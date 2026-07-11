@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Safai · Corporate Building1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ===== Safai token system — teal/mint "clean water" identity ===== */
+    --bg:#F4F8F7;
+    --surface:#FFFFFF;
+    --surface-soft:#EFF6F4;
+    --surface-tint:#E9F2FF;
+    --border:#E4EEEC;
+    --text:#0E1913;
+    --text-dim:#5C6B65;
+    --text-faint:#93A19B;
+
+    --primary:#3B82F6;
+    --primary-2:#60A5FA;
+    --primary-soft:#E6F0FF;
+    --primary-deep:#1D4ED8;
+
+    --lime:#38BDF8;
+    --lime-2:#7DD3FC;
+    --lime-soft:#E0F2FE;
+
+    --blue:#3E8BFF;
+    --blue-soft:#E9F1FF;
+
+    --amber:#F0A527;
+    --amber-soft:#FFF3DC;
+
+    --coral:#FF6B57;
+    --coral-soft:#FFE9E5;
+
+    --red:#E8435A;
+    --red-soft:#FDE7EA;
+
+    --shadow-sm: 0 2px 10px rgba(30,58,138,.06);
+    --shadow-md: 0 8px 24px rgba(30,58,138,.08);
+    --shadow-glow: 0 10px 30px rgba(59,130,246,.18);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    font-family:'Inter',sans-serif;
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    display:flex; align-items:center; justify-content:center;
+    padding:16px 10px;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(59,130,246,.16), transparent 42%),
+      radial-gradient(circle at 88% 14%, rgba(56,189,248,.14), transparent 40%),
+      radial-gradient(circle at 50% 100%, rgba(29,78,216,.10), transparent 55%),
+      radial-gradient(circle at 50% 45%, rgba(255,255,255,.35), transparent 60%),
+      #EAF1EE;
+  }
+  .display{font-family:'Space Grotesk',sans-serif;}
+  .num{font-variant-numeric:tabular-nums;}
+
+  /* ===================== PHONE FRAME ===================== */
+  /* Tuned for a large 6"+ display: taller than the previous pass so more of the
+     dashboard is visible without scrolling, while keeping a realistic phone silhouette. */
+     /* global css for device apperance */
+  .device{
+    position:relative;
+    width:min(420px, 92vw);
+    aspect-ratio:375/975;
+    background:#101915;
+    border-radius:58px;
+    padding:14px;
+    box-shadow:
+      0 40px 80px -20px rgba(10,30,25,.45),
+      0 10px 30px -10px rgba(10,30,25,.35),
+      inset 0 0 0 2px rgba(255,255,255,.04);
+  }
+  .device::before{ /* side button - right (power) */
+    content:''; position:absolute; right:-3px; top:19%; width:3px; height:7%;
+    background:#0b120e; border-radius:3px 0 0 3px;
+  }
+  .device::after{ /* side button - left (volume) */
+    content:''; position:absolute; left:-3px; top:15%; width:3px; height:11%;
+    background:#0b120e; border-radius:0 3px 3px 0;
+    box-shadow: 0 13% 0 0 #0b120e, 0 26% 0 0 #0b120e;
+  }
+  .screen{
+    position:relative;
+    width:100%; height:100%;
+    background:var(--bg);
+    border-radius:38px;
+    overflow:hidden;
+  }
+  .scroll-area{
+    width:100%; height:100%;
+    overflow-y:auto; overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .scroll-area::-webkit-scrollbar{display:none;}
+  .notch{
+    position:absolute; top:14px; left:50%; transform:translateX(-50%);
+    width:112px; height:28px; background:#101915; border-radius:20px; z-index:40;
+  }
+  .home-indicator{
+    position:absolute; bottom:8px; left:50%; transform:translateX(-50%);
+    width:118px; height:5px; border-radius:6px; background:rgba(16,25,21,.55); z-index:40;
+  }
+
+  /* ===== Fake status bar ===== */
+  .statusbar{display:flex; align-items:center; justify-content:space-between; padding:16px 26px 4px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px; color:var(--text); background:var(--surface);}
+  .statusbar .icons{display:flex; align-items:center; gap:5px;}
+  .statusbar svg{width:17px;height:11px;}
+
+  /* ===== Flat header ===== */
+  .topbar{display:flex; align-items:center; justify-content:space-between; padding:10px 16px 10px; background:linear-gradient(180deg,#FFFFFF 0%,var(--surface-tint) 100%); position:relative;}
+  .icon-btn{width:36px;height:36px;border-radius:12px; background:linear-gradient(165deg,var(--surface-soft) 0%,#ffffff 100%); border:none; display:flex; align-items:center; justify-content:center; color:var(--text); flex-shrink:0; position:relative;}
+  .icon-btn svg{width:19px;height:19px;}
+  .icon-btn:active{transform:scale(.93);}
+  .icon-btn .badge-dot{position:absolute; top:6px; right:7px; width:8px;height:8px;border-radius:50%; background:var(--coral); border:2px solid var(--surface);}
+  .building-picker{display:flex; align-items:center; gap:8px; background:none; border:none; padding:6px 4px;}
+  .building-ic{width:30px;height:30px;border-radius:10px; background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:var(--shadow-glow);}
+  .building-ic svg{width:15px;height:15px;}
+  .building-name{font-size:14.5px; font-weight:700; font-family:'Space Grotesk',sans-serif;}
+  .building-picker svg.chev{width:15px;height:15px; color:var(--text-faint); margin-left:1px;}
+
+  .greet-row{display:flex; align-items:center; justify-content:space-between; padding:8px 16px 18px; background:linear-gradient(180deg,#FFFFFF 0%,var(--surface-tint) 100%); border-bottom:1px solid var(--border); border-radius:0 0 24px 24px;}
+  .greet-left{display:flex; align-items:center; gap:11px; min-width:0;}
+  .greet-avatar{width:44px;height:44px;border-radius:15px; background:linear-gradient(135deg,var(--primary-soft),#fff); color:var(--primary-deep); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; border:1.5px solid var(--primary-soft); font-family:'Space Grotesk',sans-serif;}
+  .greet-text{min-width:0;}
+  .greet-hi{font-size:12px; color:var(--text-dim); font-weight:500;}
+  .greet-name-row{display:flex; align-items:center; gap:7px; margin-top:2px; flex-wrap:wrap;}
+  .greet-name{font-size:15px; font-weight:700; font-family:'Space Grotesk',sans-serif; white-space:nowrap;}
+  .role-pill{font-size:9px; font-weight:800; letter-spacing:.03em; color:var(--primary-deep); background:var(--primary-soft); padding:3px 8px; border-radius:20px; white-space:nowrap;}
+  .logout-btn{
+    display:flex; align-items:center; gap:6px; background:linear-gradient(165deg,#FFFFFF 0%,var(--surface-tint) 100%); color:var(--primary-deep);
+    border:1.5px solid var(--primary-soft); font-weight:700; font-size:12px;
+    padding:9px 12px; border-radius:12px; flex-shrink:0;
+  }
+  .logout-btn svg{width:14px;height:14px;}
+  .logout-btn:active{background:var(--primary-soft);}
+
+  main{padding:18px 16px 4px;}
+  section{margin-bottom:20px;}
+  .sec-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:13px; gap:8px;}
+  .sec-head-left{display:flex; align-items:center; gap:9px; min-width:0;}
+  .sec-ic{width:30px;height:30px;border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:inset 0 1px 0 rgba(255,255,255,.7), 0 4px 10px -3px currentColor;}
+  .sec-ic svg{width:15px;height:15px;}
+  .sec-title{font-size:15px; font-weight:800; letter-spacing:-.1px; font-family:'Space Grotesk',sans-serif;}
+  .sec-sub{font-size:11.5px; color:var(--text-faint); font-weight:500; margin-top:1px;}
+  .sec-link{font-size:12.5px; font-weight:700; color:var(--primary); display:flex; align-items:center; gap:2px; background:none; border:none;}
+  .sec-link svg{width:12px;height:12px;}
+
+  /* ===== Card header w/ icon ===== */
+  .card-head{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:14px;}
+  .card-head-left{display:flex; align-items:flex-start; gap:10px; min-width:0;}
+  .card-ic{width:32px;height:32px;border-radius:11px; background:linear-gradient(140deg, var(--primary-soft) 0%, #ffffff 130%); color:var(--primary-deep); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; box-shadow:inset 0 1px 0 rgba(255,255,255,.8), 0 4px 10px -3px currentColor;}
+  .card-ic svg{width:16px;height:16px;}
+  .card-head-title{font-size:13px; font-weight:800; letter-spacing:.01em; font-family:'Space Grotesk',sans-serif;}
+  .card-head-sub{font-size:11px; color:var(--text-faint); font-weight:500; margin-top:2px;}
+  .card-head-action{flex-shrink:0; position:relative;}
+  .dd-pill{display:flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:var(--text); background:linear-gradient(165deg,var(--surface-soft) 0%,#ffffff 100%); border:1px solid var(--border); padding:7px 11px; border-radius:11px; white-space:nowrap;}
+  .dd-pill svg{width:12px;height:12px; color:var(--text-faint);}
+
+  /* ===== Card ===== */
+  .card{background:linear-gradient(165deg, #FFFFFF 0%, var(--surface-tint) 100%); border-radius:20px; padding:16px; box-shadow:var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,.7); border:1px solid var(--border); transition:box-shadow .25s ease, transform .15s ease;}
+  .card:active{transform:translateY(1px);}
+
+  /* ===== HERO: Facility Pulse (signature element) ===== */
+  .pulse-card{
+    background:linear-gradient(160deg, #1D4ED8 0%, #3B82F6 46%, #60A5FA 100%);
+    border-radius:26px; padding:20px 18px 18px; color:#fff; position:relative; overflow:hidden;
+    box-shadow:0 16px 34px -12px rgba(14,110,95,.55);
+  }
+  .pulse-card::before{content:''; position:absolute; top:-60px; right:-50px; width:170px; height:170px; border-radius:50%; background:rgba(255,255,255,.08); animation:pulseFloat 9s ease-in-out infinite;}
+  .pulse-card::after{content:''; position:absolute; bottom:-70px; left:-40px; width:150px; height:150px; border-radius:50%; background:rgba(125,211,252,.12); animation:pulseFloat 11s ease-in-out infinite reverse;}
+  @keyframes pulseFloat{0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(6px,-6px) scale(1.05);}}
+  .pulse-top{display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1; margin-bottom:14px;}
+  .pulse-eyebrow{font-size:10.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; opacity:.8;}
+  .pulse-heading{font-size:16px; font-weight:700; font-family:'Space Grotesk',sans-serif; margin-top:2px;}
+  .pulse-live{display:flex; align-items:center; gap:5px; font-size:9.5px; font-weight:800; background:rgba(255,255,255,.16); padding:5px 9px; border-radius:20px; backdrop-filter:blur(4px);}
+  .pulse-live i{width:6px;height:6px;border-radius:50%; background:#7DD3FC; display:inline-block; box-shadow:0 0 0 3px rgba(125,211,252,.35); animation:livePulse 2.4s ease-in-out infinite;}
+  @keyframes livePulse{0%,100%{box-shadow:0 0 0 3px rgba(125,211,252,.35);} 50%{box-shadow:0 0 0 6px rgba(125,211,252,.15);}}
+
+  .pulse-body{display:flex; align-items:center; gap:16px; position:relative; z-index:1;}
+  .pulse-rings{position:relative; width:128px; height:128px; flex-shrink:0;}
+  .pulse-rings .score{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .pulse-rings .score .n{font-size:26px; font-weight:800; font-family:'Space Grotesk',sans-serif; line-height:1;}
+  .pulse-rings .score .t{font-size:8.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; opacity:.75; margin-top:3px;}
+
+  .pulse-metrics{display:flex; flex-direction:column; gap:9px; flex:1; min-width:0;}
+  .pulse-metric{display:flex; align-items:center; gap:9px;}
+  .pulse-metric .dot{width:9px;height:9px;border-radius:3px; flex-shrink:0;}
+  .pulse-metric .label{font-size:11px; font-weight:600; opacity:.85; flex:1; min-width:0;}
+  .pulse-metric .val{font-size:13px; font-weight:800; font-family:'Space Grotesk',sans-serif; flex-shrink:0;}
+
+  .pulse-divider{height:1px; background:rgba(255,255,255,.18); margin:16px 0 12px; position:relative; z-index:1;}
+  .pulse-loc-title{display:flex; align-items:center; justify-content:space-between; font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; opacity:.75; margin-bottom:10px; position:relative; z-index:1;}
+  .pulse-loc{display:flex; flex-direction:column; gap:9px; position:relative; z-index:1;}
+  .pulse-loc-row{display:flex; align-items:center; gap:10px;}
+  .pulse-loc-name{width:92px; flex-shrink:0; font-size:11.5px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .pulse-loc-track{flex:1; height:6px; background:rgba(255,255,255,.18); border-radius:3px; overflow:hidden;}
+  .pulse-loc-fill{height:100%; border-radius:3px; background:linear-gradient(90deg,#FFB020,#FFE29A);}
+  .pulse-loc-val{width:40px; text-align:right; flex-shrink:0; font-size:11.5px; font-weight:800; font-family:'Space Grotesk',sans-serif;}
+  .pulse-viewall{display:flex; align-items:center; justify-content:center; gap:4px; font-size:12px; font-weight:700; color:#fff; background:rgba(255,255,255,.14); border:none; padding:10px; border-radius:12px; margin-top:14px; width:100%; position:relative; z-index:1;}
+  .pulse-viewall svg{width:12px;height:12px;}
+
+  /* ===== Stat scroll ===== */
+  .stat-scroll{display:flex; gap:12px; overflow-x:auto; padding:6px 2px 10px; margin:-6px -2px -10px; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch;}
+  .stat-scroll::-webkit-scrollbar{display:none;}
+  .stat-tile{
+    --stat-accent: var(--primary);
+    --stat-accent-2: var(--primary-2);
+    flex:0 0 148px; scroll-snap-align:start;
+    background:linear-gradient(165deg, #FFFFFF 0%, var(--surface-tint) 100%); border-radius:20px; padding:15px 15px 14px;
+    box-shadow:
+      0 1px 1px rgba(16,25,21,.03),
+      0 14px 26px -12px var(--stat-glow, rgba(59,130,246,.35)),
+      0 3px 8px -2px rgba(16,25,21,.06),
+      inset 0 1px 0 rgba(255,255,255,.8);
+    border:1px solid rgba(255,255,255,.9);
+    position:relative; overflow:hidden; isolation:isolate;
+    transition:transform .16s cubic-bezier(.2,.8,.3,1), box-shadow .2s ease;
+  }
+  .stat-tile::before{ /* top accent bar */
+    content:''; position:absolute; top:0; left:0; right:0; height:3px; z-index:2;
+    background:linear-gradient(90deg, var(--stat-accent), var(--stat-accent-2));
+  }
+  .stat-tile::after{content:''; position:absolute; top:-30px; right:-30px; width:88px; height:88px; border-radius:50%; background:var(--stat-glow, rgba(59,130,246,.10)); filter:blur(2px);}
+  .stat-tile:active{transform:scale(.96) translateY(1px); box-shadow:0 1px 1px rgba(16,25,21,.04), 0 6px 14px -8px var(--stat-glow, rgba(59,130,246,.35)), inset 0 1px 0 rgba(255,255,255,.8);}
+  .stat-top-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:13px; position:relative; z-index:1;}
+  .stat-ic{
+    width:36px;height:36px;border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    position:relative; overflow:hidden;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.7), 0 4px 10px -3px var(--stat-icon-glow, rgba(59,130,246,.4)), 0 0 0 1px var(--stat-icon-ring, rgba(59,130,246,.12));
+  }
+  .stat-ic::before{content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,255,255,.6), rgba(255,255,255,0) 65%); pointer-events:none;}
+  .stat-ic svg{width:17px;height:17px; position:relative; z-index:1;}
+  .stat-num{font-size:24px; font-weight:800; letter-spacing:-.5px; position:relative; z-index:1; font-family:'Space Grotesk',sans-serif; color:var(--text);}
+  .stat-lbl{font-size:10.5px; color:var(--text-dim); font-weight:700; margin-top:3px; line-height:1.3; position:relative; z-index:1; text-transform:uppercase; letter-spacing:.02em;}
+  .stat-spark{display:flex; align-items:flex-end; gap:2px; height:18px; margin-top:11px; position:relative; z-index:1;}
+  .stat-spark i{flex:1; border-radius:2px 2px 0 0; background:var(--surface-soft); display:block;}
+  .stat-delta{display:inline-flex; align-items:center; gap:3px; font-size:9.5px; font-weight:800; margin-top:9px; padding:3px 7px; border-radius:20px; position:relative; z-index:1;}
+  .stat-delta svg{width:8px;height:8px;}
+  .stat-delta.up{color:var(--primary-deep); background:var(--primary-soft);}
+  .stat-delta.flat{color:var(--text-faint); background:var(--surface-soft);}
+
+  /* ===== Cleanliness Overview (card version, per-location board) ===== */
+  .co-list{display:flex; flex-direction:column; flex:1; min-width:0;}
+  .co-row{display:flex; align-items:center; gap:10px; padding:7px 0;}
+  .co-name{width:92px; flex-shrink:0; font-size:12px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .co-track{flex:1; height:7px; background:var(--surface-soft); border-radius:4px; overflow:hidden;}
+  .co-fill{height:100%; border-radius:4px; background:linear-gradient(90deg,var(--primary),var(--lime-2));}
+  .co-val{width:40px; flex-shrink:0; text-align:right; font-size:12px; font-weight:800; font-family:'Space Grotesk',sans-serif;}
+
+  /* ===== Weekly performance ===== */
+  .perf-chart{display:flex; align-items:stretch; gap:6px; height:114px; margin-bottom:8px;}
+  .perf-yaxis{display:flex; flex-direction:column; justify-content:space-between; align-items:flex-end; padding-bottom:0; width:16px; flex-shrink:0;}
+  .perf-yaxis span{font-size:9px; color:var(--text-faint); font-weight:600; line-height:1;}
+  .perf-bars{flex:1; display:flex; align-items:flex-end; gap:8px;}
+  .perf-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; position:relative;}
+  .perf-col .peak-tag{position:absolute; top:-18px; font-size:9px; font-weight:800; color:var(--primary-deep); font-family:'Space Grotesk',sans-serif;}
+  .perf-bar{width:100%; max-width:22px; border-radius:8px 8px 4px 4px; background:linear-gradient(180deg,var(--lime-2),var(--primary)); min-height:5px;}
+  .perf-bar.peak{background:linear-gradient(180deg,#fff2a8,var(--amber));}
+  .perf-labels{display:flex; gap:8px; margin-bottom:14px; padding-left:22px;}
+  .perf-labels span{flex:1; text-align:center; font-size:10px; color:var(--text-faint); font-weight:600;}
+  .perf-labels span.peak-day{color:var(--primary-deep); font-weight:800;}
+  .perf-stats{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .perf-stat{background:linear-gradient(165deg,var(--surface-soft) 0%,#ffffff 100%); border-radius:13px; padding:11px 12px;}
+  .perf-stat .k{font-size:10px; color:var(--text-dim); font-weight:600; display:flex; align-items:center; gap:3px;}
+  .perf-stat .k svg{width:9px;height:9px; color:var(--text-faint);}
+  .perf-stat .v{font-size:17px; font-weight:800; margin-top:3px; font-family:'Space Grotesk',sans-serif;}
+  .perf-stat .d{font-size:10px; color:var(--primary-deep); font-weight:700; margin-top:2px;}
+
+  /* ===== Heatmap ===== */
+  .heat-toprow{display:flex; align-items:center; gap:8px; margin-bottom:12px;}
+  .range-tabs{display:flex; background:var(--surface-soft); border-radius:11px; padding:3px; gap:2px;}
+  .range-tab{font-size:11px; font-weight:700; color:var(--text-dim); background:none; border:none; padding:6px 10px; border-radius:8px; white-space:nowrap;}
+  .range-tab.active{background:linear-gradient(165deg,#ffffff 0%,#F5FBFA 100%); color:var(--primary-deep); box-shadow:0 1px 4px rgba(30,58,138,.12);}
+  .heat-btn{display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; color:var(--text); background:linear-gradient(165deg,var(--surface-soft) 0%,#ffffff 100%); border:1px solid var(--border); padding:8px 11px; border-radius:11px; white-space:nowrap; flex-shrink:0; margin-left:auto;}
+  .heat-btn svg{width:13px;height:13px; color:var(--text-dim);}
+
+  /* Insight chips summarizing the heatmap */
+  .heat-insights{display:flex; gap:9px; overflow-x:auto; padding:2px 2px 6px; margin:-2px -2px 8px;}
+  .heat-insights::-webkit-scrollbar{display:none;}
+  .insight-chip{
+    flex:0 0 auto; display:flex; align-items:center; gap:8px;
+    background:linear-gradient(165deg,#FFFFFF 0%, var(--surface-tint) 100%);
+    border:1px solid rgba(255,255,255,.9); border-radius:14px; padding:9px 12px 9px 9px;
+    box-shadow:0 1px 1px rgba(16,25,21,.03), 0 10px 18px -12px rgba(30,58,138,.35), inset 0 1px 0 rgba(255,255,255,.75);
+  }
+  .insight-chip .ic{width:27px;height:27px;border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:inset 0 1px 0 rgba(255,255,255,.65), 0 3px 8px -3px currentColor;}
+  .insight-chip .ic svg{width:13px;height:13px;}
+  .insight-chip .tx .v{font-size:12.5px; font-weight:800; font-family:'Space Grotesk',sans-serif; line-height:1.15;}
+  .insight-chip .tx .l{font-size:9px; color:var(--text-faint); font-weight:700; text-transform:uppercase; letter-spacing:.03em; margin-top:1px;}
+
+  .heat-legend{display:flex; gap:7px; flex-wrap:wrap; margin-bottom:14px;}
+  .legend-chip{display:flex; align-items:center; gap:5px; font-size:9.5px; color:var(--text-dim); font-weight:700; background:#fff; padding:5px 9px 5px 7px; border-radius:20px; border:1.5px solid var(--border); box-shadow:0 1px 3px rgba(16,25,21,.04); transition:transform .12s ease, box-shadow .15s ease, opacity .15s ease;}
+  .legend-chip.static{opacity:.65; box-shadow:none;}
+  button.legend-chip{border:1.5px solid var(--border);}
+  button.legend-chip:active{transform:scale(.95);}
+  button.legend-chip:not(.active){opacity:.4; box-shadow:none;}
+  button.legend-chip[data-bucket="c-excellent"].active{background:#E3F8EC; border-color:#0E7A56; color:#0B6B4C;}
+  button.legend-chip[data-bucket="c-good"].active{background:#E7F0FF; border-color:#1D4ED8; color:#1D4ED8;}
+  button.legend-chip[data-bucket="c-average"].active{background:#FFF3DC; border-color:#A3630A; color:#8F5608;}
+  button.legend-chip[data-bucket="c-poor"].active{background:#FDE7EA; border-color:#C22D45; color:#B0263D;}
+  .dot{width:7.5px;height:7.5px;border-radius:50%; display:inline-block;}
+  .cell.dim{opacity:.16;}
+
+  /* Grid "tray" — gives the scroll area a contained, elevated feel */
+  .heat-scroll-wrap{position:relative; border-radius:16px; background:linear-gradient(165deg,var(--surface-soft) 0%,#FFFFFF 100%); border:1px solid var(--border); padding:10px 4px 8px 10px; box-shadow:inset 0 1px 4px rgba(16,25,21,.045);}
+  .heat-scroll-wrap::after{content:''; position:absolute; top:1px; right:1px; bottom:1px; width:30px; border-radius:0 15px 15px 0; background:linear-gradient(90deg, rgba(239,246,244,0), var(--surface-soft) 78%); pointer-events:none;}
+  .heat-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:14px; position:relative;}
+  .heat-scroll::-webkit-scrollbar{display:none;}
+  table.heat{border-collapse:separate; border-spacing:4px 5px; width:max-content;}
+  table.heat thead th{font-size:9px; color:var(--text-faint); font-weight:700; padding-bottom:3px; text-align:center; width:26px;}
+  table.heat thead th.weekend{color:var(--primary-deep); position:relative;}
+  table.heat thead th.weekend::after{content:''; position:absolute; left:50%; bottom:-1px; transform:translateX(-50%); width:14px; height:2px; border-radius:2px; background:var(--primary-2);}
+  th.wname-h{text-align:left; position:sticky; left:0; background:var(--surface-soft); z-index:3;}
+  .month-row td:not(:empty){font-size:9px; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:.04em; padding:2px 7px; text-align:left; background:linear-gradient(135deg,var(--primary-deep),var(--primary)); border-radius:6px; box-shadow:0 2px 6px -2px rgba(29,78,216,.5); width:max-content;}
+  td.wname{
+    position:sticky; left:0; background:var(--surface); z-index:2; border-radius:12px;
+    text-align:left; padding:4px 10px 4px 4px; box-shadow:4px 0 8px -6px rgba(16,25,21,.12);
+  }
+  .wname-inner{display:flex; flex-direction:column; gap:3px; width:84px;}
+  .wname-title{font-size:11.5px; font-weight:700; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .wname-meta{display:flex; align-items:center; gap:4px;}
+  .wname-avg{font-size:10px; font-weight:800; font-family:'Space Grotesk',sans-serif; padding:1.5px 6px; border-radius:8px; box-shadow:inset 0 1px 0 rgba(255,255,255,.5);}
+  .wname-trend{display:flex; align-items:center;}
+  .wname-trend svg{width:10px;height:10px;}
+  .trend-up{color:#159A6B;}
+  .trend-down{color:#D63B51;}
+  .trend-flat{color:var(--text-faint);}
+  td.day{width:26px; height:26px; padding:0; text-align:center; position:relative;}
+  td.day.weekend-col::before{content:''; position:absolute; inset:-2px -2px; background:rgba(59,130,246,.05); border-radius:8px; z-index:-1;}
+  .cell{
+    display:inline-flex; align-items:center; justify-content:center; width:25px; height:25px; border-radius:8px;
+    font-size:9.5px; font-weight:800; font-family:'Space Grotesk',sans-serif; position:relative;
+    transition:transform .12s ease;
+  }
+  .c-excellent{background:linear-gradient(155deg,#E3FAEC 0%,#BFEEDA 100%); color:#0B6B4C; border:1px solid rgba(14,122,86,.16); box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
+  .c-good{background:linear-gradient(155deg,#E9F1FF 0%,#CEE0FF 100%); color:#1D4ED8; border:1px solid rgba(29,78,216,.16); box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
+  .c-average{background:linear-gradient(155deg,#FFF2D6 0%,#FBDFA9 100%); color:#8F5608; border:1px solid rgba(163,99,10,.18); box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
+  .c-poor{background:linear-gradient(155deg,#FFE3E8 0%,#F9C3CD 100%); color:#B0263D; border:1px solid rgba(194,45,69,.22); box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
+  .c-poor::after{content:''; position:absolute; top:-2px; right:-2px; width:6px; height:6px; border-radius:50%; background:#E8435A; box-shadow:0 0 0 2px #fff;}
+  .c-none{background:repeating-linear-gradient(135deg, var(--surface-soft) 0px, var(--surface-soft) 4px, #ffffff 4px, #ffffff 8px); color:transparent; border:1px dashed var(--border); box-shadow:none;}
+  .heat-foot{display:flex; align-items:center; justify-content:center; margin-top:14px;}
+  .show-more{font-size:12.5px; font-weight:700; color:var(--primary); background:none; border:none; padding:0; display:flex; align-items:center; gap:3px;}
+  .show-more svg{width:12px;height:12px;}
+
+  /* ===== Stacked bottom section ===== */
+  .split-grid{display:flex; flex-direction:column; gap:14px;}
+  .split-grid .card{padding:16px;}
+  .mini-head{display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:12px;}
+  .mini-head-left{display:flex; align-items:center; gap:8px; min-width:0;}
+  .mini-ic{width:30px;height:30px;border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:inset 0 1px 0 rgba(255,255,255,.7), 0 4px 10px -3px currentColor;}
+  .mini-ic svg{width:15px;height:15px;}
+  .mini-title{font-size:12.5px; font-weight:700; font-family:'Space Grotesk',sans-serif; line-height:1.25;}
+  .live-pill{display:flex; align-items:center; gap:5px; font-size:9.5px; font-weight:800; color:#fff; background:linear-gradient(135deg,var(--primary),var(--primary-2)); padding:4px 9px; border-radius:20px; flex-shrink:0; box-shadow:0 3px 8px rgba(59,130,246,.3);}
+  .live-pill i{width:5px;height:5px;border-radius:50%; background:#fff; display:inline-block; animation:livePillPulse 1.4s ease-in-out infinite;}
+  @keyframes livePillPulse{0%,100%{opacity:1; transform:scale(1);} 50%{opacity:.4; transform:scale(.7);}}
+
+  /* ===== Top rated ===== */
+  .rank-list{display:flex; flex-direction:column; gap:3px;}
+  .rank-row{display:flex; align-items:center; gap:11px; padding:10px 8px; border-radius:14px; margin:0 -8px; position:relative; transition:background-color .15s ease;}
+  .rank-row + .rank-row{margin-top:1px;}
+  .rank-row:not(.rank-1)::after{content:''; position:absolute; left:8px; right:8px; bottom:-2px; height:1px; background:var(--border);}
+  .rank-row:last-child::after{display:none;}
+  .rank-row:active{background:var(--surface-soft);}
+  .rank-row.rank-1{background:linear-gradient(135deg, rgba(240,165,39,.10), rgba(240,165,39,.02)); box-shadow:inset 0 0 0 1px rgba(240,165,39,.18);}
+  .medal{
+    width:29px;height:29px;border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:800; color:#fff; font-family:'Space Grotesk',sans-serif; position:relative;
+  }
+  .rank-row.rank-1 .medal{width:32px; height:32px; box-shadow:0 4px 12px rgba(240,165,39,.4), inset 0 1px 0 rgba(255,255,255,.4);}
+  .rank-row.rank-1 .medal svg{width:15px;height:15px; position:absolute; top:-7px; left:50%; transform:translateX(-50%); color:#F0A527; filter:drop-shadow(0 1px 1px rgba(0,0,0,.15));}
+  .rank-mid{flex:1; min-width:0;}
+  .rank-name{font-size:13px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .rank-row.rank-1 .rank-name{font-weight:800;}
+  .rank-meta-row{display:flex; align-items:center; gap:7px; margin-top:5px;}
+  .rank-stars{display:flex; gap:1.5px; flex-shrink:0;}
+  .rank-stars svg{width:11px;height:11px; color:#E1E2EA;}
+  .rank-stars svg.star-on{color:var(--amber);}
+  .rank-bar{flex:1; height:4px; border-radius:3px; background:var(--surface-soft); overflow:hidden; min-width:24px;}
+  .rank-bar-fill{height:100%; border-radius:3px; display:block;}
+  .rank-score-wrap{flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end; gap:1px;}
+  .rank-score{font-size:14px; font-weight:800; color:var(--text); font-family:'Space Grotesk',sans-serif; line-height:1;}
+  .rank-score-max{font-size:8.5px; font-weight:700; color:var(--text-faint); letter-spacing:.02em;}
+
+  /* ===== Live activity (timeline) ===== */
+  .act-list{display:flex; flex-direction:column; position:relative;}
+  .act-row{display:flex; align-items:flex-start; gap:11px; padding:9px 8px; border-radius:14px; margin:0 -8px; position:relative; transition:background-color .15s ease;}
+  .act-row::before{content:''; position:absolute; left:18.5px; top:38px; bottom:-3px; width:2px; background:linear-gradient(180deg, var(--border) 0%, transparent 100%);}
+  .act-row:last-child::before{display:none;}
+  .act-row:active{background:var(--surface-soft);}
+  .act-ic{width:30px;height:30px;border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; z-index:1; box-shadow:0 0 0 4px var(--surface);}
+  .act-ic svg{width:14px;height:14px;}
+  .act-mid{min-width:0; flex:1; padding-top:1px;}
+  .act-top-row{display:flex; align-items:flex-start; justify-content:space-between; gap:8px;}
+  .act-text{font-size:12.5px; font-weight:700; line-height:1.4;}
+  .act-time-row{display:flex; align-items:center; gap:6px; margin-top:3px;}
+  .act-time{font-size:10.5px; color:var(--text-faint); font-weight:600;}
+  .act-status{font-size:9px; font-weight:800; letter-spacing:.02em; padding:2px 7px; border-radius:20px; flex-shrink:0; white-space:nowrap;}
+  .act-dot-sep{width:3px;height:3px;border-radius:50%; background:var(--text-faint); opacity:.5; flex-shrink:0;}
+
+  .view-all-link{display:flex; align-items:center; justify-content:center; gap:3px; font-size:11.5px; font-weight:700; color:var(--primary); margin-top:10px; background:none; border:none;}
+  .view-all-link svg{width:11px;height:11px;}
+
+  /* ===== Quick actions ===== */
+  .qa-row{display:flex; gap:10px;}
+  .qa-btn{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:8px;
+    padding:15px 8px; border-radius:16px; background:var(--surface); box-shadow:var(--shadow-sm); border:1px solid var(--border);
+  }
+  .qa-btn:active{transform:scale(.96);}
+  .qa-btn.primary{background:linear-gradient(135deg,var(--primary),var(--primary-2)); border:none; box-shadow:var(--shadow-glow);}
+  .qa-btn.primary span{color:#fff;}
+  .qa-btn.primary .qa-ic{background:rgba(255,255,255,.22); color:#fff;}
+  .qa-ic{width:34px;height:34px;border-radius:11px; background:var(--primary-soft); color:var(--primary-deep); display:flex; align-items:center; justify-content:center;}
+  .qa-ic svg{width:16px;height:16px;}
+  .qa-btn span{font-size:12px; font-weight:700;}
+
+  /* ===== Floating bottom nav ===== */
+  .navbar{position:absolute; bottom:0; left:0; right:0; z-index:50; display:flex; justify-content:center; padding:0 10px 22px; pointer-events:none;}
+  .navbar-inner{
+    width:100%;
+    background:linear-gradient(180deg, rgba(255,255,255,.98) 0%, rgba(233,248,243,.92) 100%);
+    backdrop-filter:blur(10px);
+    box-shadow:0 10px 30px rgba(30,58,138,.14), 0 1px 0 rgba(255,255,255,.6) inset;
+    border:1px solid var(--border);
+    border-radius:22px;
+    display:flex; padding:8px 6px; pointer-events:all;
+  }
+  .nav-item{flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; background:none; border:none; color:var(--text-faint); padding:8px 2px; border-radius:14px; position:relative; transition:background .2s ease, color .2s ease;}
+  .nav-item svg{width:19px;height:19px;}
+  .nav-item span{font-size:9.5px; font-weight:700;}
+  .nav-item.active{color:var(--primary-deep); background:linear-gradient(150deg, var(--primary-soft) 0%, #EAFBF6 100%); box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
+  .nav-item:active{transform:scale(.94);}
+
+  /* ===== Drawer ===== */
+  .scrim{position:absolute; inset:0; background:rgba(10,25,20,.4); backdrop-filter:blur(2px); opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:60;}
+  .scrim.open{opacity:1; pointer-events:all;}
+  .drawer{
+    position:absolute; top:0; bottom:0; left:0; width:82%; max-width:320px;
+    background:linear-gradient(165deg,#FFFFFF 0%,var(--surface-tint) 100%); z-index:61; padding:22px 18px;
+    transform:translateX(-104%); transition:transform .3s cubic-bezier(.2,.9,.3,1);
+    box-shadow:12px 0 40px rgba(10,25,20,.18);
+    overflow:hidden;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-user{display:flex; align-items:center; gap:12px; padding-bottom:18px; margin-bottom:16px; border-bottom:1px solid var(--border);}
+  .drawer-avatar{width:46px;height:46px;border-radius:15px; background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-family:'Space Grotesk',sans-serif;}
+  .drawer-user .name{font-size:14.5px; font-weight:700; font-family:'Space Grotesk',sans-serif;}
+  .drawer-user .role{font-size:10px; font-weight:800; color:var(--primary-deep); letter-spacing:.04em; margin-top:2px;}
+  .drawer-eyebrow{font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--text-faint); margin:16px 0 8px;}
+  .drawer-link{display:flex; align-items:center; gap:12px; padding:11px 10px; border-radius:12px; font-size:13.5px; font-weight:600; color:var(--text);}
+  .drawer-link svg{width:18px;height:18px; color:var(--text-dim);}
+  .drawer-link.active{background:linear-gradient(150deg, var(--primary-soft) 0%, #EAFBF6 100%); color:var(--primary-deep); font-weight:700;}
+  .drawer-link.active svg{color:var(--primary-deep);}
+  .drawer-link.has-sub{cursor:pointer;}
+  .drawer-chevron{margin-left:auto; width:14px;height:14px; color:var(--text-faint); flex-shrink:0; transition:transform .2s ease;}
+  .drawer-link.has-sub.open .drawer-chevron{transform:rotate(180deg); color:var(--primary-deep);}
+  .drawer-submenu{max-height:0; overflow:hidden; transition:max-height .25s ease; padding-left:34px;}
+  .drawer-link.has-sub.open + .drawer-submenu{max-height:130px;}
+  .drawer-sublink{display:flex; align-items:center; gap:9px; padding:9px 10px; border-radius:10px; font-size:12.5px; font-weight:600; color:var(--text-dim); cursor:pointer;}
+  .drawer-sublink:active{background:var(--surface-soft);}
+  .drawer-sublink.active{background:var(--primary-soft); color:var(--primary-deep); font-weight:700;}
+  .drawer-sublink .drawer-subdot{width:5px;height:5px;border-radius:50%; background:var(--text-faint); flex-shrink:0;}
+  .drawer-sublink.active .drawer-subdot{background:var(--primary-deep);}
+  .drawer-logout{display:flex; align-items:center; gap:12px; padding:12px 10px; border-radius:12px; font-size:13.5px; font-weight:700; color:var(--red); margin-top:18px; border-top:1px solid var(--border); padding-top:20px; cursor:pointer;}
+  .drawer-logout svg{width:18px;height:18px;}
+
+  /* ===================== APP-DEV PASS: universal interactivity ===================== */
+
+  .tap-fx{
+    cursor:pointer; -webkit-user-select:none; user-select:none;
+    position:relative; overflow:hidden;
+    transition:transform .12s cubic-bezier(.3,.7,.4,1), box-shadow .15s ease, filter .15s ease, background-color .15s ease;
+  }
+  .tap-fx:active{ transform:scale(.95); filter:brightness(.97); }
+  .tap-fx:focus-visible{ outline:2px solid var(--primary); outline-offset:2px; }
+
+  .ripple{
+    position:absolute; border-radius:50%; pointer-events:none;
+    background:radial-gradient(circle, rgba(59,130,246,.28) 0%, rgba(59,130,246,0) 70%);
+    transform:scale(0); animation:rippleGrow .55s ease-out forwards; z-index:5;
+  }
+  @keyframes rippleGrow{ to{ transform:scale(1); opacity:0; } }
+  .pulse-viewall .ripple, .qa-btn.primary .ripple{ background:radial-gradient(circle, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 70%); }
+
+  .flash-highlight{ animation:flashHi .5s ease; }
+  @keyframes flashHi{
+    0%{ box-shadow:0 0 0 0 rgba(59,130,246,.45); }
+    60%{ box-shadow:0 0 0 6px rgba(59,130,246,0); }
+    100%{ box-shadow:0 0 0 0 rgba(59,130,246,0); }
+  }
+
+  .qa-btn{ cursor:pointer; }
+
+  .toast-stack{ position:absolute; left:14px; right:14px; bottom:96px; z-index:90; display:flex; flex-direction:column; gap:8px; pointer-events:none; align-items:center;}
+  .toast{
+    max-width:100%; background:#14231E; color:#fff; font-size:12.5px; font-weight:600;
+    padding:11px 15px; border-radius:13px; box-shadow:0 10px 24px rgba(10,25,20,.35);
+    display:flex; align-items:center; gap:8px; opacity:0; transform:translateY(10px) scale(.96);
+    transition:opacity .22s ease, transform .22s ease;
+  }
+  .toast svg{width:15px;height:15px; color:var(--primary-2); flex-shrink:0;}
+  .toast.show{ opacity:1; transform:translateY(0) scale(1); }
+
+  .mini-menu{
+    position:absolute; z-index:70; background:var(--surface); border:1px solid var(--border);
+    border-radius:14px; box-shadow:var(--shadow-md); padding:6px; min-width:168px;
+    opacity:0; pointer-events:none; transform:translateY(-6px) scale(.97); transform-origin:top left;
+    transition:opacity .16s ease, transform .16s ease;
+  }
+  .mini-menu.open{ opacity:1; pointer-events:all; transform:translateY(0) scale(1); }
+  .mini-menu-item{
+    display:flex; align-items:center; gap:8px; width:100%; text-align:left; padding:9px 10px;
+    border-radius:9px; font-size:12.5px; font-weight:600; color:var(--text); background:none; border:none; cursor:pointer;
+  }
+  .mini-menu-item:active{ background:var(--surface-soft); }
+  .mini-menu-item.active{ background:var(--primary-soft); color:var(--primary-deep); font-weight:700; }
+  .mini-menu-item svg{width:14px;height:14px; flex-shrink:0; color:var(--text-faint);}
+  .mini-menu-item.active svg{ color:var(--primary-deep); }
+  .mini-menu-title{font-size:9.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--text-faint); padding:8px 10px 4px;}
+
+  .notif-panel{ right:16px; left:auto; min-width:250px; max-width:270px; }
+  .notif-item{ display:flex; gap:9px; padding:9px 8px; border-radius:11px; align-items:flex-start; }
+  .notif-item:active{ background:var(--surface-soft); }
+  .notif-dot{width:7px;height:7px;border-radius:50%; background:var(--coral); flex-shrink:0; margin-top:5px;}
+  .notif-text{font-size:12px; font-weight:600; line-height:1.35;}
+  .notif-time{font-size:10px; color:var(--text-faint); font-weight:600; margin-top:2px;}
+
+  .heat-btn.active{ background:var(--primary-soft); border-color:var(--primary); color:var(--primary-deep); }
+  .heat-btn.active svg{ color:var(--primary-deep); }
+
+  /* ===== Sidebar (drawer) — app-developer pass ===== */
+  .drawer{ display:flex; flex-direction:column; }
+  .drawer-scroll{ flex:1; overflow-y:auto; margin:0 -18px; padding:0 18px; }
+  .drawer-user{ cursor:pointer; border-radius:14px; margin:-4px -6px 16px; padding:10px 6px 18px 6px; transition:background .15s ease; }
+  .drawer-user:active{ background:var(--surface-soft); }
+  .drawer-user-row{ display:flex; align-items:center; gap:12px; width:100%; }
+  .drawer-user-chev{ margin-left:auto; width:14px; height:14px; color:var(--text-faint); flex-shrink:0; }
+  .drawer-link{
+    cursor:pointer; transition:background .15s ease, color .15s ease, transform .1s ease;
+    justify-content:space-between;
+  }
+  .drawer-link-left{ display:flex; align-items:center; gap:12px; min-width:0; }
+  .drawer-link:active{ transform:scale(.98); }
+  .drawer-link:not(.active):hover{ background:var(--surface-soft); }
+  .drawer-link-badge{
+    font-size:10px; font-weight:800; color:var(--text-dim); background:var(--surface-soft);
+    padding:2px 8px; border-radius:20px; flex-shrink:0; font-family:'Space Grotesk',sans-serif;
+  }
+  .drawer-link.active .drawer-link-badge{ background:#fff; color:var(--primary-deep); }
+  .drawer-logout:active{ background:var(--red-soft); transform:scale(.98); }
+  .drawer-footer{
+    display:flex; align-items:center; justify-content:center; gap:6px; padding-top:14px;
+    font-size:10px; font-weight:700; color:var(--text-faint); letter-spacing:.03em;
+  }
+  .drawer-close-x{
+    position:absolute; top:18px; right:16px; width:30px; height:30px; border-radius:10px;
+    background:var(--surface-soft); border:none; display:flex; align-items:center; justify-content:center;
+    color:var(--text-dim); cursor:pointer;
+  }
+  .drawer-close-x svg{ width:15px; height:15px; }
+
+  @media (max-height:1000px){
+    .device{aspect-ratio:auto; width:min(400px, 90vw); height:min(1040px, 96vh);}
+  }
+  @media (max-height:760px){
+    .device{width:min(360px, 88vw); height:min(936px, 97vh);}
+  }
+</style>
+</head>
+<body>
+
+<div class="device">
+  <div class="notch"></div>
+  <div class="screen">
+    <div class="scroll-area" id="scrollArea">
+      <div class="app">
+
+        <!-- Fake iOS status bar -->
+        <div class="statusbar">
+          <span>9:41</span>
+          <div class="icons">
+            <svg viewBox="0 0 20 12" fill="none"><rect x="0" y="7" width="3" height="5" rx="0.5" fill="currentColor"/><rect x="5" y="5" width="3" height="7" rx="0.5" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="0.5" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="0.5" fill="currentColor"/></svg>
+            <svg viewBox="0 0 16 12" fill="none"><path d="M8 3.2c2.3 0 4.4.9 6 2.4l-2 2a5.3 5.3 0 0 0-8 0l-2-2A8.5 8.5 0 0 1 8 3.2z" fill="currentColor"/><circle cx="8" cy="9.5" r="1.4" fill="currentColor"/></svg>
+            <svg viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="2.5" stroke="currentColor" stroke-width="1"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.3" fill="currentColor"/><rect x="22.5" y="4" width="1.6" height="4" rx="0.8" fill="currentColor"/></svg>
+          </div>
+        </div>
+
+        <!-- Top bar -->
+        <div class="topbar">
+          <button class="icon-btn tap-fx" id="menuBtn" aria-label="Menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+          </button>
+          <button class="building-picker tap-fx" id="buildingPicker" aria-haspopup="true" aria-expanded="false">
+            <span class="building-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"/></svg>
+            </span>
+            <span class="building-name" id="buildingName">Corporate Building1</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="mini-menu" id="buildingMenu" style="top:52px; left:16px;">
+            <div class="mini-menu-title">Switch building</div>
+            <button class="mini-menu-item active tap-fx" data-building="Corporate Building1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22v-4h6v4"/></svg>
+              Corporate Building1
+            </button>
+            <button class="mini-menu-item tap-fx" data-building="Corporate Building2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22v-4h6v4"/></svg>
+              Corporate Building2
+            </button>
+            <button class="mini-menu-item tap-fx" data-building="Warehouse East">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22v-4h6v4"/></svg>
+              Warehouse East
+            </button>
+          </div>
+          <button class="icon-btn tap-fx" id="notifBtn" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="badge-dot pulse-badge" id="notifBadge"></span>
+          </button>
+          <div class="mini-menu notif-panel" id="notifMenu" style="top:52px;">
+            <div class="mini-menu-title">Notifications</div>
+            <div class="mini-menu-item notif-item" data-toast="Opening repair request…">
+              <span class="notif-dot"></span>
+              <div><div class="notif-text">New repair request at Ground Floor Washroom A</div><div class="notif-time">2 min ago</div></div>
+            </div>
+            <div class="mini-menu-item notif-item" data-toast="Opening cleaner assignment…">
+              <span class="notif-dot" style="background:var(--amber);"></span>
+              <div><div class="notif-text">Cleaner assigned to AT1</div><div class="notif-time">14 min ago</div></div>
+            </div>
+            <div class="mini-menu-item notif-item" data-toast="Opening inspection report…">
+              <span class="notif-dot" style="background:var(--primary);"></span>
+              <div><div class="notif-text">Inspection completed at Tower A - GF Washroom</div><div class="notif-time">1 hr ago</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Greeting row -->
+        <div class="greet-row">
+          <div class="greet-left">
+            <div class="greet-avatar">OP</div>
+            <div class="greet-text">
+              <div class="greet-hi">Hey Omkar,</div>
+              <div class="greet-name-row">
+                <div class="greet-name">Omkar Porlikar</div>
+                <span class="role-pill">SUPER ADMIN</span>
+              </div>
+            </div>
+          </div>
+          <button class="logout-btn tap-fx" id="logoutBtnTop">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Logout
+          </button>
+        </div>
+
+        <main>
+
+          <!-- HERO: Facility Pulse (signature element, replaces plain overview) -->
+          <section>
+            <div class="pulse-card">
+              <div class="pulse-top">
+                <div>
+                  <div class="pulse-eyebrow">Facility Pulse</div>
+                  <div class="pulse-heading">Corporate Building1</div>
+                </div>
+                <span class="pulse-live"><i></i>LIVE</span>
+              </div>
+
+              <div class="pulse-body">
+                <div class="pulse-rings">
+                  <svg width="128" height="128" viewBox="0 0 128 128">
+                    <!-- track rings -->
+                    <circle cx="64" cy="64" r="56" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="9"/>
+                    <circle cx="64" cy="64" r="42" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="9"/>
+                    <circle cx="64" cy="64" r="28" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="9"/>
+                    <!-- Cleanliness score ring: 3.80/10 = 38% -->
+                    <circle cx="64" cy="64" r="56" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"
+                      stroke-dasharray="351.9" stroke-dashoffset="218" transform="rotate(-90 64 64)"/>
+                    <!-- Cleaner coverage ring: 30 cleaners / 53 toilets ≈ 57% -->
+                    <circle cx="64" cy="64" r="42" fill="none" stroke="#7DD3FC" stroke-width="9" stroke-linecap="round"
+                      stroke-dasharray="263.9" stroke-dashoffset="114" transform="rotate(-90 64 64)"/>
+                    <!-- Task completion ring: placeholder low activity -->
+                    <circle cx="64" cy="64" r="28" fill="none" stroke="#3E8BFF" stroke-width="9" stroke-linecap="round"
+                      stroke-dasharray="175.9" stroke-dashoffset="167" transform="rotate(-90 64 64)"/>
+                  </svg>
+                  <div class="score">
+                    <div class="n num">3.80</div>
+                    <div class="t">/ 10 score</div>
+                  </div>
+                </div>
+
+                <div class="pulse-metrics">
+                  <div class="pulse-metric">
+                    <span class="dot" style="background:#fff;"></span>
+                    <span class="label">Cleanliness score</span>
+                    <span class="val num">38%</span>
+                  </div>
+                  <div class="pulse-metric">
+                    <span class="dot" style="background:#7DD3FC;"></span>
+                    <span class="label">Cleaner coverage</span>
+                    <span class="val num">57%</span>
+                  </div>
+                  <div class="pulse-metric">
+                    <span class="dot" style="background:#3E8BFF;"></span>
+                    <span class="label">Tasks completed</span>
+                    <span class="val num">95%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pulse-divider"></div>
+              <div class="pulse-loc-title"><span>Top 5 locations by score</span></div>
+              <div class="pulse-loc">
+                <div class="pulse-loc-row">
+                  <div class="pulse-loc-name">Test89</div>
+                  <div class="pulse-loc-track"><div class="pulse-loc-fill" style="width:100%;"></div></div>
+                  <div class="pulse-loc-val num">10.00</div>
+                </div>
+                <div class="pulse-loc-row">
+                  <div class="pulse-loc-name">Voluptatum…</div>
+                  <div class="pulse-loc-track"><div class="pulse-loc-fill" style="width:100%;"></div></div>
+                  <div class="pulse-loc-val num">10.00</div>
+                </div>
+                <div class="pulse-loc-row">
+                  <div class="pulse-loc-name">tej-test</div>
+                  <div class="pulse-loc-track"><div class="pulse-loc-fill" style="width:100%;"></div></div>
+                  <div class="pulse-loc-val num">10.00</div>
+                </div>
+                <div class="pulse-loc-row">
+                  <div class="pulse-loc-name">Parsi Toilet</div>
+                  <div class="pulse-loc-track"><div class="pulse-loc-fill" style="width:100%;"></div></div>
+                  <div class="pulse-loc-val num">10.00</div>
+                </div>
+                <div class="pulse-loc-row">
+                  <div class="pulse-loc-name">Chinchbhav…</div>
+                  <div class="pulse-loc-track"><div class="pulse-loc-fill" style="width:100%;"></div></div>
+                  <div class="pulse-loc-val num">10.00</div>
+                </div>
+              </div>
+              <button class="pulse-viewall tap-fx" data-toast="Opening full location list…" data-nav="washrooms">View All Locations
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </section>
+
+          <!-- Stats -->
+          <section>
+            <div class="sec-head">
+              <div class="sec-head-left">
+                <div class="sec-ic" style="background:var(--blue-soft); color:var(--blue);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+                </div>
+                <div class="sec-title">At a glance</div>
+              </div>
+            </div>
+            <div class="stat-scroll">
+              <div class="stat-tile tap-fx" style="--stat-glow:rgba(62,139,255,.30); --stat-accent:#3E8BFF; --stat-accent-2:#7FB3FF; --stat-icon-glow:rgba(62,139,255,.45); --stat-icon-ring:rgba(62,139,255,.16);" role="button" tabindex="0" data-toast="Total Toilets — 53 across the building">
+                <div class="stat-top-row">
+                  <div class="stat-ic" style="background:var(--blue-soft); color:var(--blue);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <div class="stat-num num">53</div>
+                </div>
+                <div class="stat-lbl">Total Toilets</div>
+                <div class="stat-spark">
+                  <i style="height:40%;"></i><i style="height:55%;"></i><i style="height:35%;"></i><i style="height:70%;background:var(--blue);"></i><i style="height:60%;background:var(--blue);"></i><i style="height:80%;background:var(--blue);"></i>
+                </div>
+                <div class="stat-delta up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+                  8% vs last week
+                </div>
+              </div>
+              <div class="stat-tile tap-fx" style="--stat-glow:rgba(92,138,42,.28); --stat-accent:#7CB342; --stat-accent-2:#AEDC5F; --stat-icon-glow:rgba(92,138,42,.42); --stat-icon-ring:rgba(92,138,42,.16);" role="button" tabindex="0" data-toast="No ongoing tasks right now">
+                <div class="stat-top-row">
+                  <div class="stat-ic" style="background:var(--lime-soft); color:#5C8A2A;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/></svg>
+                  </div>
+                  <div class="stat-num num">0</div>
+                </div>
+                <div class="stat-lbl">Ongoing Tasks</div>
+                <div class="stat-spark">
+                  <i style="height:20%;"></i><i style="height:20%;"></i><i style="height:20%;"></i><i style="height:20%;"></i><i style="height:20%;"></i><i style="height:20%;"></i>
+                </div>
+                <div class="stat-delta flat">— No change</div>
+              </div>
+              <div class="stat-tile tap-fx" style="--stat-glow:rgba(29,78,216,.30); --stat-accent:#1D4ED8; --stat-accent-2:#60A5FA; --stat-icon-glow:rgba(29,78,216,.45); --stat-icon-ring:rgba(29,78,216,.16);" role="button" tabindex="0" data-toast="Completed Tasks — 0 this week">
+                <div class="stat-top-row">
+                  <div class="stat-ic" style="background:var(--primary-soft); color:var(--primary-deep);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+                  </div>
+                  <div class="stat-num num">0</div>
+                </div>
+                <div class="stat-lbl">Completed Tasks</div>
+                <div class="stat-spark">
+                  <i style="height:30%;"></i><i style="height:45%;"></i><i style="height:38%;"></i><i style="height:60%;background:var(--primary);"></i><i style="height:75%;background:var(--primary);"></i><i style="height:90%;background:var(--primary);"></i>
+                </div>
+                <div class="stat-delta up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+                  29% vs last week
+                </div>
+              </div>
+              <div class="stat-tile tap-fx" style="--stat-glow:rgba(240,165,39,.30); --stat-accent:#F0A527; --stat-accent-2:#FFCE6B; --stat-icon-glow:rgba(240,165,39,.45); --stat-icon-ring:rgba(240,165,39,.18);" role="button" tabindex="0" data-toast="No repair requests open">
+                <div class="stat-top-row">
+                  <div class="stat-ic" style="background:var(--amber-soft); color:var(--amber);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.1-3.1a4 4 0 0 1-5.4 5.4L7 20l-3-3 8.4-8.4a4 4 0 0 1 5.4-5.4z"/></svg>
+                  </div>
+                  <div class="stat-num num">0</div>
+                </div>
+                <div class="stat-lbl">Total Repairs</div>
+                <div class="stat-spark">
+                  <i style="height:20%;"></i><i style="height:20%;"></i><i style="height:20%;"></i><i style="height:20%;"></i><i style="height:20%;"></i><i style="height:20%;"></i>
+                </div>
+                <div class="stat-delta flat">— No change</div>
+              </div>
+              <div class="stat-tile tap-fx" style="--stat-glow:rgba(59,130,246,.30); --stat-accent:#3B82F6; --stat-accent-2:#38BDF8; --stat-icon-glow:rgba(59,130,246,.45); --stat-icon-ring:rgba(59,130,246,.16);" role="button" tabindex="0" data-toast="Total Cleaners — 30 active on shift">
+                <div class="stat-top-row">
+                  <div class="stat-ic" style="background:var(--primary-soft); color:var(--primary-deep);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </div>
+                  <div class="stat-num num">30</div>
+                </div>
+                <div class="stat-lbl">Total Cleaners</div>
+                <div class="stat-spark">
+                  <i style="height:50%;"></i><i style="height:55%;"></i><i style="height:60%;"></i><i style="height:65%;background:var(--primary);"></i><i style="height:80%;background:var(--primary);"></i><i style="height:88%;background:var(--primary);"></i>
+                </div>
+                <div class="stat-delta up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+                  9% vs last week
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Weekly performance -->
+          <section>
+            <div class="card">
+              <div class="card-head">
+                <div class="card-head-left">
+                  <div class="card-ic">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="14"/></svg>
+                  </div>
+                  <div class="card-head-title">Weekly Cleaner Performance</div>
+                </div>
+                <div class="card-head-action">
+                  <button class="dd-pill tap-fx" id="periodPill" aria-haspopup="true" aria-expanded="false"><span id="periodPillLabel">Week</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+                  <div class="mini-menu" id="periodMenu" style="top:40px; right:0; left:auto;">
+                    <button class="mini-menu-item active tap-fx" data-period="Week">Week</button>
+                    <button class="mini-menu-item tap-fx" data-period="Month">Month</button>
+                    <button class="mini-menu-item tap-fx" data-period="Quarter">Quarter</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="perf-chart">
+                <div class="perf-yaxis"><span>20</span><span>15</span><span>10</span><span>5</span><span>0</span></div>
+                <div class="perf-bars">
+                  <div class="perf-col"><div class="perf-bar" style="height:44%;"></div></div>
+                  <div class="perf-col"><div class="perf-bar" style="height:64%;"></div></div>
+                  <div class="perf-col"><div class="perf-bar" style="height:70%;"></div></div>
+                  <div class="perf-col"><div class="perf-bar" style="height:56%;"></div></div>
+                  <div class="perf-col"><span class="peak-tag">6</span><div class="perf-bar peak" style="height:90%;"></div></div>
+                  <div class="perf-col"><div class="perf-bar" style="height:40%;"></div></div>
+                  <div class="perf-col"><div class="perf-bar" style="height:65%;"></div></div>
+                </div>
+              </div>
+              <div class="perf-labels"><span>Sat</span><span>Sun</span><span>Mon</span><span>Tue</span><span class="peak-day">Wed</span><span>Thu</span><span>Fri</span></div>
+              <div class="perf-stats">
+                <div class="perf-stat"><div class="k">Total Tasks Completed</div><div class="v num">0</div><div class="d">↑ 8%</div></div>
+                <div class="perf-stat"><div class="k">Average / Day <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div><div class="v num">0</div><div class="d">↑ 2%</div></div>
+                <div class="perf-stat"><div class="k">Best Day</div><div class="v" style="color:var(--primary-deep); font-size:15px; font-family:'Space Grotesk',sans-serif;">Saturday</div><div class="d" style="color:var(--text-faint);">6 Tasks</div></div>
+                <div class="perf-stat"><div class="k">Completion Rate</div><div class="v num">0%</div><div class="d">↑ 2%</div></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Heatmap -->
+          <section>
+            <div class="card">
+              <div class="card-head">
+                <div class="card-head-left">
+                  <div class="card-ic">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5V6H9.5A2.5 2.5 0 0 1 7 3.5v0A2.5 2.5 0 0 1 9.5 2z"/><path d="M20.5 12A2.5 2.5 0 0 1 18 14.5H16.5V12A2.5 2.5 0 0 1 19 9.5h0A2.5 2.5 0 0 1 20.5 12z"/><path d="M2 9.5A2.5 2.5 0 0 1 4.5 7H6v2.5A2.5 2.5 0 0 1 3.5 12h0A2.5 2.5 0 0 1 2 9.5z"/><path d="M12 6h6a2 2 0 0 1 2 2v3.5"/><path d="M6 9.5V16a2 2 0 0 0 2 2h4"/></svg>
+                  </div>
+                  <div>
+                    <div class="card-head-title">Hygiene Performance Heatmap (31 Days)</div>
+                    <div class="card-head-sub">Daily hygiene scores by washroom (0-10)</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="heat-toprow">
+                <div class="range-tabs" id="heatRangeTabs">
+                  <button class="range-tab tap-fx" data-range="7D">7D</button>
+                  <button class="range-tab tap-fx active" data-range="31D">31D</button>
+                  <button class="range-tab tap-fx" data-range="90D">90D</button>
+                </div>
+                <button class="heat-btn tap-fx" id="heatFilterBtn" aria-pressed="false">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                  Filters
+                </button>
+              </div>
+
+              <!-- Auto-computed insight chips -->
+              <div class="heat-insights" id="heatInsights"></div>
+
+              <div class="heat-legend" id="heatLegend">
+                <button class="legend-chip tap-fx active" data-bucket="c-excellent"><i class="dot" style="background:#0E7A56;"></i>Excellent (8-10)</button>
+                <button class="legend-chip tap-fx active" data-bucket="c-good"><i class="dot" style="background:#1D4ED8;"></i>Good (6.5-8)</button>
+                <button class="legend-chip tap-fx active" data-bucket="c-average"><i class="dot" style="background:#A3630A;"></i>Average (4.5-6.5)</button>
+                <button class="legend-chip tap-fx active" data-bucket="c-poor"><i class="dot" style="background:#C22D45;"></i>Poor (&lt;4.5)</button>
+                <span class="legend-chip static"><i class="dot" style="background:var(--text-faint);"></i>No Inspection</span>
+              </div>
+
+              <div class="heat-scroll-wrap">
+                <div class="heat-scroll">
+                  <table class="heat" id="heatTable"></table>
+                </div>
+              </div>
+
+              <div class="heat-foot">
+                <button class="show-more tap-fx" data-toast="Opening full 31-day heatmap…" data-nav="reports">View Full Heatmap
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Top rated + Live activity -->
+          <section>
+            <div class="split-grid">
+              <div class="card">
+                <div class="mini-head">
+                  <div class="mini-head-left">
+                    <div class="mini-ic" style="background:var(--amber-soft); color:var(--amber);">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/><path d="M17 5h3a2 2 0 0 1 2 2 4 4 0 0 1-4 4M7 5H4a2 2 0 0 0-2 2 4 4 0 0 0 4 4"/></svg>
+                    </div>
+                    <div class="mini-title">Top Rated Washrooms</div>
+                  </div>
+                </div>
+                <div class="rank-list" id="rankList"></div>
+                <button class="view-all-link tap-fx" data-toast="Opening all washroom rankings…" data-nav="washrooms">View All
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+
+              <div class="card">
+                <div class="mini-head">
+                  <div class="mini-head-left">
+                    <div class="mini-ic" style="background:var(--primary-soft); color:var(--primary-deep);">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <div class="mini-title">Live Activity Feed</div>
+                  </div>
+                  <span class="live-pill"><i></i>Live</span>
+                </div>
+                <div class="act-list" id="actList"></div>
+                <button class="view-all-link tap-fx" data-toast="Opening full activity log…" data-nav="reports">View All Activity
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Quick actions -->
+          <section style="margin-bottom:96px;">
+            <div class="sec-head">
+              <div class="sec-head-left">
+                <div class="sec-ic" style="background:var(--amber-soft); color:var(--amber);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+                <div class="sec-title">Quick actions</div>
+              </div>
+            </div>
+            <div class="qa-row">
+              <div class="qa-btn primary tap-fx" role="button" tabindex="0" data-toast="Opening &lsquo;Add Washroom&rsquo; form…">
+                <div class="qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+                <span>Add Washroom</span>
+              </div>
+              <div class="qa-btn tap-fx" role="button" tabindex="0" data-toast="Opening cleaner assignment…">
+                <div class="qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                <span>Assign Cleaner</span>
+              </div>
+            </div>
+          </section>
+
+        </main>
+      </div>
+
+      <!-- Drawer (SIDEBAR ) -->
+      <div class="scrim" id="scrim"></div>
+      <aside class="drawer" id="drawer" role="dialog" aria-label="Navigation menu" aria-hidden="true">
+        <button class="drawer-close-x tap-fx" id="drawerCloseBtn" aria-label="Close menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <div class="drawer-user tap-fx" id="drawerProfile" data-toast="Opening profile settings…">
+          <div class="drawer-user-row">
+            <div class="drawer-avatar">OP</div>
+            <div><div class="name">Omkar Porlikar</div><div class="role">SUPER ADMIN</div></div>
+            <svg class="drawer-user-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <div class="drawer-scroll">
+          <div class="drawer-eyebrow">Overview</div>
+          <div class="drawer-link tap-fx" data-nav="home" data-drawer-toast="Switched to Main Dashboard">
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Main Dashboard</span>
+          </div>
+          <div class="drawer-link active tap-fx" data-drawer-toast="You're on the Client Dashboard">
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Client Dashboard</span>
+          </div>
+          <div class="drawer-eyebrow">Manage</div>
+          <div class="drawer-link has-sub tap-fx" data-drawer-toast="Opening Location Hierarchy…">
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/></svg>Location Hierarchy</span>
+            <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="drawer-submenu">
+            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening View Hierarchy…"><span class="drawer-subdot"></span>View Hierarchy</div>
+            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Add Hierarchy…"><span class="drawer-subdot"></span>Add Hierarchy</div>
+          </div>
+          <div class="drawer-link has-sub tap-fx" data-nav="washrooms" data-drawer-toast="Switched to Washrooms">
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>Washrooms</span>
+            <span class="drawer-link-badge">53</span>
+            <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="drawer-submenu">
+            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Washrooms List…"><span class="drawer-subdot"></span>Washrooms List</div>
+            <div class="drawer-sublink active tap-fx" data-drawer-toast="Opening Add Washroom…"><span class="drawer-subdot"></span>Add Washroom</div>
+          </div>
+          <div class="drawer-link has-sub tap-fx" data-drawer-toast="Opening User Management…">
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>User Management</span>
+            <span class="drawer-link-badge">30</span>
+            <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="drawer-submenu">
+            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening User List…"><span class="drawer-subdot"></span>User List</div>
+            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Add User…"><span class="drawer-subdot"></span>Add User</div>
+          </div>
+          <div class="drawer-link has-sub tap-fx" data-drawer-toast="Opening User Mapping…">
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>User Mapping</span>
+            <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="drawer-submenu">
+            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Mapped List…"><span class="drawer-subdot"></span>Mapped List</div>
+            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Add Mapping…"><span class="drawer-subdot"></span>Add Mapping</div>
+          </div>
+          <div class="drawer-link has-sub tap-fx" data-drawer-toast="Opening Facility Companies…">
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>Facility Companies</span>
+            <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="drawer-submenu">
+            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening View List…"><span class="drawer-subdot"></span>View List</div>
+            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Add Facility…"><span class="drawer-subdot"></span>Add Facility</div>
+          </div>
+
+          <div class="drawer-eyebrow">Operations</div>
+          <div class="drawer-link tap-fx" data-drawer-toast="Opening Locate On Map…">
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.1-9.5-10A5.5 5.5 0 0 1 12 4.5 5.5 5.5 0 0 1 21.5 11c-2.5 3.9-9.5 10-9.5 10z"/><circle cx="12" cy="10.5" r="2.2"/></svg>Locate On Map</span>
+          </div>
+          <div class="drawer-link tap-fx" data-drawer-toast="Opening Cleaner Activity…">
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-6 4 12 2-8 2 4h5"/></svg>Cleaner Activity</span>
+          </div>
+          <div class="drawer-link tap-fx" data-drawer-toast="Opening Attendance…">
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M1 21v-2a4 4 0 0 1 4-4h2.5"/><path d="M17 11l2 2 4-4"/></svg>Attendance</span>
+          </div>
+
+          <div class="drawer-eyebrow">System</div>
+          <div class="drawer-link tap-fx" data-drawer-toast="Opening Dynamic Configuration…">
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9.09a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Dynamic Configuration</span>
+          </div>
+          <div class="drawer-link tap-fx" data-drawer-toast="Opening User Review…">
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>User Review</span>
+          </div>
+          <div class="drawer-link tap-fx" data-drawer-toast="Opening Reports…">
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>Reports</span>
+          </div>
+
+          <div class="drawer-logout tap-fx" id="drawerLogout">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Logout
+          </div>
+          <div class="drawer-footer">Safai · v2.4.1</div>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- Toast / snackbar feedback layer -->
+    <div class="toast-stack" id="toastStack"></div>
+
+    <!-- Floating bottom nav (fixed to screen, above scroll area) -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <button class="nav-item active" data-tab="home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-tab="washrooms">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+          <span>Washrooms</span>
+        </button>
+        <button class="nav-item" data-tab="tasks">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="17" rx="2"/><path d="M8 2v4M16 2v4M4 10h16"/></svg>
+          <span>Tasks</span>
+        </button>
+        <button class="nav-item" data-tab="reports">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 20 8"/><path d="M9 13h6M9 17h6"/></svg>
+          <span>Reports</span>
+        </button>
+        <button class="nav-item" id="moreTab" data-tab="more">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
+          <span>More</span>
+        </button>
+      </div>
+    </nav>
+
+  </div>
+  <div class="home-indicator"></div>
+</div>
+
+<script>
+  /* ==========================================================================
+     APP-DEVELOPER PASS
+     Everything below wires up controls that previously had no behaviour:
+     ripple/press feedback on every .tap-fx element, a toast/snackbar system,
+     small dropdown menus, a fully working sidebar, and a legend that actually
+     filters the heatmap. Organized as small, independent modules.
+     ========================================================================== */
+
+  var screenEl = document.querySelector('.screen');
+
+  /* ---------- 1. Ripple + flash feedback on every tap target ---------- */
+  function addRipple(el, evt){
+    var rect = el.getBoundingClientRect();
+    var x = (evt.touches ? evt.touches[0].clientX : evt.clientX) - rect.left;
+    var y = (evt.touches ? evt.touches[0].clientY : evt.clientY) - rect.top;
+    var size = Math.max(rect.width, rect.height) * 1.6;
+    var span = document.createElement('span');
+    span.className = 'ripple';
+    span.style.width = span.style.height = size + 'px';
+    span.style.left = (x - size / 2) + 'px';
+    span.style.top = (y - size / 2) + 'px';
+    el.appendChild(span);
+    span.addEventListener('animationend', function(){ span.remove(); });
+  }
+  document.addEventListener('pointerdown', function(e){
+    var el = e.target.closest ? e.target.closest('.tap-fx') : null;
+    if(!el) return;
+    addRipple(el, e);
+  });
+
+  /* ---------- 2. Toast / snackbar ---------- */
+  var toastStack = document.getElementById('toastStack');
+  var toastCheckIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>';
+  function showToast(message){
+    if(!message) return;
+    var t = document.createElement('div');
+    t.className = 'toast';
+    t.innerHTML = toastCheckIcon + '<span>' + message + '</span>';
+    toastStack.appendChild(t);
+    requestAnimationFrame(function(){ t.classList.add('show'); });
+    setTimeout(function(){
+      t.classList.remove('show');
+      setTimeout(function(){ t.remove(); }, 220);
+    }, 2200);
+    // keep at most 2 toasts stacked so the UI doesn't get noisy
+    while(toastStack.children.length > 2){ toastStack.removeChild(toastStack.firstChild); }
+  }
+
+  /* ---------- 3. Bottom nav tabs ---------- */
+  function setActiveTab(tabName){
+    document.querySelectorAll('.nav-item').forEach(function(x){
+      x.classList.toggle('active', x.dataset.tab === tabName);
+    });
+  }
+  document.querySelectorAll('.nav-item').forEach(function(t){
+    t.addEventListener('click', function(){
+      if(t.id === 'moreTab'){ openDrawer(); return; }
+      setActiveTab(t.dataset.tab);
+      document.getElementById('scrollArea').scrollTo({top:0, behavior:'smooth'});
+      showToast('Switched to ' + t.querySelector('span').textContent);
+    });
+  });
+
+  /* ---------- 4. Range tabs (7D / 31D / 90D) ---------- */
+  document.querySelectorAll('.range-tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('.range-tab').forEach(function(x){ x.classList.remove('active'); });
+      t.classList.add('active');
+      showToast(t.dataset.range + ' view selected');
+    });
+  });
+
+  /* ---------- 5. Generic data-toast / data-nav handler ----------
+     Covers stat tiles, rank rows, "View All" links, quick actions, and any
+     future element — just add data-toast (and optionally data-nav) to it. */
+  document.querySelectorAll('[data-toast]').forEach(function(el){
+    if(el.tagName !== 'BUTTON' && !el.hasAttribute('tabindex')){ el.setAttribute('tabindex', '0'); }
+    if(el.tagName !== 'BUTTON' && !el.hasAttribute('role')){ el.setAttribute('role', 'button'); }
+    el.classList.add('tap-fx');
+    function activate(){
+      el.classList.remove('flash-highlight');
+      void el.offsetWidth; // restart animation
+      el.classList.add('flash-highlight');
+      showToast(el.dataset.toast);
+      if(el.dataset.nav){ setActiveTab(el.dataset.nav); }
+      if(el.closest('.mini-menu')){ closeAllMenus(); }
+    }
+    el.addEventListener('click', activate);
+    el.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(); }
+    });
+  });
+
+  /* ---------- 6. Small dropdown menu helper ---------- */
+  var openMenus = [];
+  function closeAllMenus(){
+    openMenus.forEach(function(m){
+      m.menu.classList.remove('open');
+      if(m.trigger) m.trigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+  function registerMenu(triggerEl, menuEl){
+    openMenus.push({trigger:triggerEl, menu:menuEl});
+    triggerEl.addEventListener('click', function(e){
+      e.stopPropagation();
+      var willOpen = !menuEl.classList.contains('open');
+      closeAllMenus();
+      if(willOpen){ menuEl.classList.add('open'); triggerEl.setAttribute('aria-expanded', 'true'); }
+    });
+    menuEl.addEventListener('click', function(e){ e.stopPropagation(); });
+  }
+  document.addEventListener('click', closeAllMenus);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeAllMenus(); });
+
+  /* ---------- 7. Building switcher ---------- */
+  var buildingMenu = document.getElementById('buildingMenu');
+  registerMenu(document.getElementById('buildingPicker'), buildingMenu);
+  buildingMenu.querySelectorAll('.mini-menu-item[data-building]').forEach(function(item){
+    item.addEventListener('click', function(){
+      buildingMenu.querySelectorAll('.mini-menu-item').forEach(function(x){ x.classList.remove('active'); });
+      item.classList.add('active');
+      var name = item.dataset.building;
+      document.getElementById('buildingName').textContent = name;
+      document.querySelector('.pulse-heading').textContent = name;
+      closeAllMenus();
+      showToast('Switched to ' + name);
+    });
+  });
+
+  /* ---------- 8. Notifications ---------- */
+  var notifMenu = document.getElementById('notifMenu');
+  var notifBadge = document.getElementById('notifBadge');
+  registerMenu(document.getElementById('notifBtn'), notifMenu);
+  document.getElementById('notifBtn').addEventListener('click', function(){
+    if(notifBadge){ notifBadge.style.display = 'none'; }
+  });
+
+  /* ---------- 9. Weekly performance period pill ---------- */
+  var periodMenu = document.getElementById('periodMenu');
+  var periodLabel = document.getElementById('periodPillLabel');
+  registerMenu(document.getElementById('periodPill'), periodMenu);
+  periodMenu.querySelectorAll('.mini-menu-item[data-period]').forEach(function(item){
+    item.addEventListener('click', function(){
+      periodMenu.querySelectorAll('.mini-menu-item').forEach(function(x){ x.classList.remove('active'); });
+      item.classList.add('active');
+      periodLabel.textContent = item.dataset.period;
+      closeAllMenus();
+      showToast('Showing performance by ' + item.dataset.period.toLowerCase());
+    });
+  });
+
+  /* ---------- 10. Filters button (heatmap) ---------- */
+  var filterBtn = document.getElementById('heatFilterBtn');
+  filterBtn.addEventListener('click', function(){
+    var isActive = filterBtn.classList.toggle('active');
+    filterBtn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    showToast(isActive ? 'Filters panel opened' : 'Filters panel closed');
+  });
+
+  /* ---------- 11. Legend chips actually filter the heatmap ---------- */
+  document.querySelectorAll('.legend-chip[data-bucket]').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      chip.classList.toggle('active');
+      var bucket = chip.dataset.bucket;
+      var anyActive = document.querySelectorAll('.legend-chip[data-bucket].active').length > 0;
+      document.querySelectorAll('.cell.' + bucket).forEach(function(cell){
+        cell.classList.toggle('dim', !chip.classList.contains('active'));
+      });
+      showToast(chip.classList.contains('active') ? 'Showing ' + chip.textContent.trim() : 'Hiding ' + chip.textContent.trim());
+      if(!anyActive){ /* nothing selected — leave grid as-is rather than blanking everything */ }
+    });
+  });
+
+  /* ---------- 12. Sidebar (drawer) ---------- */
+  var drawer = document.getElementById('drawer');
+  var scrim = document.getElementById('scrim');
+  var menuBtn = document.getElementById('menuBtn');
+
+  function openDrawer(){
+    drawer.classList.add('open');
+    scrim.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    menuBtn.setAttribute('aria-expanded', 'true');
+  }
+  function closeDrawer(){
+    drawer.classList.remove('open');
+    scrim.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }
+  menuBtn.addEventListener('click', openDrawer);
+  document.getElementById('drawerCloseBtn').addEventListener('click', closeDrawer);
+  scrim.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+  });
+
+  // Profile row
+  document.getElementById('drawerProfile').addEventListener('click', function(){
+    showToast('Opening profile settings…');
+  });
+
+  // Nav links: single active item, syncs with bottom nav where applicable, closes drawer
+  document.querySelectorAll('.drawer-link').forEach(function(link){
+    link.setAttribute('tabindex', '0');
+    link.setAttribute('role', 'button');
+    function activateLink(){
+      // Items with a submenu just expand/collapse — they don't navigate or close the drawer
+      if(link.classList.contains('has-sub')){
+        var wasOpen = link.classList.contains('open');
+        document.querySelectorAll('.drawer-link.has-sub').forEach(function(x){ x.classList.remove('open'); });
+        if(!wasOpen){ link.classList.add('open'); }
+        return;
+      }
+      document.querySelectorAll('.drawer-link').forEach(function(x){ x.classList.remove('active'); });
+      link.classList.add('active');
+      if(link.dataset.nav){ setActiveTab(link.dataset.nav); }
+      showToast(link.dataset.drawerToast || 'Opening…');
+      setTimeout(closeDrawer, 320);
+    }
+    link.addEventListener('click', activateLink);
+    link.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activateLink(); }
+    });
+  });
+
+  // Submenu (dropdown) items: navigate, mark active within their own submenu, close drawer
+  document.querySelectorAll('.drawer-sublink').forEach(function(sublink){
+    sublink.setAttribute('tabindex', '0');
+    sublink.setAttribute('role', 'button');
+    function activateSublink(){
+      var parentMenu = sublink.closest('.drawer-submenu');
+      if(parentMenu){ parentMenu.querySelectorAll('.drawer-sublink').forEach(function(x){ x.classList.remove('active'); }); }
+      sublink.classList.add('active');
+      showToast(sublink.dataset.drawerToast || 'Opening…');
+      setTimeout(closeDrawer, 320);
+    }
+    sublink.addEventListener('click', function(e){ e.stopPropagation(); activateSublink(); });
+    sublink.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); e.stopPropagation(); activateSublink(); }
+    });
+  });
+
+  // Logout — real confirmation step instead of firing immediately
+  var drawerLogoutBtn = document.getElementById('drawerLogout');
+  var logoutTopBtn = document.getElementById('logoutBtnTop');
+  var logoutArmed = false;
+  function handleLogoutTap(sourceLabel){
+    if(!logoutArmed){
+      logoutArmed = true;
+      showToast('Tap Logout again to confirm');
+      setTimeout(function(){ logoutArmed = false; }, 2500);
+      return;
+    }
+    logoutArmed = false;
+    showToast('Logging out…');
+    closeDrawer();
+  }
+  drawerLogoutBtn.setAttribute('tabindex', '0');
+  drawerLogoutBtn.setAttribute('role', 'button');
+  drawerLogoutBtn.addEventListener('click', function(){ handleLogoutTap('drawer'); });
+  drawerLogoutBtn.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); handleLogoutTap('drawer'); }
+  });
+  logoutTopBtn.addEventListener('click', function(){ handleLogoutTap('top'); });
+
+  /* ===================== Hygiene heatmap generator ===================== */
+  (function(){
+    // seeded RNG so the "data" is stable across reloads
+    function mulberry32(seed){
+      return function(){
+        seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+        var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+    function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+    function bucketClass(s){
+      if(s === null) return 'c-none';
+      if(s >= 8) return 'c-excellent';
+      if(s >= 6.5) return 'c-good';
+      if(s >= 4.5) return 'c-average';
+      return 'c-poor';
+    }
+    function bucketColor(s){
+      if(s === null) return 'var(--text-faint)';
+      if(s >= 8) return '#0E7A56';
+      if(s >= 6.5) return '#1D4ED8';
+      if(s >= 4.5) return '#A3630A';
+      return '#C22D45';
+    }
+
+    var DAYS = 31;
+    var startDate = new Date(2026, 5, 10); // June 10 2026
+    var dayNames = ['S','M','T','W','T','F','S'];
+
+    // Washroom profiles: base score, drift over the month, noise range, dropout chance
+    var profiles = [
+      { name:'Parsi Toilet', base:7.4, drift:0.2,  noise:1.0, dropout:0.08, seed:11 },
+      { name:'AT1',          base:8.0, drift:0.6,  noise:0.7, dropout:0.05, seed:23 },
+      { name:'bajaj',        base:6.8, drift:-0.3, noise:1.3, dropout:0.13, seed:37 },
+      { name:'BHW',          base:9.0, drift:-6.5, noise:0.8, dropout:0.10, seed:49 }
+    ];
+
+    var rows = profiles.map(function(p){
+      var rand = mulberry32(p.seed);
+      var scores = [];
+      for(var i=0;i<DAYS;i++){
+        if(rand() < p.dropout){ scores.push(null); continue; }
+        var val = p.base + p.drift * (i/(DAYS-1)) + (rand()-0.5) * 2 * p.noise;
+        scores.push(Math.round(clamp(val,0,10)*10)/10);
+      }
+      var present = scores.filter(function(s){return s!==null;});
+      var avg = present.length ? present.reduce(function(a,b){return a+b;},0)/present.length : 0;
+      var firstHalf = present.slice(0, Math.floor(present.length/2));
+      var secondHalf = present.slice(Math.floor(present.length/2));
+      var fAvg = firstHalf.length ? firstHalf.reduce(function(a,b){return a+b;},0)/firstHalf.length : avg;
+      var sAvg = secondHalf.length ? secondHalf.reduce(function(a,b){return a+b;},0)/secondHalf.length : avg;
+      var diff = sAvg - fAvg;
+      var trend = diff > 0.4 ? 'up' : (diff < -0.4 ? 'down' : 'flat');
+      return { name:p.name, scores:scores, avg:avg, trend:trend };
+    });
+
+    // ---- Build header (month row + weekday/date row) ----
+    var table = document.getElementById('heatTable');
+    var monthRow = document.createElement('tr');
+    monthRow.className = 'month-row';
+    var monthLabelCell = document.createElement('td');
+    monthLabelCell.className = 'wname-h';
+    monthLabelCell.textContent = '';
+    monthRow.appendChild(monthLabelCell);
+    var lastMonth = null;
+    for(var d=0; d<DAYS; d++){
+      var date = new Date(startDate); date.setDate(startDate.getDate()+d);
+      var mLabel = date.toLocaleString('en-US',{month:'short'});
+      var cell = document.createElement('td');
+      if(mLabel !== lastMonth){ cell.textContent = mLabel; lastMonth = mLabel; }
+      monthRow.appendChild(cell);
+    }
+    table.appendChild(monthRow);
+
+    var headRow = document.createElement('tr');
+    var thName = document.createElement('th');
+    thName.className = 'wname-h'; thName.textContent = 'Washroom';
+    headRow.appendChild(thName);
+    var weekendFlags = [];
+    for(var d2=0; d2<DAYS; d2++){
+      var date2 = new Date(startDate); date2.setDate(startDate.getDate()+d2);
+      var wd = date2.getDay();
+      var isWeekend = (wd===0||wd===6);
+      weekendFlags.push(isWeekend);
+      var th = document.createElement('th');
+      th.textContent = date2.getDate();
+      if(isWeekend) th.classList.add('weekend');
+      headRow.appendChild(th);
+    }
+    table.appendChild(headRow);
+
+    // ---- Build rows ----
+    rows.forEach(function(row){
+      var tr = document.createElement('tr');
+      var tdName = document.createElement('td');
+      tdName.className = 'wname';
+      var trendIcon = row.trend === 'up'
+        ? '<svg class="trend-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>'
+        : row.trend === 'down'
+        ? '<svg class="trend-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'
+        : '<svg class="trend-flat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+      tdName.innerHTML =
+        '<div class="wname-inner">' +
+          '<div class="wname-title">'+row.name+'</div>' +
+          '<div class="wname-meta">' +
+            '<span class="wname-avg" style="background:'+bucketColor(row.avg)+'22; color:'+bucketColor(row.avg)+';">'+row.avg.toFixed(1)+'</span>' +
+            '<span class="wname-trend">'+trendIcon+'</span>' +
+          '</div>' +
+        '</div>';
+      tr.appendChild(tdName);
+
+      row.scores.forEach(function(s, i){
+        var td = document.createElement('td');
+        td.className = 'day' + (weekendFlags[i] ? ' weekend-col' : '');
+        var span = document.createElement('span');
+        span.className = 'cell ' + bucketClass(s);
+        span.textContent = s === null ? '' : s.toFixed(1);
+        td.appendChild(span);
+        tr.appendChild(td);
+      });
+      table.appendChild(tr);
+    });
+
+    // ---- Insight chips ----
+    var overallAvg = rows.reduce(function(a,r){return a+r.avg;},0) / rows.length;
+    var flagged = rows.filter(function(r){ return r.avg < 5; });
+    var totalCells = rows.length * DAYS;
+    var filledCells = rows.reduce(function(a,r){ return a + r.scores.filter(function(s){return s!==null;}).length; }, 0);
+    var coverage = Math.round((filledCells/totalCells)*100);
+    var best = rows.reduce(function(a,r){ return r.avg > a.avg ? r : a; });
+
+    var insights = document.getElementById('heatInsights');
+    insights.innerHTML =
+      '<div class="insight-chip"><div class="ic" style="background:var(--primary-soft); color:var(--primary-deep);">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 6 6 10 6 13a6 6 0 0 0 12 0c0-3-2-7-6-11z"/></svg>' +
+      '</div><div class="tx"><div class="v">'+overallAvg.toFixed(1)+' / 10</div><div class="l">Avg Score</div></div></div>' +
+
+      '<div class="insight-chip"><div class="ic" style="background:var(--blue-soft); color:var(--blue);">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg>' +
+      '</div><div class="tx"><div class="v">'+coverage+'%</div><div class="l">Coverage</div></div></div>' +
+
+      '<div class="insight-chip"><div class="ic" style="background:var(--lime-soft); color:#5C8A2A;">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/></svg>' +
+      '</div><div class="tx"><div class="v">'+best.name+'</div><div class="l">Top Performer</div></div></div>' +
+
+      (flagged.length
+        ? '<div class="insight-chip" style="background:var(--red-soft); border-color:#F6C7CE;"><div class="ic" style="background:#fff; color:var(--red);">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>' +
+          '</div><div class="tx"><div class="v" style="color:var(--red);">'+flagged.length+' Flagged</div><div class="l">Needs Attention</div></div></div>'
+        : '');
+  })();
+
+  /* ===================== Top Rated Washrooms + Live Activity Feed ===================== */
+  (function(){
+    var STAR = '<svg viewBox="0 0 24 24" fill="currentColor" class="__CLS__"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9"/></svg>';
+    var CROWN = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 19h18l-1.5-9-4.5 3.5L12 5l-3 8.5L4.5 10 3 19z"/></svg>';
+
+    var ranked = [
+      { name:'Test89', score:9.4, medal:'linear-gradient(135deg,#FFC24B,#F0A527)', bar:'linear-gradient(90deg,#FFC24B,#F0A527)', toast:'Opening Test89 details…' },
+      { name:'Ground Floor Washroom A', score:8.9, medal:'linear-gradient(135deg,#5FA8FF,#3E8BFF)', bar:'linear-gradient(90deg,#5FA8FF,#3E8BFF)', toast:'Opening Ground Floor Washroom A details…' },
+      { name:'Tower A - Ground Floor Washroom', score:8.3, medal:'linear-gradient(135deg,#B79BFF,#8B7CFF)', bar:'linear-gradient(90deg,#B79BFF,#8B7CFF)', toast:'Opening Tower A - Ground Floor Washroom details…' },
+      { name:'Tectura amet archit', score:7.6, medal:'linear-gradient(135deg,#60A5FA,#3B82F6)', bar:'linear-gradient(90deg,#60A5FA,#3B82F6)', toast:'Opening Tectura amet archit details…' },
+      { name:'xyz', score:6.8, medal:'#AEB3BF', bar:'linear-gradient(90deg,#C7CBD4,#AEB3BF)', toast:'Opening xyz details…' }
+    ];
+
+    var rankList = document.getElementById('rankList');
+    rankList.innerHTML = ranked.map(function(r, i){
+      var filled = Math.round(r.score/2); // out of 5
+      var stars = '';
+      for(var s=0; s<5; s++){ stars += STAR.replace('__CLS__', s < filled ? 'star-on' : ''); }
+      var isFirst = i === 0;
+      return (
+        '<div class="rank-row tap-fx'+(isFirst?' rank-1':'')+'" role="button" tabindex="0" data-toast="'+r.toast+'">' +
+          '<div class="medal" style="background:'+r.medal+';">'+(isFirst ? CROWN : '')+(i+1)+'</div>' +
+          '<div class="rank-mid">' +
+            '<div class="rank-name">'+r.name+'</div>' +
+            '<div class="rank-meta-row">' +
+              '<div class="rank-stars">'+stars+'</div>' +
+              '<div class="rank-bar"><span class="rank-bar-fill" style="width:'+(r.score*10)+'%; background:'+r.bar+';"></span></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="rank-score-wrap"><div class="rank-score num">'+r.score.toFixed(1)+'</div><div class="rank-score-max">/ 10</div></div>' +
+        '</div>'
+      );
+    }).join('');
+
+    var activity = [
+      { text:'Cleaning completed at Parsi Toilet', time:'2 min ago', status:'Completed', bg:'var(--primary-soft)', fg:'var(--primary-deep)',
+        icon:'<circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/>' },
+      { text:'New repair request at Ground Floor Washroom A', time:'11 min ago', status:'Pending', bg:'var(--amber-soft)', fg:'var(--amber)',
+        icon:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.1-3.1a4 4 0 0 1-5.4 5.4L7 20l-3-3 8.4-8.4a4 4 0 0 1 5.4-5.4z"/>' },
+      { text:'Inspection completed at Tower A - GF Washroom', time:'24 min ago', status:'Reviewed', bg:'var(--blue-soft)', fg:'var(--blue)',
+        icon:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>' },
+      { text:'Cleaner assigned to AT1', time:'38 min ago', status:'Assigned', bg:'var(--red-soft)', fg:'var(--red)',
+        icon:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' }
+    ];
+
+    var actList = document.getElementById('actList');
+    actList.innerHTML = activity.map(function(a){
+      return (
+        '<div class="act-row tap-fx" role="button" tabindex="0" data-toast="Opening activity details…">' +
+          '<div class="act-ic" style="background:'+a.bg+'; color:'+a.fg+';">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'+a.icon+'</svg>' +
+          '</div>' +
+          '<div class="act-mid">' +
+            '<div class="act-text">'+a.text+'</div>' +
+            '<div class="act-time-row">' +
+              '<span class="act-status" style="background:'+a.bg+'; color:'+a.fg+';">'+a.status+'</span>' +
+              '<span class="act-dot-sep"></span>' +
+              '<span class="act-time">'+a.time+'</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
+  })();
+</script>
+</body>
+</html>
