@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Safai · User Management</title>
+<title>Safai · Add New Zone Type</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -208,7 +208,7 @@
   }
 
   /* ===== Page head card ===== */
-  .page-head{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;flex-direction: column;}
+  .page-head{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
   .page-head-left{display:flex; align-items:flex-start; gap:13px; min-width:0;}
   .page-ic{
     width:48px;height:48px;border-radius:15px;
@@ -223,8 +223,7 @@
     -webkit-background-clip:text; background-clip:text; color:transparent;
   }
   .page-sub{font-size:10.5px; font-weight:800; letter-spacing:.07em; color:var(--text-faint); text-transform:uppercase; margin-top:4px;}
-  .back-pill{align-self: flex-start;    /* Keeps button sized to text layout width boundaries */
-  width: 100%;justify-content: center;
+  .back-pill{
     display:flex; align-items:center; gap:6px; flex-shrink:0;
     background:linear-gradient(160deg,#fff 0%, var(--orange-soft) 130%); color:var(--orange); border:1.5px solid #FBCBA3;
     font-size:12.5px; font-weight:800; padding:9px 14px; border-radius:12px; white-space:nowrap;
@@ -525,62 +524,6 @@
   @media (max-height:760px) and (min-width:641px){
     .device{width:min(360px, 88vw); height:min(936px, 97vh);}
   }
-
-  /* ===== User Directory / Registry Specific Styles ===== */
-  .metrics-summary-grid{
-    display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin-bottom:16px;
-  }
-  .summary-tile{
-    background:linear-gradient(180deg,#ffffff 0%, #FBFDFF 100%);
-    border:1.5px solid var(--border); border-radius:13px; padding:10px 6px; text-align:center;
-    box-shadow:inset 0 1px 0 #fff; cursor:pointer;
-  }
-  .summary-tile.active{
-    background:linear-gradient(145deg, #101915 0%, #1A2E26 100%);
-    border-color:#101915;
-  }
-  .summary-tile .count-num{
-    font-size:18px; font-weight:800; font-family:'Space Grotesk',sans-serif; color:#181A2E;
-  }
-  .summary-tile.active .count-num{ color:#fff; }
-  .summary-tile .count-lbl{
-    font-size:8px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--text-faint); margin-top:3px;
-  }
-
-  .directory-list-box{
-    display:flex; flex-direction:column; gap:10px; padding:4px 0; margin-top:2px;
-   
-  }
-  .directory-item{
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    background:linear-gradient(165deg,#fff 0%, #FDFEFF 100%); border:1.5px solid var(--border); border-radius:14px;
-    padding:12px 14px; box-shadow:0 1px 2px rgba(16,25,21,.03);
-  }
-  .member-profile-stack{display:flex; align-items:center; gap:12px; min-width:0;}
-  .member-avatar-badge{
-    width:36px; height:36px; border-radius:50%; background:var(--surface-soft);
-    border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center;
-    font-family:'Space Grotesk',sans-serif; font-size:12.5px; font-weight:800; color:var(--text-dim); flex-shrink:0;
-  }
-  .member-meta-details{min-width:0;}
-  .member-name{font-size:13.5px; font-weight:800; font-family:'Space Grotesk',sans-serif; color:#181A2E; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .member-subtxt{font-size:11px; color:var(--text-faint); font-weight:600; margin-top:2px;}
-
-  .member-right-controls{display:flex; align-items:center; gap:12px; flex-shrink:0;}
-  .role-pill-badge{
-    font-size:9px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
-    padding:4px 8px; border-radius:6px; font-family:'Space Grotesk',sans-serif; text-align:center;
-  }
-  .role-pill-badge.cleaner{background:var(--orange-soft); color:var(--orange);}
-  .role-pill-badge.supervisor{background:var(--green-soft); color:var(--green);}
-  .role-pill-badge.admin{background:var(--primary-soft); color:var(--primary-deep);}
-
-  .inline-action-btn{
-    width:30px; height:30px; border-radius:9px; border:1px solid var(--border);
-    background:linear-gradient(180deg,#ffffff 0%, #FBFDFF 100%);
-    display:flex; align-items:center; justify-content:center; color:var(--text-dim); border:1px solid var(--border); cursor:pointer;
-  }
-  .inline-action-btn svg{width:13px !important; height:13px !important; display:block;}
 </style>
 </head>
 <body>
@@ -591,7 +534,8 @@
     <div class="scroll-area" id="scrollArea">
       <div class="app">
 
-         <div class="topbar">
+        <!-- Top bar -->
+        <div class="topbar">
           <button class="icon-btn tap-fx" id="menuBtn" aria-label="Menu">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
           </button>
@@ -647,189 +591,192 @@
 
         <main>
 
+          <!-- Page head -->
           <section>
             <div class="card page-head">
               <span class="blueprint-mark tr" aria-hidden="true"></span>
               <span class="blueprint-mark bl" aria-hidden="true"></span>
-              <svg class="watermark-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              <svg class="watermark-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
               <div class="page-head-left">
                 <div class="page-ic">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
                 </div>
                 <div>
-                  <div class="page-title">USER MANAGEMENT</div>
-                  <div class="page-sub">Manage roles, permissions, and staff access</div>
+                  <div class="page-title">Add New Zone Type</div>
+                  <div class="page-sub">Configure Workspace Architecture</div>
                   <svg class="title-draw" viewBox="0 0 70 6" aria-hidden="true"><path d="M2 3 H68"/></svg>
                 </div>
               </div>
-              <button class="back-pill tap-fx" data-toast="Opening new user forms setup…">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              <a href="addUser.html"> ADD NEW USER</a> 
+              <button class="back-pill tap-fx" data-toast="Back to zone type list…">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Back to List
               </button>
             </div>
           </section>
 
+          <!-- Zone configuration form -->
           <section>
             <div class="card">
               <div class="card-head">
                 <div class="card-ic">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
                 </div>
                 <div>
-                  <div class="card-head-title">Registry Counters</div>
-                  <div class="card-head-sub">Filter directory list view scopes</div>
-                </div>
-              </div>
-
-              <div class="metrics-summary-grid">
-                <div class="summary-tile active tap-fx" data-toast="Filtering all members…">
-                  <div class="count-num">41</div>
-                  <div class="count-lbl">Total Users</div>
-                </div>
-                <div class="summary-tile tap-fx" data-toast="Filtering management team…">
-                  <div class="count-num">6</div>
-                  <div class="count-lbl">Supervisor</div>
-                </div>
-                <div class="summary-tile tap-fx" data-toast="Filtering operational team…">
-                  <div class="count-num">30</div>
-                  <div class="count-lbl">Cleaner</div>
-                </div>
-                <div class="summary-tile tap-fx" data-toast="Filtering facility administration…">
-                  <div class="count-num">5</div>
-                  <div class="count-lbl">Fac. Admin</div>
+                  <div class="card-head-title">Zone Configuration</div>
+                  <div class="card-head-sub">Define a new zone classification</div>
                 </div>
               </div>
 
               <div class="field">
+                <div class="field-label">Zone Type Name <span class="req">*</span></div>
                 <div class="input-wrap">
-                  <svg class="pre-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                  <input type="text" class="text-input" placeholder="Search by name, email or phone...">
+                  <svg class="pre-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                  <input type="text" class="text-input" id="zoneNameInput" placeholder="e.g. Storage Zone">
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="field-label plain">Parent Type <span class="opt">(Optional)</span></div>
+                <div class="select-field tap-fx" id="parentTypeSelect" data-toast="Opening parent type list…">
+                  <span>Select parent type…</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+
+              <div class="info-box">
+                <div class="info-ic">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.5" r="0.6" fill="currentColor" stroke="none"/></svg>
+                </div>
+                <div>
+                  <div class="info-title">Functional Relationship Architecture</div>
+                  <div class="info-text">Establishing a parent organizes zones logically and enables better resource management across the registry.</div>
                 </div>
               </div>
             </div>
           </section>
 
+          <!-- Architecture hierarchy -->
           <section>
             <div class="card">
               <div class="arch-head">
                 <div class="arch-head-left">
                   <div class="arch-ic">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="18" r="2.5"/><circle cx="12" cy="6" r="2.5"/><path d="M12 8.5V13M12 13H6v2.7M12 13h6v2.7"/></svg>
                   </div>
                   <div>
-                    <div class="arch-title">Staff Members</div>
-                    <div class="arch-sub">Directory Registry View</div>
+                    <div class="arch-title">Architecture</div>
+                    <div class="arch-sub">Hierarchical Map</div>
+                  </div>
+                </div>
+                <button class="expand-btn tap-fx" id="expandBtn" aria-label="View complete hierarchy">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                </button>
+              </div>
+
+              <div class="tree-scroll">
+                <div class="tree" id="treeSource">
+                  <div class="node root">
+                    <div class="node-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9.09a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+                    <div class="node-name">Corporate<br>Building1</div>
+                  </div>
+
+                  <div class="stem-v"></div>
+
+                  <div class="row row-floors">
+                    <div class="branch">
+                      <div class="node floor1">
+                        <div class="node-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4M3 6h4M3 18h4M9 6l2 2-2 2M13 6h8M13 12h8M13 18h8"/></svg></div>
+                        <div class="node-name">Floor 1</div>
+                        <div class="node-meta">Level</div>
+                      </div>
+                    </div>
+                    <div class="branch">
+                      <div class="node floor2">
+                        <div class="node-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                        <div class="node-name">Floor 2</div>
+                        <div class="node-meta">Level</div>
+                      </div>
+                    </div>
+                    <div class="branch">
+                      <div class="node floor3">
+                        <div class="node-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+                        <div class="node-name">Floor 3</div>
+                        <div class="node-meta">Level</div>
+                      </div>
+                    </div>
+                    <div class="branch">
+                      <div class="node floor4">
+                        <div class="node-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v6c0 5 4 8 9 9 5-1 9-4 9-9V7z"/></svg></div>
+                        <div class="node-name">Floor 4</div>
+                        <div class="node-meta">Level</div>
+                      </div>
+                    </div>
+                    <div class="branch">
+                      <div class="node floor5">
+                        <div class="node-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></div>
+                        <div class="node-name">Floor 5</div>
+                        <div class="node-meta">Level</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row row-zones">
+                    <div class="branch">
+                      <div class="node parking">
+                        <div class="node-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17V7h4a3 3 0 1 1 0 6H9"/></svg></div>
+                        <div class="node-name">Parking</div>
+                        <div class="node-meta">Zone</div>
+                      </div>
+                    </div>
+                    <div class="branch">
+                      <div class="node lobby">
+                        <div class="node-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 21v-5h6v5"/></svg></div>
+                        <div class="node-name">Lobby</div>
+                        <div class="node-meta">Zone</div>
+                      </div>
+                    </div>
+                    <div class="branch">
+                      <div class="node service">
+                        <div class="node-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.1-3.1a4 4 0 0 1-5.4 5.4L7 20l-3-3 8.4-8.4a4 4 0 0 1 5.4-5.4z"/></svg></div>
+                        <div class="node-name">Service</div>
+                        <div class="node-meta">Zone</div>
+                      </div>
+                    </div>
+                    <div class="branch">
+                      <div class="node utility">
+                        <div class="node-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 4 14 11 14 10 22 20 9 13 9 13 2"/></svg></div>
+                        <div class="node-name">Utility</div>
+                        <div class="node-meta">Zone</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div class="directory-list-box">
-                
-                <div class="directory-item">
-                  <div class="member-profile-stack">
-                    <div class="member-avatar-badge">S</div>
-                    <div class="member-meta-details">
-                      <div class="member-name">Sneha Gupta</div>
-                      <div class="member-subtxt">ID: #442 · 9121606496</div>
-                    </div>
-                  </div>
-                  <div class="member-right-controls">
-                    <span class="role-pill-badge cleaner">Cleaner</span>
-                    <button class="inline-action-btn tap-fx" data-toast="Modifying Sneha Gupta configurations…">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="directory-item">
-                  <div class="member-profile-stack">
-                    <div class="member-avatar-badge">N</div>
-                    <div class="member-meta-details">
-                      <div class="member-name">New Cleaner Ktc</div>
-                      <div class="member-subtxt">ID: #441 · 9100025946</div>
-                    </div>
-                  </div>
-                  <div class="member-right-controls">
-                    <span class="role-pill-badge cleaner">Cleaner</span>
-                    <button class="inline-action-btn tap-fx" data-toast="Modifying item configurations…">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="directory-item">
-                  <div class="member-profile-stack">
-                    <div class="member-avatar-badge">T</div>
-                    <div class="member-meta-details">
-                      <div class="member-name">Test90</div>
-                      <div class="member-subtxt">ID: #394 · hjei@gmail.com</div>
-                    </div>
-                  </div>
-                  <div class="member-right-controls">
-                    <span class="role-pill-badge cleaner">Cleaner</span>
-                    <button class="inline-action-btn tap-fx" data-toast="Modifying item configurations…">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="directory-item">
-                  <div class="member-profile-stack">
-                    <div class="member-avatar-badge">K</div>
-                    <div class="member-meta-details">
-                      <div class="member-name">Kamlesh Supervisor Test</div>
-                      <div class="member-subtxt">ID: #386 · KamleshSupervisor.test@safai.com</div>
-                    </div>
-                  </div>
-                  <div class="member-right-controls">
-                    <span class="role-pill-badge supervisor">Supervisor</span>
-                    <button class="inline-action-btn tap-fx" data-toast="Modifying Kamlesh Supervisor configurations…">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="directory-item">
-                  <div class="member-profile-stack">
-                    <div class="member-avatar-badge">H</div>
-                    <div class="member-meta-details">
-                      <div class="member-name">Hyacinth Wolf</div>
-                      <div class="member-subtxt">ID: #277 · gyne@mailinator.com</div>
-                    </div>
-                  </div>
-                  <div class="member-right-controls">
-                    <span class="role-pill-badge admin">Facility Admin</span>
-                    <button class="inline-action-btn tap-fx" data-toast="Modifying Hyacinth Wolf configurations…">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    </button>
-                  </div>
-                </div>
-
+              <div class="tree-hint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M6 14v-1a2 2 0 0 0-4 0v3a8 8 0 0 0 8 8h2a8 8 0 0 0 8-8v-3a2 2 0 0 0-4 0v1"/></svg>
+                <span>Drag to pan, pinch to zoom</span>
               </div>
-
-              <!-- <div class="tree-hint">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-                <span>Scroll container directly to view hidden registry indices</span>
-              </div> -->
             </div>
           </section>
 
         </main>
 
         <div class="action-row">
-          <button class="action-btn discard tap-fx" id="discardBtn" data-toast="Filters Reset">
+          <button class="action-btn discard tap-fx" id="discardBtn" data-toast="Changes discarded">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 9 8 9"/></svg>
-            Reset Filters
+            Discard
           </button>
-          <button class="action-btn create tap-fx" id="createZoneBtn" data-toast="Opening routing loop assignments configurations view…">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Assign Shifts
+          <button class="action-btn create tap-fx" id="createZoneBtn" data-toast="Enter a zone type name to continue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Create Zone
           </button>
         </div>
       </div>
 
+      <!-- Drawer -->
       <div class="scrim" id="scrim"></div>
-     <aside class="drawer" id="drawer" role="dialog" aria-label="Navigation menu" aria-hidden="true">
+      <aside class="drawer" id="drawer" role="dialog" aria-label="Navigation menu" aria-hidden="true">
         <button class="drawer-close-x tap-fx" id="drawerCloseBtn" aria-label="Close menu">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
@@ -845,21 +792,20 @@
         <div class="drawer-scroll">
           <div class="drawer-eyebrow">Overview</div>
           <div class="drawer-link tap-fx" data-nav="home" data-drawer-toast="Switched to Main Dashboard">
-            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-              <a href="index.html" >Main Dashboard</span></a>
+            <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Main Dashboard</span>
           </div>
           <div class="drawer-link tap-fx" data-drawer-toast="You're on the Client Dashboard">
             <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Client Dashboard</span>
           </div>
 
           <div class="drawer-eyebrow">Manage</div>
-          <div class="drawer-link has-sub  tap-fx" data-nav="hierarchy" data-drawer-toast="Opening Location Hierarchy…">
+          <div class="drawer-link has-sub open tap-fx" data-nav="hierarchy" data-drawer-toast="Opening Location Hierarchy…">
             <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/></svg>Location Hierarchy</span>
             <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="drawer-submenu">
             <div class="drawer-sublink tap-fx" data-drawer-toast="Opening View Hierarchy…"><span class="drawer-subdot"></span>View Hierarchy</div>
-            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Add Hierarchy…"><span class="drawer-subdot"></span>Add Hierarchy</div>
+            <div class="drawer-sublink active tap-fx" data-drawer-toast="Opening Add Hierarchy…"><span class="drawer-subdot"></span>Add Hierarchy</div>
           </div>
 
           <div class="drawer-link has-sub tap-fx" data-nav="washrooms" data-drawer-toast="Switched to Washrooms">
@@ -872,13 +818,13 @@
             <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Add Washroom…"><span class="drawer-subdot"></span>Add Washroom</div>
           </div>
 
-          <div class="drawer-link has-sub open tap-fx" data-nav="users" data-drawer-toast="Opening User Management…">
+          <div class="drawer-link has-sub tap-fx" data-nav="users" data-drawer-toast="Opening User Management…">
             <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>User Management</span>
             <span class="drawer-link-badge">30</span>
             <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="drawer-submenu">
-            <div class="drawer-sublink active tap-fx" data-drawer-toast="Opening User List…"><span class="drawer-subdot"></span>User List</div>
+            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening User List…"><span class="drawer-subdot"></span>User List</div>
             <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Add User…"><span class="drawer-subdot"></span>Add User</div>
           </div>
 
@@ -929,41 +875,79 @@
           <div class="drawer-footer">Safai · v2.4.1</div>
         </div>
       </aside>
+
     </div>
 
+    <!-- Toast / snackbar feedback layer -->
     <div class="toast-stack" id="toastStack"></div>
 
+    <!-- Action buttons -->
+    <!-- (kept inside scroll flow above navbar via main padding; sits just above bottom nav) -->
+
+    <!-- Bottom nav, docked flush to the bottom edge -->
     <nav class="navbar">
       <div class="navbar-inner">
         <button class="nav-item" data-tab="home">
-             
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-         <a href="index.html">
-          <span>Dashboard</span>
-        </a>
+          <span><a href="index.html">DashBoard</span></a>
         </button>
-        <button class="nav-item" data-tab="washroom">
+        <button class="nav-item active" data-tab="washroom">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
           <span>Washroom</span>
-        </button>
-        <button class="nav-item active" data-tab="users">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-          <span>Users</span>
           <span class="nav-dot"></span>
+        </button>
+        <button class="nav-item" data-tab="tasks">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span>Tasks</span>
         </button>
         <button class="nav-item" data-tab="reports">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="13" width="3" height="5"/><rect x="12" y="9" width="3" height="9"/><rect x="17" y="5" width="3" height="13"/></svg>
           <span>Reports</span>
         </button>
+        <button class="nav-item" data-tab="profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile</span>
+        </button>
       </div>
     </nav>
+
+    <!-- Fullscreen Complete Hierarchy modal -->
+    <div class="hier-modal" id="hierarchyModal" aria-hidden="true">
+      <div class="hier-modal-head">
+        <button class="icon-btn tap-fx" id="hierCloseBtn" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div class="hier-modal-titles">
+          <div class="hmt-title">Complete Hierarchy</div>
+          <div class="hmt-sub">Corporate Building1 · Full Map</div>
+        </div>
+        <div style="width:36px; flex-shrink:0;"></div>
+      </div>
+
+      <div class="hier-pan-zoom" id="hierPanZoom">
+        <div class="hier-canvas" id="hierCanvas"></div>
+      </div>
+
+      <div class="hier-zoom-controls">
+        <button class="zoom-btn tap-fx" id="hierZoomIn" aria-label="Zoom in">+</button>
+        <button class="zoom-btn tap-fx" id="hierZoomReset" aria-label="Reset zoom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 9 8 9"/></svg>
+        </button>
+        <button class="zoom-btn tap-fx" id="hierZoomOut" aria-label="Zoom out">−</button>
+      </div>
+
+      <div class="hier-hint-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M6 14v-1a2 2 0 0 0-4 0v3a8 8 0 0 0 8 8h2a8 8 0 0 0 8-8v-3a2 2 0 0 0-4 0v1"/></svg>
+        Drag to pan · Pinch or use +/− to zoom
+      </div>
+    </div>
 
   </div>
   <div class="home-indicator"></div>
 </div>
 
 <script>
-  /* ---------- Ripple + feedback engines ---------- */
+  /* ---------- Ripple + flash feedback on every tap target ---------- */
   function addRipple(el, evt){
     var rect = el.getBoundingClientRect();
     var x = (evt.touches ? evt.touches[0].clientX : evt.clientX) - rect.left;
@@ -983,7 +967,7 @@
     addRipple(el, e);
   });
 
-  /* ---------- Toast UI logic loop ---------- */
+  /* ---------- Toast / snackbar ---------- */
   var toastStack = document.getElementById('toastStack');
   var toastCheckIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>';
   function showToast(message){
@@ -1000,7 +984,7 @@
     while(toastStack.children.length > 2){ toastStack.removeChild(toastStack.firstChild); }
   }
 
-  /* ---------- Switch active views navigation tabs ---------- */
+  /* ---------- Bottom nav tabs ---------- */
   function setActiveTab(tabName){
     document.querySelectorAll('.nav-item').forEach(function(x){
       x.classList.toggle('active', x.dataset.tab === tabName);
@@ -1010,11 +994,11 @@
     t.addEventListener('click', function(){
       setActiveTab(t.dataset.tab);
       document.getElementById('scrollArea').scrollTo({top:0, behavior:'smooth'});
-      showToast('Switched tab scope to: ' + t.querySelector('span').textContent);
+      showToast('Switched to ' + t.querySelector('span').textContent);
     });
   });
 
-  /* ---------- Universal triggers loop ---------- */
+  /* ---------- Generic data-toast / data-nav handler ---------- */
   document.querySelectorAll('[data-toast]').forEach(function(el){
     if(el.tagName !== 'BUTTON' && !el.hasAttribute('tabindex')){ el.setAttribute('tabindex', '0'); }
     if(el.tagName !== 'BUTTON' && !el.hasAttribute('role')){ el.setAttribute('role', 'button'); }
@@ -1028,9 +1012,12 @@
       if(el.closest('.mini-menu')){ closeAllMenus(); }
     }
     el.addEventListener('click', activate);
+    el.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(); }
+    });
   });
 
-  /* ---------- Dropdown overlay managers ---------- */
+  /* ---------- Small dropdown menu helper ---------- */
   var openMenus = [];
   function closeAllMenus(){
     openMenus.forEach(function(m){
@@ -1046,10 +1033,12 @@
       closeAllMenus();
       if(willOpen){ menuEl.classList.add('open'); triggerEl.setAttribute('aria-expanded', 'true'); }
     });
+    menuEl.addEventListener('click', function(e){ e.stopPropagation(); });
   }
   document.addEventListener('click', closeAllMenus);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeAllMenus(); });
 
-  /* ---------- Scope selector switcher panel ---------- */
+  /* ---------- Building switcher ---------- */
   var buildingMenu = document.getElementById('buildingMenu');
   registerMenu(document.getElementById('buildingPicker'), buildingMenu);
   buildingMenu.querySelectorAll('.mini-menu-item[data-building]').forEach(function(item){
@@ -1059,10 +1048,11 @@
       var name = item.dataset.building;
       document.getElementById('buildingName').textContent = name;
       closeAllMenus();
-      showToast('Target building set: ' + name);
+      showToast('Switched to ' + name);
     });
   });
 
+  /* ---------- Notifications ---------- */
   var notifMenu = document.getElementById('notifMenu');
   var notifBadge = document.getElementById('notifBadge');
   registerMenu(document.getElementById('notifBtn'), notifMenu);
@@ -1070,7 +1060,7 @@
     if(notifBadge){ notifBadge.style.display = 'none'; }
   });
 
-  /* ---------- Side navigation drawer ---------- */
+  /* ---------- Sidebar (drawer) ---------- */
   var drawer = document.getElementById('drawer');
   var scrim = document.getElementById('scrim');
   var menuBtn = document.getElementById('menuBtn');
@@ -1078,17 +1068,30 @@
   function openDrawer(){
     drawer.classList.add('open');
     scrim.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    menuBtn.setAttribute('aria-expanded', 'true');
   }
   function closeDrawer(){
     drawer.classList.remove('open');
     scrim.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    menuBtn.setAttribute('aria-expanded', 'false');
   }
   menuBtn.addEventListener('click', openDrawer);
   document.getElementById('drawerCloseBtn').addEventListener('click', closeDrawer);
   scrim.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+  });
+
+  document.getElementById('drawerProfile').addEventListener('click', function(){
+    showToast('Opening profile settings…');
+  });
 
   document.querySelectorAll('.drawer-link').forEach(function(link){
-    link.addEventListener('click', function(){
+    link.setAttribute('tabindex', '0');
+    link.setAttribute('role', 'button');
+    function activateLink(){
       if(link.classList.contains('has-sub')){
         var wasOpen = link.classList.contains('open');
         document.querySelectorAll('.drawer-link.has-sub').forEach(function(x){ x.classList.remove('open'); });
@@ -1097,22 +1100,143 @@
       }
       document.querySelectorAll('.drawer-link').forEach(function(x){ x.classList.remove('active'); });
       link.classList.add('active');
-      showToast(link.dataset.drawerToast || 'Loading component loop…');
+      if(link.dataset.nav){ setActiveTab(link.dataset.nav); }
+      showToast(link.dataset.drawerToast || 'Opening…');
       setTimeout(closeDrawer, 320);
+    }
+    link.addEventListener('click', activateLink);
+    link.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activateLink(); }
     });
   });
 
-  // Dynamic dashboard metric filter tile active states toggle behavior loop controls
-  document.querySelectorAll('.summary-tile').forEach(function(tile){
-    tile.addEventListener('click', function(){
-      document.querySelectorAll('.summary-tile').forEach(function(el){ el.classList.remove('active'); });
-      tile.classList.add('active');
+  document.querySelectorAll('.drawer-sublink').forEach(function(sublink){
+    sublink.setAttribute('tabindex', '0');
+    sublink.setAttribute('role', 'button');
+    function activateSublink(){
+      var parentMenu = sublink.closest('.drawer-submenu');
+      if(parentMenu){ parentMenu.querySelectorAll('.drawer-sublink').forEach(function(x){ x.classList.remove('active'); }); }
+      sublink.classList.add('active');
+      showToast(sublink.dataset.drawerToast || 'Opening…');
+      setTimeout(closeDrawer, 320);
+    }
+    sublink.addEventListener('click', function(e){ e.stopPropagation(); activateSublink(); });
+    sublink.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); e.stopPropagation(); activateSublink(); }
     });
   });
 
   document.getElementById('drawerLogout').addEventListener('click', function(){
-    showToast('Admin profile verification session cleared.');
+    showToast('Logging out…');
     setTimeout(closeDrawer, 320);
+  });
+
+  /* ---------- Fullscreen "Complete Hierarchy" modal ---------- */
+  (function(){
+    var modal = document.getElementById('hierarchyModal');
+    var panZoom = document.getElementById('hierPanZoom');
+    var canvas = document.getElementById('hierCanvas');
+    var scale = 1, panX = 0, panY = 0;
+    var MIN_SCALE = 0.5, MAX_SCALE = 2.6;
+
+    function applyTransform(){
+      canvas.style.transform = 'translate(calc(-50% + ' + panX + 'px), calc(-50% + ' + panY + 'px)) scale(' + scale + ')';
+    }
+
+    function fillCanvas(){
+      if(canvas.dataset.filled) return;
+      var source = document.getElementById('treeSource');
+      if(source){ canvas.appendChild(source.cloneNode(true)); }
+      canvas.dataset.filled = '1';
+    }
+
+    function openHierarchy(){
+      fillCanvas();
+      scale = 1; panX = 0; panY = 0;
+      applyTransform();
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      showToast('Showing complete hierarchy');
+    }
+    function closeHierarchy(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    document.getElementById('expandBtn').addEventListener('click', openHierarchy);
+    document.getElementById('hierCloseBtn').addEventListener('click', closeHierarchy);
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && modal.classList.contains('open')) closeHierarchy();
+    });
+
+    document.getElementById('hierZoomIn').addEventListener('click', function(){
+      scale = Math.min(MAX_SCALE, +(scale + 0.2).toFixed(2)); applyTransform();
+    });
+    document.getElementById('hierZoomOut').addEventListener('click', function(){
+      scale = Math.max(MIN_SCALE, +(scale - 0.2).toFixed(2)); applyTransform();
+    });
+    document.getElementById('hierZoomReset').addEventListener('click', function(){
+      scale = 1; panX = 0; panY = 0; applyTransform();
+    });
+
+    /* Drag to pan (mouse + touch via Pointer Events) */
+    var dragging = false, startX = 0, startY = 0, startPanX = 0, startPanY = 0;
+    panZoom.addEventListener('pointerdown', function(e){
+      dragging = true; panZoom.classList.add('dragging');
+      startX = e.clientX; startY = e.clientY; startPanX = panX; startPanY = panY;
+      try{ panZoom.setPointerCapture(e.pointerId); }catch(err){}
+    });
+    panZoom.addEventListener('pointermove', function(e){
+      if(!dragging) return;
+      panX = startPanX + (e.clientX - startX);
+      panY = startPanY + (e.clientY - startY);
+      applyTransform();
+    });
+    function endDrag(){ dragging = false; panZoom.classList.remove('dragging'); }
+    panZoom.addEventListener('pointerup', endDrag);
+    panZoom.addEventListener('pointercancel', endDrag);
+    panZoom.addEventListener('pointerleave', function(){ if(dragging) endDrag(); });
+
+    /* Wheel = zoom (desktop trackpads / mouse wheel) */
+    panZoom.addEventListener('wheel', function(e){
+      e.preventDefault();
+      var delta = e.deltaY > 0 ? -0.12 : 0.12;
+      scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, +(scale + delta).toFixed(2)));
+      applyTransform();
+    }, { passive:false });
+
+    /* Pinch to zoom (two-finger touch) */
+    var pinchStartDist = null, pinchStartScale = 1;
+    panZoom.addEventListener('touchstart', function(e){
+      if(e.touches.length === 2){
+        pinchStartDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        pinchStartScale = scale;
+      }
+    }, { passive:true });
+    panZoom.addEventListener('touchmove', function(e){
+      if(e.touches.length === 2 && pinchStartDist){
+        e.preventDefault();
+        var dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, +(pinchStartScale * (dist / pinchStartDist)).toFixed(2)));
+        applyTransform();
+      }
+    }, { passive:false });
+    panZoom.addEventListener('touchend', function(e){
+      if(e.touches.length < 2) pinchStartDist = null;
+    });
+  })();
+
+  /* ---------- Discard / Create Zone buttons ---------- */
+  document.getElementById('zoneNameInput').addEventListener('input', function(){
+    var createBtn = document.getElementById('createZoneBtn');
+    if(!createBtn) return;
+    createBtn.classList.toggle('ready', this.value.trim().length > 0);
   });
 </script>
 </body>
