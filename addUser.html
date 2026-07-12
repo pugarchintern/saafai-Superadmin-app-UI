@@ -228,7 +228,7 @@
     display:flex; align-items:center; gap:6px; flex-shrink:0;
     background:linear-gradient(160deg,#fff 0%, var(--orange-soft) 130%); color:var(--orange); border:1.5px solid #FBCBA3;
     font-size:12.5px; font-weight:800; padding:9px 14px; border-radius:12px; white-space:nowrap;
-    box-shadow:0 4px 12px -6px rgba(242,113,28,.4);
+    box-shadow:0 4px 12px -6px rgba(242,113,28,.4); cursor:pointer;
   }
   .back-pill svg{width:13px;height:13px;}
   .back-pill:active{background:var(--orange-soft);}
@@ -264,14 +264,13 @@
   .text-input::placeholder{color:var(--text-faint);}
 
   .select-field{
-    width:100%; display:flex; align-items:center; justify-content:space-between;
-    border:1.5px solid var(--border); border-radius:13px;
+    width:100%; border:1.5px solid var(--border); border-radius:13px;
     background:linear-gradient(180deg,#ffffff 0%, #FBFDFF 100%);
-    padding:14px 14px; font-size:13.5px; color:var(--text-faint); font-weight:600;
-    transition:border-color .15s ease, box-shadow .15s ease;
+    padding:14px 14px; font-size:13.5px; color:var(--text); font-weight:600;
+    outline:none; transition:border-color .15s ease, box-shadow .15s ease;
+    appearance:none; -webkit-appearance:none;
   }
-  .select-field:active{border-color:var(--primary); box-shadow:0 0 0 4px var(--primary-soft);}
-  .select-field svg{width:16px;height:16px; color:var(--text-dim); flex-shrink:0;}
+  .select-field:focus{border-color:var(--primary); box-shadow:0 0 0 4px var(--primary-soft);}
 
   .info-box{
     display:flex; align-items:flex-start; gap:11px;
@@ -281,81 +280,13 @@
   }
   .info-ic{
     width:27px;height:27px;border-radius:50%;
-    background:linear-gradient(145deg,#fff,#EAFBF1); color:var(--green);
+    background:radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(234,251,241,1) 100%); color:var(--green);
     display:flex; align-items:center; justify-content:center; flex-shrink:0;
     box-shadow:0 2px 6px -2px rgba(47,174,109,.5);
   }
   .info-ic svg{width:14px;height:14px;}
   .info-title{font-size:10.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--green); margin-bottom:5px; font-family:'Space Grotesk',sans-serif;}
   .info-text{font-size:12px; color:#3D5B4A; font-weight:500; line-height:1.55;}
-
-  /* ===== Architecture / tree card ===== */
-  .arch-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;}
-  .arch-head-left{display:flex; align-items:center; gap:11px; min-width:0;}
-  .arch-ic{width:38px;height:38px;border-radius:12px; background:linear-gradient(135deg,#6D5CE8,#8B7CFF); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 6px 14px -4px rgba(109,92,232,.5);}
-  .arch-ic svg{width:18px;height:18px;}
-  .arch-title{font-size:14.5px; font-weight:800; letter-spacing:.01em; font-family:'Space Grotesk',sans-serif; color:#181A2E;}
-  .arch-sub{font-size:10.5px; color:var(--text-faint); font-weight:700; letter-spacing:.05em; text-transform:uppercase; margin-top:2px;}
-  .expand-btn{
-    width:34px;height:34px;border-radius:11px;
-    background:linear-gradient(140deg,#fff 0%, var(--violet-soft) 130%); border:1px solid #E1DCFF;
-    display:flex; align-items:center; justify-content:center; color:var(--violet); flex-shrink:0;
-    box-shadow:0 4px 10px -5px rgba(124,108,240,.5);
-  }
-  .expand-btn:active{transform:scale(.93);}
-  .expand-btn svg{width:15px;height:15px;}
-
-  .tree-scroll{overflow-x:auto; padding:22px 4px 6px; margin-top:6px; -webkit-overflow-scrolling:touch;}
-  .tree-scroll::-webkit-scrollbar{display:none;}
-  .tree{display:flex; flex-direction:column; align-items:center; min-width:560px;}
-
-  .node{
-    display:flex; flex-direction:column; align-items:center; gap:6px;
-    background:linear-gradient(165deg,#fff 0%, #FDFEFF 100%); border:1.5px solid var(--border); border-radius:14px;
-    padding:10px 11px; min-width:80px; text-align:center; cursor:pointer;
-    box-shadow:0 1px 2px rgba(16,25,21,.04), 0 8px 16px -10px rgba(16,25,21,.18), inset 0 1px 0 rgba(255,255,255,.9);
-    transition:transform .15s cubic-bezier(.3,.7,.4,1), box-shadow .15s ease;
-  }
-  .node:active{transform:scale(.95);}
-  .node-ic{width:25px;height:25px;border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#fff; box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 3px 8px -2px rgba(16,25,21,.25);}
-  .node-ic svg{width:12px;height:12px;}
-  .node-name{font-size:11px; font-weight:800; letter-spacing:-.01em; color:#181A2E; white-space:nowrap; line-height:1.25; font-family:'Space Grotesk',sans-serif;}
-  .node-meta{font-size:9px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--text-faint);}
-
-  .node.root{background:linear-gradient(165deg,#fff 0%, var(--primary-soft) 140%); border-color:#CFE1FF;}
-  .node.root .node-ic{width:30px;height:30px; background:linear-gradient(140deg,#5FA0FF,var(--primary-deep)); color:#fff;}
-  .node.root .node-ic svg{width:14px;height:14px;}
-
-  .node.floor1{background:linear-gradient(165deg,#fff 0%,#E7EEFF 140%); border-color:#D3E0FF;} .node.floor1 .node-ic{background:linear-gradient(140deg,#6FA6FF,var(--primary));}
-  .node.floor2{background:linear-gradient(165deg,#fff 0%,var(--green-soft) 140%); border-color:#C7EDD8;} .node.floor2 .node-ic{background:linear-gradient(140deg,#57CB8B,var(--green));}
-  .node.floor3{background:linear-gradient(165deg,#fff 0%,var(--orange-soft) 140%); border-color:#FBD9BB;} .node.floor3 .node-ic{background:linear-gradient(140deg,#FF9950,var(--orange));}
-  .node.floor4{background:linear-gradient(165deg,#fff 0%,var(--lime-soft) 140%); border-color:#BFE9F7;} .node.floor4 .node-ic{background:linear-gradient(140deg,#3FCBE8,#0EA5C4);}
-  .node.floor5{background:linear-gradient(165deg,#fff 0%,var(--pink-soft) 140%); border-color:#F8C6D6;} .node.floor5 .node-ic{background:linear-gradient(140deg,#FF7CA0,var(--pink));}
-
-  .node.parking{background:linear-gradient(165deg,#fff 0%,var(--green-soft) 140%); border-color:#C7EDD8;} .node.parking .node-ic{background:linear-gradient(140deg,#57CB8B,var(--green));}
-  .node.lobby{background:linear-gradient(165deg,#fff 0%,var(--orange-soft) 140%); border-color:#FBD9BB;} .node.lobby .node-ic{background:linear-gradient(140deg,#FF9950,var(--orange));}
-  .node.service{background:linear-gradient(165deg,#fff 0%,var(--gray-soft) 140%); border-color:#DDE1E6;} .node.service .node-ic{background:linear-gradient(140deg,#8B93A1,var(--gray));}
-  .node.utility{background:linear-gradient(165deg,#fff 0%,var(--green-soft) 140%); border-color:#C7EDD8;} .node.utility .node-ic{background:linear-gradient(140deg,#57CB8B,var(--green));}
-
-  .row{display:flex; align-items:flex-start; position:relative;}
-  .row-floors{gap:14px; padding-top:22px; position:relative;}
-  .row-zones{gap:14px; padding-top:22px; position:relative; margin-top:4px;}
-
-  .stem-v{width:2px; height:20px; background:var(--border);}
-  .row-floors::before{
-    content:''; position:absolute; top:0; left:6%; right:6%; height:2px; background:var(--border);
-  }
-  .row-floors > .branch{position:relative; display:flex; flex-direction:column; align-items:center;}
-  .row-floors > .branch::before{content:''; position:absolute; top:-22px; left:50%; width:2px; height:22px; background:var(--border);}
-
-  .row-zones{width:60%;}
-  .row-zones::before{content:''; position:absolute; top:0; left:8%; right:8%; height:2px; background:var(--border);}
-  .row-zones > .branch{position:relative; display:flex; flex-direction:column; align-items:center;}
-  .row-zones > .branch::before{content:''; position:absolute; top:-22px; left:50%; width:2px; height:22px; background:var(--border);}
-
-  .tree-hint{display:flex; align-items:center; gap:8px; justify-content:center; margin-top:16px; padding-top:14px; border-top:1px solid var(--border);}
-  .tree-hint svg{width:14px;height:14px; color:var(--text-faint);}
-  .tree-hint span{font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--text-faint);}
 
   /* ===== Action buttons (in-flow, sits above the bottom navbar) ===== */
   .action-row{
@@ -372,7 +303,7 @@
   .action-btn svg{width:16px;height:16px;}
   .action-btn.discard{background:linear-gradient(135deg,#F2711C 0%,#FF8A3D 100%); box-shadow:0 12px 22px -8px rgba(242,113,28,.55), inset 0 1px 0 rgba(255,255,255,.25);}
   .action-btn.discard:active{transform:scale(.97);}
-  .action-btn.create{background:linear-gradient(135deg,#F8CDA8 0%,#FBDCC0 100%); color:#fff; box-shadow:inset 0 1px 0 rgba(255,255,255,.4);}
+  .action-btn.create{background:linear-gradient(135deg,#F8CDA8 0%,#FBDCC0 100%); color:#fff; box-shadow:inset 0 1px 0 rgba(255,255,255,.4); cursor:pointer;}
   .action-btn.create.ready{background:linear-gradient(135deg,#F2711C 0%,#FF9950 100%); box-shadow:0 12px 22px -8px rgba(242,113,28,.55), inset 0 1px 0 rgba(255,255,255,.25);}
   .action-btn.create.ready:active{transform:scale(.97);}
 
@@ -473,114 +404,12 @@
   .notif-text{font-size:12px; font-weight:600; line-height:1.35;}
   .notif-time{font-size:10px; color:var(--text-faint); font-weight:600; margin-top:2px;}
 
-  /* ===== Fullscreen "Complete Hierarchy" modal ===== */
-  .hier-modal{
-    position:absolute; inset:0; z-index:96; display:flex; flex-direction:column;
-    background:
-      radial-gradient(circle at 15% 0%, rgba(124,108,240,.10), transparent 45%),
-      radial-gradient(circle at 90% 10%, rgba(59,130,246,.10), transparent 45%),
-      var(--bg);
-    transform:translateY(100%); transition:transform .38s cubic-bezier(.2,.9,.3,1);
-  }
-  .hier-modal.open{transform:translateY(0);}
-  .hier-modal-head{
-    display:flex; align-items:center; gap:10px; padding:16px 14px 14px;
-    background:linear-gradient(180deg,#FFFFFF 0%,var(--surface-tint) 100%);
-    border-bottom:1px solid var(--border); flex-shrink:0;
-  }
-  .hier-modal-titles{flex:1; min-width:0; text-align:center;}
-  .hmt-title{font-size:14.5px; font-weight:800; font-family:'Space Grotesk',sans-serif; letter-spacing:-.05em; color:#181A2E;}
-  .hmt-sub{font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--text-faint); margin-top:2px;}
-  .hier-pan-zoom{
-    flex:1; position:relative; overflow:hidden; touch-action:none; cursor:grab;
-    background-image:radial-gradient(circle, rgba(148,163,184,.28) 1px, transparent 1px);
-    background-size:22px 22px;
-  }
-  .hier-pan-zoom.dragging{cursor:grabbing;}
-  .hier-canvas{position:absolute; top:50%; left:50%; transform-origin:center center; will-change:transform;}
-  .hier-canvas .tree{min-width:640px; padding:10px 30px 30px;}
-  .hier-canvas .tree-hint{display:none;}
-  .hier-zoom-controls{
-    position:absolute; right:16px; bottom:22px; display:flex; flex-direction:column; gap:9px; z-index:3;
-  }
-  .zoom-btn{
-    width:40px;height:40px;border-radius:13px; border:1px solid var(--border);
-    background:linear-gradient(165deg,#fff 0%, var(--surface-tint) 100%);
-    box-shadow:var(--shadow-sm); font-size:19px; font-weight:800; color:var(--text-dim);
-    display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif;
-  }
-  .zoom-btn:active{transform:scale(.92);}
-  .zoom-btn svg{width:16px;height:16px;}
-  .hier-hint-pill{
-    position:absolute; left:50%; bottom:22px; transform:translateX(-50%); z-index:3;
-    display:flex; align-items:center; gap:7px; background:rgba(20,35,30,.85); color:#fff;
-    padding:9px 14px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:.03em;
-    white-space:nowrap; backdrop-filter:blur(6px);
-  }
-  .hier-hint-pill svg{width:13px;height:13px; color:var(--lime-2); flex-shrink:0;}
-
   @media (max-height:1000px) and (min-width:641px){
     .device{aspect-ratio:auto; width:min(400px, 90vw); height:min(1040px, 96vh);}
   }
   @media (max-height:760px) and (min-width:641px){
     .device{width:min(360px, 88vw); height:min(936px, 97vh);}
   }
-
-  /* ===== User Directory / Registry Specific Styles ===== */
-  .metrics-summary-grid{
-    display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin-bottom:16px;
-  }
-  .summary-tile{
-    background:linear-gradient(180deg,#ffffff 0%, #FBFDFF 100%);
-    border:1.5px solid var(--border); border-radius:13px; padding:10px 6px; text-align:center;
-    box-shadow:inset 0 1px 0 #fff; cursor:pointer;
-  }
-  .summary-tile.active{
-    background:linear-gradient(145deg, #101915 0%, #1A2E26 100%);
-    border-color:#101915;
-  }
-  .summary-tile .count-num{
-    font-size:18px; font-weight:800; font-family:'Space Grotesk',sans-serif; color:#181A2E;
-  }
-  .summary-tile.active .count-num{ color:#fff; }
-  .summary-tile .count-lbl{
-    font-size:8px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--text-faint); margin-top:3px;
-  }
-
-  .directory-list-box{
-    display:flex; flex-direction:column; gap:10px; padding:4px 0; margin-top:2px;
-   
-  }
-  .directory-item{
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    background:linear-gradient(165deg,#fff 0%, #FDFEFF 100%); border:1.5px solid var(--border); border-radius:14px;
-    padding:12px 14px; box-shadow:0 1px 2px rgba(16,25,21,.03);
-  }
-  .member-profile-stack{display:flex; align-items:center; gap:12px; min-width:0;}
-  .member-avatar-badge{
-    width:36px; height:36px; border-radius:50%; background:var(--surface-soft);
-    border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center;
-    font-family:'Space Grotesk',sans-serif; font-size:12.5px; font-weight:800; color:var(--text-dim); flex-shrink:0;
-  }
-  .member-meta-details{min-width:0;}
-  .member-name{font-size:13.5px; font-weight:800; font-family:'Space Grotesk',sans-serif; color:#181A2E; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .member-subtxt{font-size:11px; color:var(--text-faint); font-weight:600; margin-top:2px;}
-
-  .member-right-controls{display:flex; align-items:center; gap:12px; flex-shrink:0;}
-  .role-pill-badge{
-    font-size:9px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
-    padding:4px 8px; border-radius:6px; font-family:'Space Grotesk',sans-serif; text-align:center;
-  }
-  .role-pill-badge.cleaner{background:var(--orange-soft); color:var(--orange);}
-  .role-pill-badge.supervisor{background:var(--green-soft); color:var(--green);}
-  .role-pill-badge.admin{background:var(--primary-soft); color:var(--primary-deep);}
-
-  .inline-action-btn{
-    width:30px; height:30px; border-radius:9px; border:1px solid var(--border);
-    background:linear-gradient(180deg,#ffffff 0%, #FBFDFF 100%);
-    display:flex; align-items:center; justify-content:center; color:var(--text-dim); border:1px solid var(--border); cursor:pointer;
-  }
-  .inline-action-btn svg{width:13px !important; height:13px !important; display:block;}
 </style>
 </head>
 <body>
@@ -646,186 +475,106 @@
         </div>
 
         <main>
-
-          <section>
-            <div class="card page-head">
-              <span class="blueprint-mark tr" aria-hidden="true"></span>
-              <span class="blueprint-mark bl" aria-hidden="true"></span>
-              <svg class="watermark-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-              <div class="page-head-left">
-                <div class="page-ic">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                </div>
-                <div>
-                  <div class="page-title">USER MANAGEMENT</div>
-                  <div class="page-sub">Manage roles, permissions, and staff access</div>
-                  <svg class="title-draw" viewBox="0 0 70 6" aria-hidden="true"><path d="M2 3 H68"/></svg>
-                </div>
-              </div>
-              <button class="back-pill tap-fx" data-toast="Opening new user forms setup…">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              <a href="addUser.html"> ADD NEW USER</a> 
-              </button>
-            </div>
-          </section>
+          
+          <div style="padding: 0 4px 14px 4px;">
+            <button class="back-pill tap-fx" id="topBackBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            <a href="user_management.html">  Back to User List</a>
+            </button>
+          </div>
 
           <section>
             <div class="card">
               <div class="card-head">
                 <div class="card-ic">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
                 <div>
-                  <div class="card-head-title">Registry Counters</div>
-                  <div class="card-head-sub">Filter directory list view scopes</div>
+                  <div class="card-head-title">User Registration</div>
+                  <div class="card-head-sub">Define system permission credentials</div>
                 </div>
               </div>
 
-              <div class="metrics-summary-grid">
-                <div class="summary-tile active tap-fx" data-toast="Filtering all members…">
-                  <div class="count-num">41</div>
-                  <div class="count-lbl">Total Users</div>
+              <div class="info-box" style="margin-top:0px; margin-bottom:18px; background:linear-gradient(135deg, var(--surface-soft) 0%, #F9FDFB 100%); border-color:var(--border);">
+                <div class="info-ic" style="background:#fff; color:var(--amber); box-shadow:0 2px 6px rgba(240,165,39,0.2);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
                 </div>
-                <div class="summary-tile tap-fx" data-toast="Filtering management team…">
-                  <div class="count-num">6</div>
-                  <div class="count-lbl">Supervisor</div>
+                <div>
+                  <div class="info-title" style="color:var(--text-dim); font-size:10px; font-weight:800; letter-spacing:.06em;">ASSIGNED OPERATION NODE</div>
+                  <div class="info-text" style="color:var(--text-faint); font-size:11px;">Select the operation node for this user profile.</div>
                 </div>
-                <div class="summary-tile tap-fx" data-toast="Filtering operational team…">
-                  <div class="count-num">30</div>
-                  <div class="count-lbl">Cleaner</div>
-                </div>
-                <div class="summary-tile tap-fx" data-toast="Filtering facility administration…">
-                  <div class="count-num">5</div>
-                  <div class="count-lbl">Fac. Admin</div>
-                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:8px; margin:20px 0 12px 0; padding-bottom:6px; border-bottom:1px solid var(--border);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--orange);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span style="font-size:11px; font-weight:800; font-family:'Space Grotesk', sans-serif; text-transform:uppercase; letter-spacing:0.04em;">User Information</span>
               </div>
 
               <div class="field">
+                <div class="field-label">Full Name <span class="req">*</span></div>
                 <div class="input-wrap">
-                  <svg class="pre-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                  <input type="text" class="text-input" placeholder="Search by name, email or phone...">
+                  <svg class="pre-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <input type="text" class="text-input" id="userNameInput" placeholder="Legal Name">
                 </div>
               </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+                <div class="field" style="margin:0;">
+                  <div class="field-label">Email</div>
+                  <div class="input-wrap">
+                    <svg class="pre-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    <input type="text" class="text-input" id="userEmailInput" value="srujal@mail.me">
+                  </div>
+                </div>
+                <div class="field" style="margin:0;">
+                  <div class="field-label">Phone <span class="req">*</span></div>
+                  <div class="input-wrap">
+                    <svg class="pre-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.48 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <input type="tel" class="text-input" id="userPhoneInput" value="123XXXXX12">
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:8px; margin:20px 0 12px 0; padding-bottom:6px; border-bottom:1px solid var(--border);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--orange);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span style="font-size:11px; font-weight:800; font-family:'Space Grotesk', sans-serif; text-transform:uppercase; letter-spacing:0.04em;">Access & Security</span>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div class="field" style="margin:0;">
+                  <div class="field-label">Password <span class="req">*</span></div>
+                  <div class="input-wrap">
+                    <svg class="pre-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <input type="password" class="text-input" id="userPasswordInput" value="••••••">
+                  </div>
+                </div>
+                <div class="field" style="margin:0;">
+                  <div class="field-label">Access Level <span class="req">*</span></div>
+                  <div class="input-wrap">
+                    <select class="select-field data-select" id="userRoleSelect">
+                      <option value="cleaner">Cleaner</option>
+                      <option value="supervisor">Supervisor</option>
+                      <option value="admin">Admin</option>
+                      <option value="super_admin">Super Admin</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </section>
 
-          <section>
-            <div class="card">
-              <div class="arch-head">
-                <div class="arch-head-left">
-                  <div class="arch-ic">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                  </div>
-                  <div>
-                    <div class="arch-title">Staff Members</div>
-                    <div class="arch-sub">Directory Registry View</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="directory-list-box">
-                
-                <div class="directory-item">
-                  <div class="member-profile-stack">
-                    <div class="member-avatar-badge">S</div>
-                    <div class="member-meta-details">
-                      <div class="member-name">Sneha Gupta</div>
-                      <div class="member-subtxt">ID: #442 · 9121606496</div>
-                    </div>
-                  </div>
-                  <div class="member-right-controls">
-                    <span class="role-pill-badge cleaner">Cleaner</span>
-                    <button class="inline-action-btn tap-fx" data-toast="Modifying Sneha Gupta configurations…">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="directory-item">
-                  <div class="member-profile-stack">
-                    <div class="member-avatar-badge">N</div>
-                    <div class="member-meta-details">
-                      <div class="member-name">New Cleaner Ktc</div>
-                      <div class="member-subtxt">ID: #441 · 9100025946</div>
-                    </div>
-                  </div>
-                  <div class="member-right-controls">
-                    <span class="role-pill-badge cleaner">Cleaner</span>
-                    <button class="inline-action-btn tap-fx" data-toast="Modifying item configurations…">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="directory-item">
-                  <div class="member-profile-stack">
-                    <div class="member-avatar-badge">T</div>
-                    <div class="member-meta-details">
-                      <div class="member-name">Test90</div>
-                      <div class="member-subtxt">ID: #394 · hjei@gmail.com</div>
-                    </div>
-                  </div>
-                  <div class="member-right-controls">
-                    <span class="role-pill-badge cleaner">Cleaner</span>
-                    <button class="inline-action-btn tap-fx" data-toast="Modifying item configurations…">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="directory-item">
-                  <div class="member-profile-stack">
-                    <div class="member-avatar-badge">K</div>
-                    <div class="member-meta-details">
-                      <div class="member-name">Kamlesh Supervisor Test</div>
-                      <div class="member-subtxt">ID: #386 · KamleshSupervisor.test@safai.com</div>
-                    </div>
-                  </div>
-                  <div class="member-right-controls">
-                    <span class="role-pill-badge supervisor">Supervisor</span>
-                    <button class="inline-action-btn tap-fx" data-toast="Modifying Kamlesh Supervisor configurations…">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="directory-item">
-                  <div class="member-profile-stack">
-                    <div class="member-avatar-badge">H</div>
-                    <div class="member-meta-details">
-                      <div class="member-name">Hyacinth Wolf</div>
-                      <div class="member-subtxt">ID: #277 · gyne@mailinator.com</div>
-                    </div>
-                  </div>
-                  <div class="member-right-controls">
-                    <span class="role-pill-badge admin">Facility Admin</span>
-                    <button class="inline-action-btn tap-fx" data-toast="Modifying Hyacinth Wolf configurations…">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    </button>
-                  </div>
-                </div>
-
-              </div>
-
-              <!-- <div class="tree-hint">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-                <span>Scroll container directly to view hidden registry indices</span>
-              </div> -->
-            </div>
-          </section>
+          <div class="action-row">
+            <button class="action-btn discard tap-fx" id="discardBtn">
+              CANCEL
+            </button>
+            <button class="action-btn create ready tap-fx" id="createZoneBtn">
+              CREATE USER
+            </button>
+          </div>
 
         </main>
 
-        <div class="action-row">
-          <button class="action-btn discard tap-fx" id="discardBtn" data-toast="Filters Reset">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 9 8 9"/></svg>
-            Reset Filters
-          </button>
-          <button class="action-btn create tap-fx" id="createZoneBtn" data-toast="Opening routing loop assignments configurations view…">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Assign Shifts
-          </button>
-        </div>
       </div>
 
       <div class="scrim" id="scrim"></div>
@@ -877,8 +626,8 @@
             <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="drawer-submenu">
-            <div class="drawer-sublink active tap-fx" data-drawer-toast="Opening User List…"><span class="drawer-subdot"></span>User List</div>
-            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Add User…"><span class="drawer-subdot"></span>Add User</div>
+            <div class="drawer-sublink  tap-fx" data-drawer-toast="Opening User List…"><span class="drawer-subdot"></span>User List</div>
+            <div class="drawer-sublink active tap-fx" data-drawer-toast="Opening Add User…"><span class="drawer-subdot"></span>Add User</div>
           </div>
 
           <div class="drawer-link has-sub tap-fx" data-drawer-toast="Opening User Mapping…">
@@ -935,11 +684,9 @@
     <nav class="navbar">
       <div class="navbar-inner">
         <button class="nav-item" data-tab="home">
-             
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-         <a href="index.html">
-          <span>Dashboard</span>
-        </a>
+          <a href="index.html">
+          <span>Dashboard</span></a>
         </button>
         <button class="nav-item" data-tab="washroom">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
@@ -1101,17 +848,31 @@
     });
   });
 
-  // Dynamic dashboard metric filter tile active states toggle behavior loop controls
-  document.querySelectorAll('.summary-tile').forEach(function(tile){
-    tile.addEventListener('click', function(){
-      document.querySelectorAll('.summary-tile').forEach(function(el){ el.classList.remove('active'); });
-      tile.classList.add('active');
-    });
-  });
-
   document.getElementById('drawerLogout').addEventListener('click', function(){
     showToast('Admin profile verification session cleared.');
     setTimeout(closeDrawer, 320);
+  });
+
+  /* ---------- Action button interactions ---------- */
+  document.getElementById('createZoneBtn').addEventListener('click', function() {
+    var name = document.getElementById('userNameInput').value.trim();
+    if(name === "") {
+      showToast("Please enter a valid full name.");
+    } else {
+      showToast("User '" + name + "' created successfully!");
+    }
+  });
+
+  document.getElementById('discardBtn').addEventListener('click', function() {
+    document.getElementById('userNameInput').value = "";
+    document.getElementById('userEmailInput').value = "srujal@mail.me";
+    document.getElementById('userPhoneInput').value = "";
+    document.getElementById('userRoleSelect').selectedIndex = 0;
+    showToast("Forms wiped clean");
+  });
+
+  document.getElementById('topBackBtn').addEventListener('click', function() {
+    showToast("Returning to active User List view directory...");
   });
 </script>
 </body>

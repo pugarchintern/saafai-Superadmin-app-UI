@@ -1,4 +1,761 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cleaner Assignments App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            400: '#fb923c',
+                            500: '#f97316',
+                            600: '#ea580c',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .bottom-sheet-enter { transform: translateY(100%); }
+        .bottom-sheet-enter-active { transform: translateY(0); transition: transform 300ms ease-in-out; }
+        .bottom-sheet-exit { transform: translateY(0); }
+        .bottom-sheet-exit-active { transform: translateY(100%); transition: transform 300ms ease-in-out; }
+    </style>
+</head>
+<body class="bg-gray-200 text-gray-800 font-sans antialiased flex justify-center items-center min-h-screen sm:p-4">
 
-<!-- cleaner assignment page -->
+    <!-- Mobile App Container -->
+    <div class="w-full h-[100dvh] sm:w-[390px] sm:h-[844px] sm:max-h-[95vh] bg-gray-50 relative flex flex-col overflow-hidden sm:border-[14px] sm:border-gray-900 sm:rounded-[3rem] shadow-none sm:shadow-2xl">
+        
+        <div class="hidden sm:block absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[24px] bg-gray-900 rounded-b-3xl z-[60]"></div>
+
+        <!-- Header -->
+        <header class="bg-white px-4 py-3 sm:pt-7 flex items-center justify-between shadow-sm sticky top-0 z-10">
+            <div class="flex items-center gap-3">
+                <button class="w-10 h-10 bg-brand-500 text-white rounded-xl flex items-center justify-center hover:bg-brand-600 transition">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+                <div class="flex flex-col">
+                    <h1 class="text-sm font-semibold text-gray-900 leading-tight">Nagpur Railway St...</h1>
+                    <span class="text-[10px] text-gray-500 font-medium">SUPER ADMIN</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 text-gray-500">
+                <button><i class="fa-regular fa-bell text-lg"></i></button>
+                <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-sm flex items-center justify-center">K</button>
+            </div>
+        </header>
+
+        <!-- Main Dashboard -->
+        <main class="flex-1 overflow-y-auto pb-24 relative" id="main-scroll-area">
+            <div class="p-4 flex items-center justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900 uppercase tracking-tight">Cleaner Assignments</h2>
+                    <p class="text-xs text-gray-500 font-medium tracking-wide">SYSTEM PERSONNEL MAPPING</p>
+                </div>
+                <button onclick="openModal()" class="bg-brand-500 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-md shadow-brand-500/30 flex items-center gap-1 active:scale-95 transition">
+                    <i class="fa-solid fa-plus"></i> ADD
+                </button>
+            </div>
+
+            <div class="px-4 pb-2">
+                <div class="flex gap-3 overflow-x-auto hide-scrollbar snap-x pb-2">
+                    <div class="snap-start min-w-[140px] bg-white border-l-4 border-gray-800 rounded-xl p-4 shadow-sm flex flex-col">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Total Staff</p>
+                        <div class="flex items-end justify-between mt-auto">
+                            <span class="text-3xl font-black text-gray-900 leading-none">76</span>
+                            <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500"><i class="fa-solid fa-users text-sm"></i></div>
+                        </div>
+                    </div>
+                    <div class="snap-start min-w-[140px] bg-white border-l-4 border-brand-500 rounded-xl p-4 shadow-sm flex flex-col">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Assigned</p>
+                        <div class="flex items-end justify-between mt-auto">
+                            <span class="text-3xl font-black text-gray-900 leading-none">13</span>
+                            <div class="w-8 h-8 rounded-full bg-brand-50 flex items-center justify-center text-brand-500"><i class="fa-solid fa-circle-check text-sm"></i></div>
+                        </div>
+                    </div>
+                    <div class="snap-start min-w-[140px] bg-white border-l-4 border-red-500 rounded-xl p-4 shadow-sm flex flex-col">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Unassigned</p>
+                        <div class="flex items-end justify-between mt-auto">
+                            <span class="text-3xl font-black text-gray-900 leading-none">2</span>
+                            <div class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-500"><i class="fa-solid fa-circle-exclamation text-sm"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-4 mt-2 space-y-3 pb-8" id="list-container">
+                <!-- Populated by JS -->
+            </div>
+        </main>
+
+        <!-- Create Assignment Modal -->
+        <div id="modal-backdrop" class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300 rounded-[inherit]"></div>
+        
+        <div id="create-modal" class="absolute bottom-0 left-0 right-0 w-full bg-white rounded-t-3xl shadow-2xl z-50 bottom-sheet-enter flex flex-col" style="height: 90%; display: none;">
+            
+            <div class="w-full flex justify-center pt-3 pb-1" onclick="closeModal()">
+                <div class="w-12 h-1.5 bg-gray-300 rounded-full cursor-pointer"></div>
+            </div>
+
+            <div class="px-5 pb-3 pt-1 flex justify-between items-center border-b border-gray-100">
+                <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <i class="fa-regular fa-clipboard text-gray-500"></i> Create Assignments
+                </h3>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-5 space-y-6 relative" id="modal-scroll-area">
+                
+                <!-- Multiple/Single Mode Toggle -->
+                <div class="flex items-center justify-between bg-gray-50 border border-gray-100 rounded-2xl p-4 cursor-pointer" onclick="toggleMode()">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600 shrink-0" id="mode-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-900 uppercase" id="mode-title">Multiple Mode</p>
+                            <p class="text-[10px] text-gray-500" id="mode-desc">Bulk mapping active</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer pointer-events-none">
+                        <input type="checkbox" id="mode-toggle-checkbox" checked class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-500 flex items-center justify-between px-1.5">
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Roles Chips -->
+                <div>
+                    <div class="flex flex-wrap gap-2" id="role-chips-container">
+                        <button type="button" onclick="selectRole(this, 'ALL ROLES')" class="role-chip px-3 py-1.5 bg-brand-50 text-brand-600 text-xs font-bold rounded-lg border border-brand-200 transition-colors">ALL ROLES</button>
+                        <button type="button" onclick="selectRole(this, 'ADMIN')" class="role-chip px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-lg border border-gray-200 transition-colors">ADMIN</button>
+                        <button type="button" onclick="selectRole(this, 'SUPERVISOR')" class="role-chip px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-lg border border-gray-200 transition-colors">SUPERVISOR</button>
+                        <button type="button" onclick="selectRole(this, 'CLEANER')" class="role-chip px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-lg border border-gray-200 transition-colors">CLEANER</button>
+                        <button type="button" onclick="selectRole(this, 'FACILITY ADMIN')" class="role-chip px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-lg border border-gray-200 transition-colors">FACILITY ADMIN</button>
+                    </div>
+                </div>
+
+                <!-- Custom User Dropdown -->
+                <div class="relative">
+                    <label class="block text-[10px] font-bold text-gray-900 uppercase tracking-wider mb-2">Select Users (<span id="selected-users-count">0</span> SELECTED)</label>
+                    <button type="button" onclick="toggleUserDropdown(event)" class="w-full flex justify-between items-center text-left bg-white border border-gray-200 rounded-xl py-3 px-4 text-sm text-gray-700 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+                        <span id="user-dropdown-label">Click to select users...</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+                    </button>
+
+                    <!-- User Menu -->
+                    <div id="user-dropdown-menu" class="hidden absolute left-0 right-0 top-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-20 flex flex-col" style="max-height: 250px;">
+                        <div class="p-2 border-b border-gray-100 relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                            <input type="text" id="user-search" onkeyup="renderUserDropdownList()" placeholder="Search users..." class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-8 pr-3 text-sm focus:outline-none focus:border-brand-500">
+                        </div>
+                        <div class="p-2 border-b border-gray-100" id="user-select-all-container">
+                            <button type="button" onclick="toggleSelectAllUsers()" class="w-full text-left px-2 py-1.5 text-xs font-bold text-brand-600 hover:bg-brand-50 rounded flex items-center gap-2">
+                                <i class="fa-regular fa-square" id="user-select-all-icon"></i> <span id="user-select-all-text">Select All</span>
+                            </button>
+                        </div>
+                        <div id="user-list-items" class="overflow-y-auto p-1 flex-1 hide-scrollbar">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                    
+                    <!-- Selected User Pills -->
+                    <div id="selected-users-container" class="mt-3 flex flex-wrap gap-2"></div>
+                </div>
+
+                <!-- Custom Zone Dropdown -->
+                <div class="relative mt-2">
+                    <label class="block text-[10px] font-bold text-gray-900 uppercase tracking-wider mb-2">Select Zones (<span id="selected-zones-count">0</span> SELECTED)</label>
+                    <button type="button" onclick="toggleZoneDropdown(event)" class="w-full flex justify-between items-center text-left bg-white border border-gray-200 rounded-xl py-3 px-4 text-sm text-gray-700 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+                        <span id="zone-dropdown-label">Click to select zones...</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+                    </button>
+
+                    <!-- Zone Menu -->
+                    <div id="zone-dropdown-menu" class="hidden absolute left-0 right-0 top-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-20 flex flex-col" style="max-height: 200px;">
+                        <div id="zone-list-items" class="overflow-y-auto p-1 flex-1 hide-scrollbar">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                    
+                    <!-- Selected Zone Pills -->
+                    <div id="selected-zones-container" class="mt-3 flex flex-wrap gap-2"></div>
+                </div>
+
+                <!-- Auto Assign Checkbox -->
+                <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-xl bg-gray-50/50 mt-1">
+                    <div class="mt-0.5">
+                        <input type="checkbox" id="auto-assign-checkbox" onchange="handleAutoAssign()" class="w-4 h-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500">
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-900">Assign all locations in selected zones</p>
+                        <p class="text-[10px] text-gray-500 mt-0.5 leading-snug">Automatically selects all matching washrooms in background.</p>
+                    </div>
+                </label>
+
+                <!-- Custom Location Dropdown -->
+                <div class="relative pb-6 mt-1">
+                    <label class="block text-[10px] font-bold text-gray-900 uppercase tracking-wider mb-2">Select Locations (<span id="selected-locations-count">0</span> SELECTED)</label>
+                    <button type="button" onclick="toggleLocationDropdown(event)" class="w-full flex justify-between items-center text-left bg-white border border-gray-200 rounded-xl py-3 px-4 text-sm text-gray-700 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+                        <span id="location-dropdown-label">Click to select locations...</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+                    </button>
+
+                    <!-- Location Menu -->
+                    <div id="location-dropdown-menu" class="hidden absolute left-0 right-0 top-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-20 flex flex-col" style="max-height: 250px;">
+                        <div class="p-2 border-b border-gray-100 relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                            <input type="text" id="location-search" onkeyup="renderLocationDropdownList()" placeholder="Search locations..." class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-8 pr-3 text-sm focus:outline-none focus:border-brand-500">
+                        </div>
+                        <div class="p-2 border-b border-gray-100">
+                            <button type="button" onclick="toggleSelectAllLocations()" class="w-full text-left px-2 py-1.5 text-xs font-bold text-brand-600 hover:bg-brand-50 rounded flex items-center gap-2">
+                                <i class="fa-regular fa-square" id="location-select-all-icon"></i> <span id="location-select-all-text">Select All</span>
+                            </button>
+                        </div>
+                        <div id="location-list-items" class="overflow-y-auto p-1 flex-1 hide-scrollbar">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Selected Location Pills -->
+                    <div id="selected-locations-container" class="mt-3 flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Sticky Bottom Action -->
+            <div class="p-4 bg-white border-t border-gray-100 flex justify-end pb-safe z-30 relative">
+                <button id="create-btn" onclick="createAssignments()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 px-4 rounded-xl flex justify-center items-center gap-2 shadow-lg shadow-brand-500/30 transition active:scale-[0.98]">
+                    <i class="fa-solid fa-check"></i> Create 0 Assignments
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock Data
+        let assignmentsData = [
+            { id: 1, name: 'Nikhil Test', phone: '7666267910', location: 'Office Floor-3 Washroom 2', role: 'CLEANER', status: 'ASSIGNED', date: '5/30/2026', initial: 'NT' },
+            { id: 2, name: 'Akshay L.', phone: '9876543210', location: 'Main Entrance Washroom', role: 'CLEANER', status: 'ASSIGNED', date: '6/01/2026', initial: 'AL' }
+        ];
+
+        const allUsers = [
+            { id: 101, name: 'Alice Smith', role: 'ADMIN', phone: '9876543201', initial: 'AS', color: 'bg-gray-100 text-gray-700' },
+            { id: 102, name: 'Bob Jones', role: 'ADMIN', phone: '9876543202', initial: 'BJ', color: 'bg-gray-100 text-gray-700' },
+            { id: 103, name: 'Charlie Brown', role: 'SUPERVISOR', phone: '9876543203', initial: 'CB', color: 'bg-blue-100 text-blue-700' },
+            { id: 104, name: 'Diana Prince', role: 'SUPERVISOR', phone: '9876543204', initial: 'DP', color: 'bg-blue-100 text-blue-700' },
+            { id: 105, name: 'Akshay Lokhande', role: 'CLEANER', phone: '9876543205', initial: 'AL', color: 'bg-purple-100 text-purple-700' },
+            { id: 106, name: 'John Doe', role: 'CLEANER', phone: '9876543206', initial: 'JD', color: 'bg-purple-100 text-purple-700' },
+            { id: 107, name: 'Eve Davis', role: 'FACILITY ADMIN', phone: '9876543207', initial: 'ED', color: 'bg-orange-100 text-orange-700' },
+            { id: 108, name: 'Frank White', role: 'FACILITY ADMIN', phone: '9876543208', initial: 'FW', color: 'bg-orange-100 text-orange-700' }
+        ];
+
+        const allZones = [
+            { id: 301, name: 'North Zone' },
+            { id: 302, name: 'South Zone' },
+            { id: 303, name: 'Central Zone' }
+        ];
+
+        const allLocations = [
+            { id: 201, name: 'Office Floor-1 Washroom 1', zoneId: 301 },
+            { id: 202, name: 'Office Floor-2 Washroom 2', zoneId: 301 },
+            { id: 203, name: 'Main Entrance Washroom', zoneId: 302 },
+            { id: 204, name: 'Cafeteria Washroom', zoneId: 302 },
+            { id: 205, name: 'Platform 1 North Washroom', zoneId: 303 }
+        ];
+
+        // State variables
+        let isMultiMode = true;
+        let currentRoleFilter = 'ALL ROLES';
+        let selectedUsers = [];
+        let selectedZones = [];
+        let selectedLocations = [];
+        let isUserMenuOpen = false;
+        let isLocMenuOpen = false;
+        let isZoneMenuOpen = false;
+
+        // --- DASHBOARD RENDERING ---
+        function renderAssignments() {
+            const container = document.getElementById('list-container');
+            container.innerHTML = '';
+            assignmentsData.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 relative">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-800 font-bold text-sm flex items-center justify-center shrink-0">
+                                    ${item.initial}
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-gray-900 leading-tight">${item.name}</h4>
+                                    <p class="text-[10px] text-gray-500">${item.phone}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-3 mb-3 border border-gray-100/50">
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <i class="fa-solid fa-location-dot text-brand-500 text-xs"></i>
+                                <span class="text-xs font-bold text-gray-800">${item.location}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-50 text-blue-600 text-[9px] font-bold px-2 py-0.5 rounded border border-blue-100 uppercase">${item.role}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between border-t border-gray-100 pt-3">
+                            <div class="flex items-center gap-1.5 text-[10px] text-gray-500 font-medium">
+                                <i class="fa-regular fa-calendar"></i> Assigned on: ${item.date}
+                            </div>
+                        </div>
+                        <div class="absolute -left-1.5 -top-1.5 w-5 h-5 bg-blue-50 border border-blue-100 text-blue-600 rounded-full flex items-center justify-center text-[9px] font-bold shadow-sm">
+                            ${index + 1}
+                        </div>
+                    </div>`;
+            });
+        }
+
+        // --- MODAL LOGIC ---
+        function toggleMode() {
+            isMultiMode = !isMultiMode;
+            document.getElementById('mode-toggle-checkbox').checked = isMultiMode;
+            document.getElementById('mode-title').textContent = isMultiMode ? 'Multiple Mode' : 'Single Mode';
+            document.getElementById('mode-desc').textContent = isMultiMode ? 'Bulk mapping active' : 'Assign one user at a time';
+            document.getElementById('mode-icon').innerHTML = isMultiMode ? '<i class="fa-solid fa-users"></i>' : '<i class="fa-solid fa-user"></i>';
+            document.getElementById('user-select-all-container').style.display = isMultiMode ? 'block' : 'none';
+            
+            // Reset Selections when toggling mode
+            selectedUsers = [];
+            updateSelectionsUI();
+            renderUserDropdownList();
+        }
+
+        function selectRole(btn, role) {
+            document.querySelectorAll('.role-chip').forEach(chip => {
+                chip.className = 'role-chip px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-lg border border-gray-200 transition-colors';
+            });
+            btn.className = 'role-chip px-3 py-1.5 bg-brand-50 text-brand-600 text-xs font-bold rounded-lg border border-brand-200 transition-colors';
+            currentRoleFilter = role;
+            renderUserDropdownList();
+        }
+
+        // --- CUSTOM DROPDOWN HELPERS ---
+        function toggleUserDropdown(e) {
+            if(e) e.stopPropagation();
+            isUserMenuOpen = !isUserMenuOpen;
+            isLocMenuOpen = false;
+            isZoneMenuOpen = false;
+            document.getElementById('user-dropdown-menu').style.display = isUserMenuOpen ? 'flex' : 'none';
+            document.getElementById('location-dropdown-menu').style.display = 'none';
+            document.getElementById('zone-dropdown-menu').style.display = 'none';
+            if(isUserMenuOpen) renderUserDropdownList();
+        }
+
+        function toggleZoneDropdown(e) {
+            if(e) e.stopPropagation();
+            isZoneMenuOpen = !isZoneMenuOpen;
+            isUserMenuOpen = false;
+            isLocMenuOpen = false;
+            document.getElementById('zone-dropdown-menu').style.display = isZoneMenuOpen ? 'flex' : 'none';
+            document.getElementById('user-dropdown-menu').style.display = 'none';
+            document.getElementById('location-dropdown-menu').style.display = 'none';
+            if(isZoneMenuOpen) renderZoneDropdownList();
+        }
+
+        function toggleLocationDropdown(e) {
+            if(e) e.stopPropagation();
+            isLocMenuOpen = !isLocMenuOpen;
+            isUserMenuOpen = false;
+            isZoneMenuOpen = false;
+            document.getElementById('location-dropdown-menu').style.display = isLocMenuOpen ? 'flex' : 'none';
+            document.getElementById('user-dropdown-menu').style.display = 'none';
+            document.getElementById('zone-dropdown-menu').style.display = 'none';
+            if(isLocMenuOpen) renderLocationDropdownList();
+        }
+
+        document.addEventListener('click', (e) => {
+            if (isUserMenuOpen && !e.target.closest('#user-dropdown-menu') && !e.target.closest('button[onclick^="toggleUser"]')) toggleUserDropdown();
+            if (isLocMenuOpen && !e.target.closest('#location-dropdown-menu') && !e.target.closest('button[onclick^="toggleLoc"]')) toggleLocationDropdown();
+            if (isZoneMenuOpen && !e.target.closest('#zone-dropdown-menu') && !e.target.closest('button[onclick^="toggleZone"]')) toggleZoneDropdown();
+        });
+
+        // --- RENDER USER DROPDOWN ---
+        function renderUserDropdownList() {
+            const searchTerm = document.getElementById('user-search').value.toLowerCase();
+            const container = document.getElementById('user-list-items');
+            
+            const filtered = allUsers.filter(u => {
+                const matchesRole = currentRoleFilter === 'ALL ROLES' || u.role === currentRoleFilter;
+                const matchesSearch = u.name.toLowerCase().includes(searchTerm);
+                return matchesRole && matchesSearch;
+            });
+
+            container.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<p class="text-xs text-gray-500 p-3 text-center">No users found</p>';
+                return;
+            }
+
+            filtered.forEach(user => {
+                const isSelected = selectedUsers.some(su => su.id === user.id);
+                const icon = isSelected ? 'fa-solid fa-square-check text-brand-500' : 'fa-regular fa-square text-gray-300';
+                
+                container.innerHTML += `
+                    <div onclick="handleUserClick(${user.id})" class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                        <i class="${icon} text-base flex-shrink-0"></i>
+                        <div class="flex justify-between items-center w-full">
+                            <span class="text-sm font-medium text-gray-800">${user.name}</span>
+                            <span class="text-[9px] px-1.5 py-0.5 rounded-full font-bold ${user.color}">${user.role}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            updateSelectAllUI('user', filtered, selectedUsers);
+        }
+
+        // --- RENDER ZONE DROPDOWN ---
+        function renderZoneDropdownList() {
+            const container = document.getElementById('zone-list-items');
+            container.innerHTML = '';
+            
+            allZones.forEach(zone => {
+                const isSelected = selectedZones.some(sz => sz.id === zone.id);
+                const icon = isSelected ? 'fa-solid fa-square-check text-brand-500' : 'fa-regular fa-square text-gray-300';
+                
+                container.innerHTML += `
+                    <div onclick="handleZoneClick(${zone.id})" class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                        <i class="${icon} text-base flex-shrink-0"></i>
+                        <span class="text-sm font-medium text-gray-800">${zone.name}</span>
+                    </div>
+                `;
+            });
+        }
+
+        // --- RENDER LOCATION DROPDOWN ---
+        function renderLocationDropdownList() {
+            const searchTerm = document.getElementById('location-search').value.toLowerCase();
+            const container = document.getElementById('location-list-items');
+            
+            // Filter locations by search term AND selected zones (if any)
+            const filtered = allLocations.filter(loc => {
+                const matchesSearch = loc.name.toLowerCase().includes(searchTerm);
+                const matchesZone = selectedZones.length === 0 || selectedZones.some(z => z.id === loc.zoneId);
+                return matchesSearch && matchesZone;
+            });
+            
+            container.innerHTML = '';
+            if (filtered.length === 0) {
+                container.innerHTML = '<p class="text-xs text-gray-500 p-3 text-center">No locations found</p>';
+                return;
+            }
+
+            filtered.forEach(loc => {
+                const isSelected = selectedLocations.some(sl => sl.id === loc.id);
+                const icon = isSelected ? 'fa-solid fa-square-check text-brand-500' : 'fa-regular fa-square text-gray-300';
+                
+                container.innerHTML += `
+                    <div onclick="handleLocationClick(${loc.id})" class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                        <i class="${icon} text-base flex-shrink-0"></i>
+                        <span class="text-sm font-medium text-gray-800">${loc.name}</span>
+                    </div>
+                `;
+            });
+
+            updateSelectAllUI('location', filtered, selectedLocations);
+        }
+
+        // --- SELECTION HANDLERS ---
+        function handleUserClick(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            const index = selectedUsers.findIndex(u => u.id === userId);
+
+            if (index > -1) {
+                selectedUsers.splice(index, 1);
+            } else {
+                if (!isMultiMode) selectedUsers = []; // Clear array if single mode
+                selectedUsers.push(user);
+                if(!isMultiMode) toggleUserDropdown(); // Auto close if single mode
+            }
+            
+            updateSelectionsUI();
+            renderUserDropdownList();
+        }
+
+        function handleZoneClick(zoneId) {
+            const zone = allZones.find(z => z.id === zoneId);
+            const index = selectedZones.findIndex(z => z.id === zoneId);
+            
+            if (index > -1) selectedZones.splice(index, 1);
+            else selectedZones.push(zone);
+
+            handleAutoAssign(); // Re-evaluate auto-assign if checked
+            
+            updateSelectionsUI();
+            renderZoneDropdownList();
+        }
+
+        function handleLocationClick(locId) {
+            const loc = allLocations.find(l => l.id === locId);
+            const index = selectedLocations.findIndex(l => l.id === locId);
+            
+            if (index > -1) {
+                selectedLocations.splice(index, 1);
+                document.getElementById('auto-assign-checkbox').checked = false; // Uncheck auto if manually removed
+            }
+            else selectedLocations.push(loc);
+
+            updateSelectionsUI();
+            renderLocationDropdownList();
+        }
+
+        function removeUser(userId) {
+            selectedUsers = selectedUsers.filter(u => u.id !== userId);
+            updateSelectionsUI();
+            if(isUserMenuOpen) renderUserDropdownList();
+        }
+
+        function removeLocation(locId) {
+            selectedLocations = selectedLocations.filter(l => l.id !== locId);
+            document.getElementById('auto-assign-checkbox').checked = false;
+            updateSelectionsUI();
+            if(isLocMenuOpen) renderLocationDropdownList();
+        }
+
+        function removeZone(zoneId) {
+            selectedZones = selectedZones.filter(z => z.id !== zoneId);
+            handleAutoAssign(); 
+            updateSelectionsUI();
+            if(isZoneMenuOpen) renderZoneDropdownList();
+        }
+
+        function handleAutoAssign() {
+            const isChecked = document.getElementById('auto-assign-checkbox').checked;
+            if (isChecked && selectedZones.length > 0) {
+                const validLocations = allLocations.filter(loc => selectedZones.some(z => z.id === loc.zoneId));
+                validLocations.forEach(loc => {
+                    if(!selectedLocations.some(sl => sl.id === loc.id)) {
+                        selectedLocations.push(loc);
+                    }
+                });
+            }
+            updateSelectionsUI();
+            if(isLocMenuOpen) renderLocationDropdownList();
+        }
+
+        // --- SELECT ALL LOGIC ---
+        function toggleSelectAllUsers() {
+            const searchTerm = document.getElementById('user-search').value.toLowerCase();
+            const filtered = allUsers.filter(u => 
+                (currentRoleFilter === 'ALL ROLES' || u.role === currentRoleFilter) && 
+                u.name.toLowerCase().includes(searchTerm)
+            );
+
+            const allSelected = filtered.every(f => selectedUsers.some(su => su.id === f.id));
+            
+            if (allSelected) {
+                selectedUsers = selectedUsers.filter(su => !filtered.some(f => f.id === su.id));
+            } else {
+                filtered.forEach(f => {
+                    if (!selectedUsers.some(su => su.id === f.id)) selectedUsers.push(f);
+                });
+            }
+            updateSelectionsUI();
+            renderUserDropdownList();
+        }
+
+        function toggleSelectAllLocations() {
+            const searchTerm = document.getElementById('location-search').value.toLowerCase();
+            const filtered = allLocations.filter(l => l.name.toLowerCase().includes(searchTerm));
+
+            const allSelected = filtered.every(f => selectedLocations.some(sl => sl.id === f.id));
+            
+            if (allSelected) {
+                selectedLocations = selectedLocations.filter(sl => !filtered.some(f => f.id === sl.id));
+            } else {
+                filtered.forEach(f => {
+                    if (!selectedLocations.some(sl => sl.id === f.id)) selectedLocations.push(f);
+                });
+            }
+            updateSelectionsUI();
+            renderLocationDropdownList();
+        }
+
+        function updateSelectAllUI(type, filteredList, selectedList) {
+            const allSelected = filteredList.length > 0 && filteredList.every(f => selectedList.some(s => s.id === f.id));
+            const iconEl = document.getElementById(`${type}-select-all-icon`);
+            const textEl = document.getElementById(`${type}-select-all-text`);
+            
+            if(!iconEl) return;
+
+            iconEl.className = allSelected ? 'fa-solid fa-square-check text-brand-600' : 'fa-regular fa-square text-gray-400';
+            textEl.textContent = allSelected ? 'Deselect All' : `Select All (${filteredList.length})`;
+        }
+
+        // --- UPDATE UI PILLS & COUNTS ---
+        function updateSelectionsUI() {
+            // User UI Updates
+            const userContainer = document.getElementById('selected-users-container');
+            document.getElementById('selected-users-count').textContent = selectedUsers.length;
+            
+            if (selectedUsers.length > 0) {
+                document.getElementById('user-dropdown-label').innerHTML = `<span class="text-brand-600 font-bold">${selectedUsers.length} user${selectedUsers.length>1?'s':''} selected</span>`;
+            } else {
+                document.getElementById('user-dropdown-label').textContent = 'Click to select users...';
+            }
+
+            userContainer.innerHTML = '';
+            selectedUsers.forEach(user => {
+                userContainer.innerHTML += `
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-brand-50 border border-brand-100 rounded-lg">
+                        <span class="text-xs font-semibold text-gray-800">${user.name}</span>
+                        <span class="${user.color} text-[8px] font-bold px-1.5 py-0.5 rounded uppercase">${user.role}</span>
+                        <button onclick="removeUser(${user.id})" class="ml-1 text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
+                    </div>`;
+            });
+
+            // Zone UI Updates
+            const zoneContainer = document.getElementById('selected-zones-container');
+            document.getElementById('selected-zones-count').textContent = selectedZones.length;
+            
+            if (selectedZones.length > 0) {
+                document.getElementById('zone-dropdown-label').innerHTML = `<span class="text-brand-600 font-bold">${selectedZones.length} zone${selectedZones.length>1?'s':''} selected</span>`;
+            } else {
+                document.getElementById('zone-dropdown-label').textContent = 'Click to select zones...';
+            }
+
+            zoneContainer.innerHTML = '';
+            selectedZones.forEach(zone => {
+                zoneContainer.innerHTML += `
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-brand-50 border border-brand-100 rounded-lg">
+                        <span class="text-xs font-semibold text-brand-800">${zone.name}</span>
+                        <button onclick="removeZone(${zone.id})" class="ml-1 text-brand-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
+                    </div>`;
+            });
+
+            // Location UI Updates
+            const locContainer = document.getElementById('selected-locations-container');
+            document.getElementById('selected-locations-count').textContent = selectedLocations.length;
+            
+            if (selectedLocations.length > 0) {
+                document.getElementById('location-dropdown-label').innerHTML = `<span class="text-brand-600 font-bold">${selectedLocations.length} location${selectedLocations.length>1?'s':''} selected</span>`;
+            } else {
+                document.getElementById('location-dropdown-label').textContent = 'Click to select locations...';
+            }
+
+            locContainer.innerHTML = '';
+            selectedLocations.forEach(loc => {
+                locContainer.innerHTML += `
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 border border-gray-200 rounded-lg">
+                        <span class="text-xs font-semibold text-gray-800 truncate max-w-[150px]">${loc.name}</span>
+                        <button onclick="removeLocation(${loc.id})" class="ml-1 text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
+                    </div>`;
+            });
+
+            // Button Update
+            const btn = document.getElementById('create-btn');
+            const total = selectedUsers.length * selectedLocations.length;
+            btn.innerHTML = `<i class="fa-solid fa-check"></i> Create ${total} Assignment${total !== 1 ? 's' : ''}`;
+        }
+
+        // --- FORM SUBMIT ---
+        function createAssignments() {
+            if (selectedUsers.length === 0 || selectedLocations.length === 0) {
+                const btn = document.getElementById('create-btn');
+                const orig = btn.innerHTML;
+                btn.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Select Users & Locations`;
+                btn.classList.replace('bg-brand-500', 'bg-red-500');
+                
+                setTimeout(() => {
+                    btn.innerHTML = orig;
+                    btn.classList.replace('bg-red-500', 'bg-brand-500');
+                }, 2000);
+                return;
+            }
+
+            const today = new Date();
+            const dateStr = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+
+            selectedUsers.forEach((user) => {
+                selectedLocations.forEach((loc) => {
+                    assignmentsData.unshift({
+                        id: Date.now() + Math.random(),
+                        name: user.name,
+                        phone: user.phone,
+                        location: loc.name,
+                        role: user.role,
+                        status: 'ASSIGNED',
+                        date: dateStr,
+                        initial: user.initial
+                    });
+                });
+            });
+
+            renderAssignments();
+            
+            // Reset
+            selectedUsers = [];
+            selectedZones = [];
+            selectedLocations = [];
+            document.getElementById('auto-assign-checkbox').checked = false;
+            updateSelectionsUI();
+            closeModal();
+            document.getElementById('main-scroll-area').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- MODAL UTILS ---
+        const modal = document.getElementById('create-modal');
+        const backdrop = document.getElementById('modal-backdrop');
+
+        function openModal() {
+            modal.style.display = 'flex';
+            backdrop.style.display = 'block';
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                backdrop.classList.add('opacity-100');
+                modal.classList.remove('bottom-sheet-enter');
+                modal.classList.add('bottom-sheet-enter-active');
+            }, 10);
+        }
+
+        function closeModal() {
+            backdrop.classList.remove('opacity-100');
+            backdrop.classList.add('opacity-0');
+            modal.classList.remove('bottom-sheet-enter-active');
+            modal.classList.add('bottom-sheet-exit-active');
+            isUserMenuOpen = false;
+            isLocMenuOpen = false;
+            isZoneMenuOpen = false;
+            document.getElementById('user-dropdown-menu').style.display = 'none';
+            document.getElementById('location-dropdown-menu').style.display = 'none';
+            document.getElementById('zone-dropdown-menu').style.display = 'none';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                backdrop.style.display = 'none';
+                modal.classList.remove('bottom-sheet-exit-active');
+                modal.classList.add('bottom-sheet-enter');
+            }, 300);
+        }
+
+        backdrop.addEventListener('click', closeModal);
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAssignments();
+            updateSelectionsUI();
+        });
+    </script>
+</body>
 </html>
