@@ -1,0 +1,4943 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Safai · Washroom Locations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* ===== Safai token system — subtle blue identity, matched to the dashboard build ===== */
+        --bg: #f5f7fa;
+        --surface: #ffffff;
+        --surface-soft: #eef3f9;
+        --surface-tint: #e9f1ff;
+        --border: #e1e8f0;
+        --text: #111827;
+        --text-dim: #5b6472;
+        --text-faint: #94a0ac;
+
+        --primary: #3b82f6;
+        --accent: #60a5fa;
+        --primary-deep: #1d4ed8;
+        --primary-soft: #e6f0ff;
+
+        --cta: #f0a527;
+        --cta-deep: #8f5608;
+        --cta-soft: #fff3dc;
+
+        --red: #e8435a;
+        --red-soft: #fde7ea;
+
+        --green: #0e7a56;
+        --green-soft: #e5f5ef;
+
+        --amber: #c9861d;
+        --amber-soft: #fdf1dd;
+
+        --shadow-sm: 0 2px 10px rgba(29, 78, 216, 0.07);
+        --shadow-md: 0 8px 24px rgba(29, 78, 216, 0.1);
+        --shadow-glow: 0 10px 30px rgba(59, 130, 246, 0.22);
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        min-height: 100vh;
+        font-family: "Inter", sans-serif;
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 10px;
+        background:
+          radial-gradient(
+            circle at 12% 8%,
+            rgba(59, 130, 246, 0.1),
+            transparent 42%
+          ),
+          radial-gradient(
+            circle at 88% 14%,
+            rgba(240, 165, 39, 0.08),
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 50% 100%,
+            rgba(29, 78, 216, 0.06),
+            transparent 55%
+          ),
+          radial-gradient(
+            circle at 50% 45%,
+            rgba(255, 255, 255, 0.35),
+            transparent 60%
+          ),
+          #eef2f7;
+      }
+      .display {
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .num {
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ===================== PHONE FRAME (same dimensions as the hierarchy build) ===================== */
+      .device {
+        position: relative;
+        width: min(420px, 92vw);
+        aspect-ratio: 375/975;
+        background: #12181f;
+        border-radius: 58px;
+        padding: 14px;
+        box-shadow:
+          0 40px 80px -20px rgba(20, 17, 32, 0.45),
+          0 10px 30px -10px rgba(20, 17, 32, 0.35),
+          inset 0 0 0 2px rgba(255, 255, 255, 0.04);
+      }
+      .device::before {
+        content: "";
+        position: absolute;
+        right: -3px;
+        top: 19%;
+        width: 3px;
+        height: 7%;
+        background: #0b0f14;
+        border-radius: 3px 0 0 3px;
+      }
+      .device::after {
+        content: "";
+        position: absolute;
+        left: -3px;
+        top: 15%;
+        width: 3px;
+        height: 11%;
+        background: #0b0f14;
+        border-radius: 0 3px 3px 0;
+        box-shadow:
+          0 13% 0 0 #0b0f14,
+          0 26% 0 0 #0b0f14;
+      }
+      .screen {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: var(--bg);
+        border-radius: 38px;
+        overflow: hidden;
+      }
+      .scroll-area {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .scroll-area::-webkit-scrollbar {
+        display: none;
+      }
+      .notch {
+        position: absolute;
+        top: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 112px;
+        height: 28px;
+        background: #12181f;
+        border-radius: 20px;
+        z-index: 40;
+      }
+      .home-indicator {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 118px;
+        height: 5px;
+        border-radius: 6px;
+        background: rgba(20, 17, 32, 0.55);
+        z-index: 40;
+      }
+
+      /* ===================== RESPONSIVE: real mobile gets full-bleed, no mockup bezel ===================== */
+      @media (max-width: 640px) {
+        body {
+          display: block;
+          padding: 0;
+          min-height: 100vh;
+          min-height: 100dvh;
+          background: var(--bg);
+        }
+        .device {
+          width: 100vw;
+          max-width: none;
+          aspect-ratio: auto;
+          height: 100vh;
+          height: 100dvh;
+          border-radius: 0;
+          padding: 0;
+          background: var(--bg);
+          box-shadow: none;
+        }
+        .device::before,
+        .device::after {
+          display: none;
+        }
+        .notch {
+          display: none;
+        }
+        .screen {
+          border-radius: 0;
+        }
+        .topbar {
+          padding-top: max(16px, env(safe-area-inset-top));
+        }
+      }
+
+      /* ===== Top bar ===== */
+      .topbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 30px 16px 10px;
+        background: linear-gradient(
+          180deg,
+          #ffffff 0%,
+          var(--surface-tint) 100%
+        );
+      }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: linear-gradient(
+          165deg,
+          var(--surface-soft) 0%,
+          #ffffff 100%
+        );
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+        flex-shrink: 0;
+        position: relative;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease,
+          transform 0.15s ease;
+      }
+      .icon-btn svg {
+        width: 19px;
+        height: 19px;
+      }
+      .icon-btn .badge-dot {
+        position: absolute;
+        top: 6px;
+        right: 7px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--primary);
+        border: 2px solid var(--surface);
+      }
+      .building-picker {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: none;
+        border: none;
+        padding: 6px 4px;
+        flex: 1;
+        min-width: 0;
+      }
+      .building-ic {
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: var(--shadow-glow);
+        transition: transform 0.25s ease;
+      }
+      .building-ic svg {
+        width: 16px;
+        height: 16px;
+      }
+      .building-name {
+        font-size: 14.5px;
+        font-weight: 700;
+        font-family: "Space Grotesk", sans-serif;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid var(--primary-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--primary-deep);
+        font-family: "Space Grotesk", sans-serif;
+        position: relative;
+        flex-shrink: 0;
+        transition:
+          transform 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .avatar .dot {
+        position: absolute;
+        bottom: -1px;
+        right: -1px;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--green);
+        border: 2px solid var(--surface);
+      }
+
+      main {
+        padding: 16px 16px 4px;
+      }
+      section {
+        margin-bottom: 18px;
+      }
+
+      /* ===== Hero card ===== */
+      .hero-card {
+        background: linear-gradient(
+          165deg,
+          #ffffff 0%,
+          var(--surface-tint) 100%
+        );
+        border-radius: 20px;
+        padding: 16px;
+        box-shadow:
+          var(--shadow-sm),
+          inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        border: 1px solid var(--border);
+        transition:
+          box-shadow 0.25s ease,
+          transform 0.25s ease;
+      }
+      .hero-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .hero-ic {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: linear-gradient(
+          140deg,
+          var(--primary) 0%,
+          var(--accent) 130%
+        );
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.35),
+          0 6px 14px -4px var(--primary);
+        transition: transform 0.25s ease;
+      }
+      .hero-ic svg {
+        width: 23px;
+        height: 23px;
+      }
+      .hero-title {
+        font-size: 18px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+        letter-spacing: -0.2px;
+      }
+      .hero-sub {
+        font-size: 10.5px;
+        font-weight: 700;
+        color: var(--text-faint);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-top: 3px;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 10px;
+      }
+      .btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 12px 10px;
+        border-radius: 26px;
+        white-space: nowrap;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          filter 0.2s ease,
+          background 0.2s ease;
+      }
+      .btn svg {
+        width: 15px;
+        height: 15px;
+      }
+      .btn-outline {
+        background: #fff;
+        border: 1.5px solid #ffab2d;
+        color: #ffab2d;
+      }
+      .btn-fill {
+        border: none;
+        color: black;
+        box-shadow: none;
+      }
+      .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .hero-stat {
+        --stat-accent: var(--primary);
+        --stat-accent-2: var(--accent);
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        border-radius: 16px;
+        padding: 12px 8px 11px;
+        text-align: center;
+        background: linear-gradient(
+          165deg,
+          #ffffff 0%,
+          var(--surface-tint) 100%
+        );
+        box-shadow:
+          0 1px 1px rgba(16, 25, 21, 0.03),
+          0 10px 20px -12px var(--stat-glow, rgba(59, 130, 246, 0.3)),
+          inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .hero-stat::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        z-index: 2;
+        background: linear-gradient(
+          90deg,
+          var(--stat-accent),
+          var(--stat-accent-2)
+        );
+      }
+      .hero-stat::after {
+        content: "";
+        position: absolute;
+        top: -22px;
+        right: -22px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--stat-glow, rgba(59, 130, 246, 0.12));
+        filter: blur(2px);
+      }
+      .hero-stat .stat-ic {
+        width: 28px;
+        height: 28px;
+        border-radius: 9px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 7px;
+        color: var(--stat-color);
+        position: relative;
+        z-index: 1;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.7),
+          0 4px 10px -3px var(--stat-icon-glow, rgba(59, 130, 246, 0.4)),
+          0 0 0 1px var(--stat-icon-ring, rgba(59, 130, 246, 0.12));
+      }
+      .hero-stat .stat-ic svg {
+        width: 14px;
+        height: 14px;
+        position: relative;
+        z-index: 1;
+      }
+      .hero-stat .v {
+        font-size: 18px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+        color: var(--text);
+        position: relative;
+        z-index: 1;
+      }
+      .hero-stat .l {
+        font-size: 9px;
+        font-weight: 700;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-top: 2px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ===== Search row ===== */
+      .search-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .search-box {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 14px;
+        box-shadow: var(--shadow-sm);
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .search-box:focus-within {
+        border-color: var(--primary);
+        box-shadow:
+          0 0 0 3px var(--primary-soft),
+          var(--shadow-sm);
+      }
+      .search-box svg {
+        width: 17px;
+        height: 17px;
+        color: var(--text-faint);
+        flex-shrink: 0;
+        transition: color 0.2s ease;
+      }
+      .search-box:focus-within svg {
+        color: var(--primary);
+      }
+      .search-box input {
+        border: none;
+        outline: none;
+        background: none;
+        font-size: 13px;
+        font-family: "Inter", sans-serif;
+        color: var(--text);
+        width: 100%;
+      }
+      .search-box input::placeholder {
+        color: var(--text-faint);
+      }
+      .filter-btn {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: #fff;
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-dim);
+        flex-shrink: 0;
+        box-shadow: var(--shadow-sm);
+        transition:
+          border-color 0.2s ease,
+          color 0.2s ease,
+          transform 0.2s ease;
+        position: relative;
+      }
+      .filter-btn svg {
+        width: 17px;
+        height: 17px;
+      }
+      .filter-btn.active-filters {
+        color: var(--primary-deep);
+        border-color: var(--primary);
+      }
+      .filter-btn .fbadge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        min-width: 16px;
+        height: 16px;
+        padding: 0 4px;
+        border-radius: 9px;
+        background: var(--primary-deep);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--bg);
+      }
+
+      /* ===== Filter chip row (horizontal scroll) ===== */
+      .chip-row {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+        margin-bottom: 14px;
+        scrollbar-width: none;
+      }
+      .chip-row::-webkit-scrollbar {
+        display: none;
+      }
+      .chip {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text-dim);
+        background: #fff;
+        border: 1px solid var(--border);
+        padding: 8px 12px;
+        border-radius: 20px;
+        white-space: nowrap;
+        box-shadow: var(--shadow-sm);
+        transition:
+          border-color 0.2s ease,
+          color 0.2s ease,
+          transform 0.15s ease;
+      }
+      .chip svg {
+        width: 12px;
+        height: 12px;
+        color: var(--text-faint);
+        flex-shrink: 0;
+      }
+      .chip.on {
+        color: var(--primary-deep);
+        border-color: var(--primary);
+        background: var(--primary-soft);
+      }
+      .seg-toggle {
+        flex-shrink: 0;
+        display: flex;
+        background: var(--surface-soft);
+        border-radius: 20px;
+        padding: 3px;
+        gap: 2px;
+        border: 1px solid var(--border);
+      }
+      .seg-btn {
+        padding: 7px 13px;
+        border-radius: 16px;
+        border: none;
+        background: none;
+        font-size: 11.5px;
+        font-weight: 700;
+        color: var(--text-faint);
+        white-space: nowrap;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease;
+      }
+      .seg-btn.active {
+        background: #fff;
+        color: var(--primary-deep);
+        box-shadow: 0 1px 5px rgba(29, 78, 216, 0.18);
+      }
+
+      /* ===== List toolbar (count + view toggle) ===== */
+      .list-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .list-count {
+        font-size: 12px;
+        color: var(--text-dim);
+        font-weight: 600;
+      }
+      .list-count b {
+        color: var(--text);
+        font-weight: 800;
+      }
+      .view-toggle {
+        display: flex;
+        background: var(--surface-soft);
+        border-radius: 10px;
+        padding: 3px;
+        gap: 2px;
+      }
+      .view-btn {
+        width: 30px;
+        height: 28px;
+        border-radius: 7px;
+        border: none;
+        background: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-faint);
+        transition:
+          color 0.2s ease,
+          transform 0.15s ease;
+      }
+      .view-btn svg {
+        width: 14.5px;
+        height: 14.5px;
+      }
+      .view-btn.active {
+        background: #fff;
+        color: var(--primary-deep);
+        box-shadow: 0 1px 5px rgba(29, 78, 216, 0.18);
+      }
+
+      /* ===== Pagination ===== */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 14px;
+      }
+      .page-btn {
+        min-width: 32px;
+        height: 32px;
+        padding: 0 8px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text-dim);
+        font-size: 12.5px;
+        font-weight: 700;
+        font-family: "Space Grotesk", sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition:
+          border-color 0.2s ease,
+          color 0.2s ease,
+          transform 0.15s ease,
+          box-shadow 0.2s ease;
+      }
+      .page-btn svg {
+        width: 14px;
+        height: 14px;
+      }
+      .page-btn.nav {
+        color: var(--primary-deep);
+        font-weight: 700;
+      }
+      .page-btn:disabled {
+        color: var(--text-faint);
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      .page-btn.active {
+        background: linear-gradient(135deg, var(--primary-deep), var(--accent));
+        color: #fff;
+        border-color: transparent;
+        box-shadow: 0 6px 14px -4px rgba(29, 78, 216, 0.35);
+      }
+      .page-dots {
+        width: 20px;
+        text-align: center;
+        color: var(--text-faint);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      /* ===== Washroom list ===== */
+      .wr-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .wr-card {
+        position: relative;
+        background: linear-gradient(
+          165deg,
+          #ffffff 0%,
+          var(--surface-tint) 100%
+        );
+        border-radius: 16px;
+        padding: 14px 14px 13px 16px;
+        border: 1px solid var(--border);
+        box-shadow:
+          0 1px 1px rgba(20, 20, 30, 0.04),
+          0 10px 20px -14px rgba(20, 20, 30, 0.14),
+          inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        overflow: hidden;
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease,
+          border-color 0.25s ease;
+        animation: cardIn 0.4s ease backwards;
+      }
+      .wr-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, var(--primary), var(--accent));
+        opacity: 0.4;
+        transition:
+          width 0.2s ease,
+          opacity 0.2s ease;
+      }
+      .wr-top {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+        margin-bottom: 11px;
+      }
+      .wr-badge {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: linear-gradient(150deg, var(--primary-soft) 0%, #fff 100%);
+        color: var(--primary-deep);
+        border: 1.5px solid var(--primary-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        transition: transform 0.25s ease;
+      }
+      .wr-badge svg {
+        width: 18px;
+        height: 18px;
+      }
+      .wr-titlewrap {
+        flex: 1;
+        min-width: 0;
+      }
+      .wr-name {
+        font-size: 14.5px;
+        font-weight: 700;
+        font-family: "Space Grotesk", sans-serif;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .wr-sub {
+        font-size: 11px;
+        color: var(--text-faint);
+        font-weight: 600;
+        margin-top: 2px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .status-pill {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        padding: 5px 10px 5px 8px;
+        border-radius: 20px;
+        text-transform: uppercase;
+      }
+      .status-pill::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+      .status-pill.active {
+        color: var(--green);
+        background: var(--green-soft);
+      }
+      .status-pill.active::before {
+        background: var(--green);
+      }
+      .status-pill.inactive {
+        color: var(--text-dim);
+        background: var(--surface-soft);
+      }
+      .status-pill.inactive::before {
+        background: var(--text-faint);
+      }
+
+      .wr-metrics {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 11px;
+      }
+      .wr-metric {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        padding: 8px 10px;
+      }
+      .wr-metric .lbl {
+        font-size: 9.5px;
+        font-weight: 700;
+        color: var(--text-faint);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .wr-metric .val {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 14px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+        color: var(--text);
+        margin-top: 2px;
+      }
+      .wr-metric .val.dash {
+        color: var(--text-faint);
+        font-weight: 700;
+      }
+      .wr-metric .val svg {
+        width: 13px;
+        height: 13px;
+        color: var(--cta);
+        flex-shrink: 0;
+      }
+
+      .wr-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding-top: 11px;
+        border-top: 1px dashed var(--border);
+      }
+      .wr-people {
+        min-width: 0;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .wr-person {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text);
+        overflow: hidden;
+      }
+      .wr-person .pdot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--green);
+        flex-shrink: 0;
+      }
+      .wr-person.unassigned {
+        color: var(--text-faint);
+        font-style: italic;
+        font-weight: 600;
+      }
+      .wr-person.unassigned .pdot {
+        background: var(--text-faint);
+      }
+      .wr-person span.name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .wr-person .extra {
+        flex-shrink: 0;
+        font-size: 9.5px;
+        font-weight: 800;
+        color: var(--primary-deep);
+        background: var(--primary-soft);
+        padding: 1px 5px;
+        border-radius: 8px;
+      }
+      .wr-facility {
+        font-size: 10.5px;
+        color: var(--text-faint);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        overflow: hidden;
+      }
+      .wr-facility svg {
+        width: 11px;
+        height: 11px;
+        flex-shrink: 0;
+      }
+      .wr-facility span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .wr-actions {
+        display: flex;
+        gap: 7px;
+        flex-shrink: 0;
+      }
+      .wr-actions button {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        border: 1.5px solid transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          border-color 0.2s ease,
+          background 0.2s ease,
+          transform 0.15s ease,
+          box-shadow 0.2s ease;
+      }
+      .wr-actions button svg {
+        width: 14px;
+        height: 14px;
+      }
+      .act-locate {
+        color: #2e6fe0;
+        background: #eaf2fe;
+        border-color: #d7e7fd;
+      }
+      .act-kebab {
+        color: var(--text-dim);
+        background: var(--surface-soft);
+        border-color: var(--border);
+      }
+
+      /* ===== Grid view ===== */
+      .wr-list.grid-mode {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .wgrid-card {
+        position: relative;
+        background: linear-gradient(
+          165deg,
+          #ffffff 0%,
+          var(--surface-tint) 100%
+        );
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 12px 12px 11px;
+        box-shadow:
+          0 1px 1px rgba(20, 20, 30, 0.04),
+          0 10px 20px -14px rgba(20, 20, 30, 0.14),
+          inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        overflow: hidden;
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+        animation: cardIn 0.4s ease backwards;
+      }
+      .wgrid-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--accent));
+        opacity: 0.4;
+        transition:
+          opacity 0.2s ease,
+          height 0.2s ease;
+      }
+      .wgrid-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 6px;
+      }
+      .wgrid-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: linear-gradient(150deg, var(--primary-soft) 0%, #fff 100%);
+        color: var(--primary-deep);
+        border: 1.5px solid var(--primary-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: transform 0.25s ease;
+      }
+      .wgrid-badge svg {
+        width: 15px;
+        height: 15px;
+      }
+      .wgrid-name {
+        font-size: 12.5px;
+        font-weight: 700;
+        font-family: "Space Grotesk", sans-serif;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .wgrid-zone {
+        font-size: 10px;
+        color: var(--text-faint);
+        font-weight: 600;
+        margin-top: 1px;
+      }
+      .wgrid-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+      }
+      .wgrid-rating {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 11.5px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .wgrid-rating svg {
+        width: 11px;
+        height: 11px;
+        color: var(--cta);
+      }
+      .wgrid-actions {
+        display: flex;
+        gap: 6px;
+        margin-top: 1px;
+      }
+      .wgrid-actions button {
+        flex: 1;
+        height: 28px;
+        border-radius: 8px;
+        border: 1.5px solid transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          border-color 0.2s ease,
+          background 0.2s ease,
+          transform 0.15s ease;
+      }
+      .wgrid-actions button svg {
+        width: 13px;
+        height: 13px;
+      }
+
+      @keyframes cardIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ===== Footer summary ===== */
+      .zones-foot {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: linear-gradient(
+          165deg,
+          #ffffff 0%,
+          var(--surface-tint) 100%
+        );
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px 15px;
+        margin-top: 14px;
+        box-shadow: var(--shadow-sm);
+        transition:
+          box-shadow 0.25s ease,
+          transform 0.25s ease;
+      }
+      .zones-foot-ic {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        background: linear-gradient(140deg, var(--amber) 0%, #f0a527 130%);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 4px 10px -3px rgba(201, 122, 29, 0.4);
+        transition: transform 0.25s ease;
+      }
+      .zones-foot-ic svg {
+        width: 18px;
+        height: 18px;
+      }
+      .zones-foot-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .zones-foot-label {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-faint);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .zones-foot-num {
+        font-size: 22px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+        color: var(--cta-deep);
+        margin-top: 1px;
+      }
+      .zones-foot svg.chev {
+        width: 18px;
+        height: 18px;
+        color: var(--text-faint);
+        flex-shrink: 0;
+      }
+
+      /* ===== Floating action button ===== */
+      .fab {
+        position: absolute;
+        right: 20px;
+        bottom: 96px;
+        z-index: 60;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #ffab2d;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        box-shadow:
+          0 12px 26px -6px rgba(201, 122, 29, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      }
+      .fab svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      /* ===== Bottom nav — docked flush to the screen edge ===== */
+      .navbar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        display: flex;
+      }
+      .navbar-inner {
+        width: 100%;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.98) 0%,
+          rgba(253, 241, 234, 0.95) 100%
+        );
+        backdrop-filter: blur(10px);
+        box-shadow: 0 -6px 18px rgba(29, 78, 216, 0.08);
+        border-top: 1px solid var(--border);
+        display: flex;
+        padding: 9px 6px 20px;
+      }
+      .nav-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        background: none;
+        border: none;
+        color: var(--text-faint);
+        padding: 8px 2px;
+        border-radius: 14px;
+        position: relative;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease;
+      }
+      .nav-item svg {
+        width: 19px;
+        height: 19px;
+      }
+      .nav-item span {
+        font-size: 9.5px;
+        font-weight: 700;
+      }
+      .nav-item.active {
+        color: var(--primary-deep);
+        background: linear-gradient(
+          150deg,
+          var(--primary-soft) 0%,
+          #e9f1ff 100%
+        );
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      }
+      .nav-item:active {
+        transform: scale(0.94);
+      }
+
+      /* ===== Shared interaction helpers ===== */
+      .tap-fx {
+        cursor: pointer;
+        transition:
+          transform 0.12s ease,
+          filter 0.12s ease;
+      }
+      .tap-fx:active {
+        transform: scale(0.95);
+        filter: brightness(0.97);
+      }
+      .tap-fx:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
+
+      .toast-stack {
+        position: absolute;
+        left: 14px;
+        right: 14px;
+        bottom: 96px;
+        z-index: 90;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        pointer-events: none;
+        align-items: center;
+      }
+      .toast {
+        max-width: 100%;
+        background: #1a2230;
+        color: #fff;
+        font-size: 12.5px;
+        font-weight: 600;
+        padding: 11px 15px;
+        border-radius: 13px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.35);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        opacity: 0;
+        transform: translateY(10px) scale(0.96);
+        transition:
+          opacity 0.22s ease,
+          transform 0.22s ease;
+      }
+      .toast svg {
+        width: 15px;
+        height: 15px;
+        color: var(--accent);
+        flex-shrink: 0;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      /* ===== Drawer (matches Add Zone Type reference) ===== */
+      .scrim {
+        position: absolute;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.42);
+        backdrop-filter: blur(2px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+        z-index: 190;
+      }
+      .scrim.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .drawer {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 82%;
+        max-width: 320px;
+        background: linear-gradient(
+          165deg,
+          #ffffff 0%,
+          var(--surface-tint) 100%
+        );
+        z-index: 200;
+        padding: 22px 18px;
+        transform: translateX(-104%);
+        transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+        box-shadow: 12px 0 40px rgba(15, 23, 42, 0.18);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .drawer.open {
+        transform: translateX(0);
+      }
+      .drawer-user {
+        cursor: pointer;
+        border-radius: 14px;
+        margin: -4px -6px 16px;
+        padding: 10px 6px 18px 6px;
+        transition: background 0.15s ease;
+        border-bottom: 1px solid var(--border);
+      }
+      .drawer-user:active {
+        background: var(--surface-soft);
+      }
+      .drawer-user-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+      }
+      .drawer-avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 15px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .drawer-user .name {
+        font-size: 14.5px;
+        font-weight: 700;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .drawer-user .role {
+        font-size: 10px;
+        font-weight: 800;
+        color: var(--primary-deep);
+        letter-spacing: 0.04em;
+        margin-top: 2px;
+      }
+      .drawer-user-chev {
+        margin-left: auto;
+        width: 14px;
+        height: 14px;
+        color: var(--text-faint);
+        flex-shrink: 0;
+      }
+      .drawer-eyebrow {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-faint);
+        margin: 16px 0 8px;
+      }
+      .drawer-scroll {
+        flex: 1;
+        overflow-y: auto;
+        margin: 0 -18px;
+        padding: 0 18px;
+      }
+      .drawer-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 10px;
+        border-radius: 12px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--text);
+        cursor: pointer;
+        transition:
+          background 0.15s ease,
+          color 0.15s ease,
+          transform 0.1s ease;
+        justify-content: space-between;
+      }
+      .drawer-link-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+      .drawer-link svg {
+        width: 18px;
+        height: 18px;
+        color: var(--text-dim);
+      }
+      .drawer-link:active {
+        transform: scale(0.98);
+      }
+      .drawer-link:not(.active):hover {
+        background: var(--surface-soft);
+      }
+      .drawer-link.active {
+        background: linear-gradient(
+          150deg,
+          var(--primary-soft) 0%,
+          #e9f1ff 100%
+        );
+        color: var(--primary-deep);
+        font-weight: 700;
+      }
+      .drawer-link.active svg {
+        color: var(--primary-deep);
+      }
+      .drawer-link.has-sub {
+        cursor: pointer;
+      }
+      .drawer-chevron {
+        margin-left: auto;
+        width: 14px;
+        height: 14px;
+        color: var(--text-faint);
+        flex-shrink: 0;
+        transition: transform 0.2s ease;
+      }
+      .drawer-link.has-sub.open .drawer-chevron {
+        transform: rotate(180deg);
+        color: var(--primary-deep);
+      }
+      .drawer-submenu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.25s ease;
+        padding-left: 34px;
+      }
+      .drawer-link.has-sub.open + .drawer-submenu {
+        max-height: 130px;
+      }
+      .drawer-sublink {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 9px 10px;
+        border-radius: 10px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--text-dim);
+        cursor: pointer;
+      }
+      .drawer-sublink:active {
+        background: var(--surface-soft);
+      }
+      .drawer-sublink.active {
+        background: var(--primary-soft);
+        color: var(--primary-deep);
+        font-weight: 700;
+      }
+      .drawer-sublink .drawer-subdot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--text-faint);
+        flex-shrink: 0;
+      }
+      .drawer-sublink.active .drawer-subdot {
+        background: var(--primary-deep);
+      }
+      .drawer-link-badge {
+        font-size: 10px;
+        font-weight: 800;
+        color: var(--text-dim);
+        background: var(--surface-soft);
+        padding: 2px 8px;
+        border-radius: 20px;
+        flex-shrink: 0;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .drawer-link.active .drawer-link-badge {
+        background: #fff;
+        color: var(--primary-deep);
+      }
+      .drawer-logout {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 10px;
+        border-radius: 12px;
+        font-size: 13.5px;
+        font-weight: 700;
+        color: var(--red);
+        margin-top: 18px;
+        border-top: 1px solid var(--border);
+        padding-top: 20px;
+        cursor: pointer;
+      }
+      .drawer-logout svg {
+        width: 18px;
+        height: 18px;
+      }
+      .drawer-logout:active {
+        background: var(--red-soft);
+        transform: scale(0.98);
+      }
+      .drawer-footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding-top: 14px;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-faint);
+        letter-spacing: 0.03em;
+      }
+      .drawer-close-x {
+        position: absolute;
+        top: 18px;
+        right: 16px;
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+        background: var(--surface-soft);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-dim);
+        cursor: pointer;
+      }
+      .drawer-close-x svg {
+        width: 15px;
+        height: 15px;
+      }
+
+      /* These two only kick in on short desktop/laptop browser windows */
+      @media (max-height: 1000px) and (min-width: 641px) {
+        .device {
+          aspect-ratio: auto;
+          width: min(400px, 90vw);
+          height: min(1040px, 96vh);
+        }
+      }
+      @media (max-height: 760px) and (min-width: 641px) {
+        .device {
+          width: min(360px, 88vw);
+          height: min(936px, 97vh);
+        }
+      }
+
+      /* ===== Hover interactions (mouse/trackpad only — never sticks on touch) ===== */
+      @media (hover: hover) and (pointer: fine) {
+        .hero-card:hover {
+          box-shadow:
+            var(--shadow-md),
+            inset 0 1px 0 rgba(255, 255, 255, 0.7);
+          transform: translateY(-2px);
+        }
+        .hero-ic:hover,
+        .building-ic:hover {
+          transform: scale(1.08) rotate(-3deg);
+        }
+        .hero-stat:hover {
+          transform: translateY(-3px);
+          box-shadow:
+            0 1px 1px rgba(16, 25, 21, 0.04),
+            0 14px 24px -12px var(--stat-glow, rgba(59, 130, 246, 0.4)),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .btn-outline:hover {
+          background: #fff4e5;
+          border-color: #ffab2d;
+          color: #ffab2d;
+        }
+        .btn-fill:hover {
+          background: #fff4e5;
+          filter: none;
+          transform: translateY(-2px);
+          box-shadow: none;
+        }
+
+        .search-box:hover {
+          border-color: var(--accent);
+        }
+        .filter-btn:hover {
+          border-color: var(--primary);
+          color: var(--primary-deep);
+          transform: translateY(-1px);
+        }
+        .chip:hover {
+          border-color: var(--primary);
+          color: var(--primary-deep);
+          transform: translateY(-1px);
+        }
+
+        .view-btn:not(.active):hover {
+          color: var(--primary-deep);
+          transform: translateY(-1px);
+        }
+
+        .page-btn:not(.active):not(:disabled):hover {
+          border-color: var(--primary);
+          color: var(--primary-deep);
+          transform: translateY(-1px);
+          box-shadow: var(--shadow-sm);
+        }
+
+        .wr-card:hover {
+          transform: translateY(-4px);
+          box-shadow:
+            0 4px 10px rgba(20, 20, 30, 0.05),
+            0 18px 30px -14px rgba(20, 20, 30, 0.18),
+            0 0 0 1px rgba(59, 130, 246, 0.14),
+            inset 0 1px 0 rgba(255, 255, 255, 0.7);
+          border-color: var(--accent);
+        }
+        .wr-card:hover::before {
+          width: 4px;
+          opacity: 1;
+        }
+        .wr-card:hover .wr-badge {
+          transform: scale(1.06);
+        }
+        .act-locate:hover {
+          background: #d7e7fd;
+          border-color: #2e6fe0;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 10px -3px rgba(46, 111, 224, 0.35);
+        }
+        .act-kebab:hover {
+          color: var(--primary-deep);
+          background: var(--primary-soft);
+          transform: rotate(90deg);
+        }
+
+        .wgrid-card:hover {
+          transform: translateY(-4px) scale(1.01);
+          box-shadow:
+            0 4px 10px rgba(20, 20, 30, 0.05),
+            0 18px 30px -14px rgba(20, 20, 30, 0.18),
+            0 0 0 1px rgba(59, 130, 246, 0.14),
+            inset 0 1px 0 rgba(255, 255, 255, 0.7);
+          border-color: var(--accent);
+        }
+        .wgrid-card:hover::before {
+          opacity: 1;
+          height: 4px;
+        }
+        .wgrid-card:hover .wgrid-badge {
+          transform: scale(1.06);
+        }
+
+        .zones-foot:hover {
+          box-shadow: var(--shadow-md);
+          transform: translateY(-2px);
+        }
+        .zones-foot:hover .zones-foot-ic {
+          transform: scale(1.08);
+        }
+
+        .fab:hover {
+          transform: scale(1.08) rotate(90deg);
+          box-shadow:
+            0 16px 30px -6px rgba(201, 122, 29, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .icon-btn:hover {
+          background: var(--primary-soft);
+          color: var(--primary-deep);
+          transform: translateY(-1px);
+        }
+        .avatar:hover {
+          transform: scale(1.06);
+          border-color: var(--primary);
+        }
+
+        .nav-item:not(.active):hover {
+          color: var(--primary);
+          background: var(--surface-soft);
+        }
+
+        .drawer-close-x:hover {
+          background: var(--red-soft);
+          color: var(--red);
+        }
+      }
+
+      /* ===================================================================
+     WASHROOM DETAIL SCREEN
+     A full-viewport overlay (breaks out of the phone-frame on purpose)
+     so it can show the wide two-column desktop layout on big screens
+     and collapse to a single stacked column on phones.
+     =================================================================== */
+      .detail-screen {
+        position: absolute;
+        inset: 0;
+        z-index: 210;
+        background: var(--bg);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateX(100%);
+        transition:
+          opacity 0.28s ease,
+          transform 0.28s ease,
+          visibility 0s linear 0.28s;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .detail-screen::-webkit-scrollbar {
+        display: none;
+      }
+      .detail-screen.open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+        transform: translateX(0);
+        transition:
+          opacity 0.28s ease,
+          transform 0.28s ease;
+      }
+
+      .detail-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 16px 12px;
+        background: linear-gradient(
+          180deg,
+          #ffffff 0%,
+          var(--surface-tint) 100%
+        );
+        border-bottom: 1px solid var(--border);
+      }
+      .detail-back {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--cta-deep);
+        background: var(--cta-soft);
+        border: 1.5px solid var(--cta);
+        border-radius: 11px;
+        padding: 8px 11px 8px 9px;
+        box-shadow: var(--shadow-sm);
+        flex-shrink: 0;
+      }
+      .detail-back svg {
+        width: 14px;
+        height: 14px;
+      }
+      .detail-topbar-name {
+        font-size: 12.5px;
+        font-weight: 700;
+        font-family: "Space Grotesk", sans-serif;
+        color: var(--text-dim);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .detail-main {
+        padding: 16px 16px 100px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .detail-section-head {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 14.5px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+        margin-bottom: 2px;
+      }
+      .detail-section-head svg {
+        width: 18px;
+        height: 18px;
+        color: var(--primary-deep);
+      }
+
+      /* ---- hero: photo/capacity card + info card ---- */
+      .detail-hero-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .detail-photo-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+      }
+      .detail-photo {
+        width: 100%;
+        aspect-ratio: 16/8;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--accent) 60%,
+          #8fc7ff 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.85);
+        position: relative;
+      }
+      .detail-photo svg {
+        width: 44px;
+        height: 44px;
+      }
+      .detail-photo::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at 25% 20%,
+          rgba(255, 255, 255, 0.28),
+          transparent 55%
+        );
+      }
+      .detail-photo-body {
+        padding: 16px;
+      }
+      .detail-photo-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .detail-building-name {
+        font-size: 17px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .detail-building-sub {
+        font-size: 11.5px;
+        color: var(--text-faint);
+        font-weight: 600;
+        margin-top: 2px;
+      }
+      .detail-ring {
+        position: relative;
+        width: 58px;
+        height: 58px;
+        flex-shrink: 0;
+      }
+      .detail-ring svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+      .detail-ring-track {
+        fill: none;
+        stroke: var(--surface-soft);
+        stroke-width: 4;
+      }
+      .detail-ring-val {
+        fill: none;
+        stroke: var(--green);
+        stroke-width: 4;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 0.6s ease;
+      }
+      .detail-ring-text {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .detail-ring-text b {
+        font-size: 15px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+        color: var(--green);
+        line-height: 1;
+      }
+      .detail-ring-text span {
+        font-size: 7.5px;
+        font-weight: 700;
+        color: var(--text-faint);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .detail-capacity-box {
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 14px;
+      }
+      .detail-capacity-label {
+        font-size: 9.5px;
+        font-weight: 800;
+        color: var(--text-faint);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+      }
+      .detail-capacity-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .detail-capacity-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12.5px;
+        font-weight: 700;
+      }
+      .detail-capacity-item .tag {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--text-dim);
+      }
+      .detail-capacity-item .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+      }
+      .detail-capacity-item .dot.women {
+        background: #db5aa0;
+      }
+      .detail-capacity-item .dot.men {
+        background: var(--primary);
+      }
+      .detail-capacity-item b {
+        font-family: "Space Grotesk", sans-serif;
+        color: var(--text);
+      }
+
+      .detail-info-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 18px 18px 20px;
+        box-shadow: var(--shadow-sm);
+      }
+      .detail-title {
+        font-size: 23px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+        letter-spacing: -0.3px;
+        margin-bottom: 12px;
+      }
+      .detail-zone-pill {
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        border-radius: 13px;
+        padding: 10px 13px;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 12px;
+      }
+      .detail-zone-pill .ic {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        background: #fff;
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-deep);
+        flex-shrink: 0;
+      }
+      .detail-zone-pill .ic svg {
+        width: 15px;
+        height: 15px;
+      }
+      .detail-zone-pill .lbl {
+        font-size: 9px;
+        font-weight: 800;
+        color: var(--text-faint);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .detail-zone-pill .val {
+        font-size: 13.5px;
+        font-weight: 700;
+        margin-top: 1px;
+      }
+      .detail-meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--text-dim);
+        margin-bottom: 14px;
+      }
+      .detail-meta-row b {
+        color: var(--text);
+        font-weight: 700;
+      }
+      .detail-meta-row .item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .detail-meta-row svg {
+        width: 14px;
+        height: 14px;
+        color: var(--text-faint);
+      }
+      .detail-amenities {
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 14px;
+        margin-bottom: 16px;
+      }
+      .detail-amenities-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 9px;
+      }
+      .detail-amenities-label svg {
+        width: 14px;
+        height: 14px;
+        color: var(--primary-deep);
+      }
+      .detail-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+      .detail-amenity-chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11.5px;
+        font-weight: 700;
+        color: var(--primary-deep);
+        background: var(--primary-soft);
+        border: 1px solid #d7e7fd;
+        padding: 6px 11px;
+        border-radius: 20px;
+      }
+      .detail-amenity-chip svg {
+        width: 12px;
+        height: 12px;
+      }
+      .detail-btn-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .dbtn {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 12.5px;
+        font-weight: 700;
+        padding: 10px 15px;
+        border-radius: 12px;
+        border: 1.5px solid transparent;
+        white-space: nowrap;
+        transition:
+          transform 0.15s ease,
+          filter 0.15s ease;
+      }
+      .dbtn svg {
+        width: 14px;
+        height: 14px;
+      }
+      .dbtn-locate {
+        background: #fff;
+        border-color: var(--cta);
+        color: var(--cta-deep);
+      }
+      .dbtn-edit {
+        background: linear-gradient(
+          135deg,
+          var(--cta-deep) 0%,
+          var(--cta) 60%,
+          #ffc169 100%
+        );
+        color: #fff;
+        box-shadow: 0 6px 14px -5px rgba(201, 122, 29, 0.45);
+      }
+      .dbtn-delete {
+        background: var(--red-soft);
+        color: var(--red);
+        border-color: #f7c7ce;
+      }
+
+      /* ---- facilities ---- */
+      .detail-facilities-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .detail-fac-panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: var(--shadow-sm);
+      }
+      .detail-fac-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .detail-fac-head .ic {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--surface-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-deep);
+        flex-shrink: 0;
+      }
+      .detail-fac-head .ic svg {
+        width: 16px;
+        height: 16px;
+      }
+      .detail-fac-head .t {
+        font-size: 14px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .detail-fac-head .s {
+        font-size: 10.5px;
+        color: var(--text-faint);
+        font-weight: 600;
+      }
+      .detail-fac-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        font-size: 12.5px;
+        font-weight: 700;
+      }
+      .detail-fac-row:last-child {
+        margin-bottom: 0;
+      }
+      .detail-fac-row .l {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
+      .detail-fac-row .l svg {
+        width: 15px;
+        height: 15px;
+        color: var(--primary-deep);
+      }
+      .detail-fac-row .l .wc {
+        width: 15px;
+        height: 15px;
+        border-radius: 4px;
+        background: var(--primary-soft);
+        color: var(--primary-deep);
+        font-size: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+      }
+      .detail-fac-row .n {
+        color: var(--primary-deep);
+        font-family: "Space Grotesk", sans-serif;
+      }
+
+      /* ---- cleaners + review stats ---- */
+      .detail-two-col {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .detail-panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: var(--shadow-sm);
+      }
+      .detail-panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .detail-panel-head .t {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .detail-panel-head .t svg {
+        width: 16px;
+        height: 16px;
+        color: var(--primary-deep);
+      }
+      .detail-panel-head .view-all {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: var(--cta-deep);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .detail-panel-head .view-all svg {
+        width: 11px;
+        height: 11px;
+      }
+      .detail-cleaner-row {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        border-radius: 13px;
+        padding: 10px 12px;
+        margin-bottom: 9px;
+      }
+      .detail-cleaner-row:last-child {
+        margin-bottom: 0;
+      }
+      .detail-cleaner-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+        flex-shrink: 0;
+      }
+      .detail-cleaner-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .detail-cleaner-info .n {
+        font-size: 12.5px;
+        font-weight: 700;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .detail-cleaner-info .r {
+        font-size: 10.5px;
+        color: var(--primary-deep);
+        font-weight: 700;
+        text-transform: capitalize;
+      }
+      .detail-cleaner-info .p {
+        font-size: 10.5px;
+        color: var(--text-faint);
+        font-weight: 600;
+        margin-top: 1px;
+      }
+      .detail-cleaner-side {
+        text-align: right;
+        flex-shrink: 0;
+      }
+      .detail-cleaner-side .status {
+        display: inline-block;
+        font-size: 9.5px;
+        font-weight: 800;
+        color: var(--green);
+        background: var(--green-soft);
+        padding: 3px 9px;
+        border-radius: 10px;
+        text-transform: lowercase;
+      }
+      .detail-cleaner-side .d {
+        font-size: 9.5px;
+        color: var(--text-faint);
+        font-weight: 600;
+        margin-top: 4px;
+      }
+      .detail-empty-cleaners {
+        font-size: 12px;
+        color: var(--text-faint);
+        font-weight: 600;
+        text-align: center;
+        padding: 14px 0;
+      }
+
+      .detail-stat-box {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 13px 14px;
+        margin-bottom: 10px;
+      }
+      .detail-stat-box:last-child {
+        margin-bottom: 0;
+      }
+      .detail-stat-box.na {
+        background: var(--primary-soft);
+      }
+      .detail-stat-box.rated {
+        background: var(--green-soft);
+      }
+      .detail-stat-ic {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .detail-stat-ic svg {
+        width: 19px;
+        height: 19px;
+      }
+      .detail-stat-box.na .detail-stat-ic {
+        background: var(--primary);
+      }
+      .detail-stat-box.rated .detail-stat-ic {
+        background: var(--green);
+      }
+      .detail-stat-box .v {
+        font-size: 19px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+        line-height: 1.2;
+      }
+      .detail-stat-box .l {
+        font-size: 10.5px;
+        font-weight: 600;
+        color: var(--text-dim);
+        margin-top: 1px;
+      }
+      .detail-stars {
+        display: flex;
+        gap: 2px;
+        margin-bottom: 2px;
+      }
+      .detail-stars svg {
+        width: 12px;
+        height: 12px;
+        color: var(--cta);
+      }
+
+      /* ---- reviews ---- */
+      .detail-reviews-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+      }
+      .detail-tabs {
+        display: flex;
+        border-bottom: 1px solid var(--border);
+      }
+      .detail-tab {
+        flex: 1;
+        text-align: center;
+        padding: 14px 10px 12px;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--text-faint);
+        border-bottom: 2px solid transparent;
+        transition:
+          color 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .detail-tab.active {
+        color: var(--primary-deep);
+        border-color: var(--primary-deep);
+      }
+      .detail-tab-panel {
+        padding: 20px 18px 26px;
+        display: none;
+      }
+      .detail-tab-panel.active {
+        display: block;
+      }
+      .detail-empty-reviews {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 24px 10px 10px;
+      }
+      .detail-empty-reviews .ic {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--surface-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-faint);
+        margin-bottom: 14px;
+      }
+      .detail-empty-reviews .ic svg {
+        width: 24px;
+        height: 24px;
+      }
+      .detail-empty-reviews .h {
+        font-size: 15px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .detail-empty-reviews .s {
+        font-size: 12px;
+        color: var(--text-faint);
+        font-weight: 600;
+        margin-top: 5px;
+      }
+      .detail-review-item {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 13px 14px;
+        margin-bottom: 10px;
+        background: var(--surface-soft);
+      }
+      .detail-review-item:last-child {
+        margin-bottom: 0;
+      }
+      .detail-review-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 7px;
+      }
+      .detail-review-who {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
+      .detail-review-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--green), #34d399);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 800;
+        font-family: "Space Grotesk", sans-serif;
+        flex-shrink: 0;
+      }
+      .detail-review-name {
+        font-size: 12.5px;
+        font-weight: 700;
+      }
+      .detail-review-date {
+        font-size: 10.5px;
+        color: var(--text-faint);
+        font-weight: 600;
+      }
+      .detail-review-text {
+        font-size: 12.5px;
+        color: var(--text-dim);
+        font-weight: 500;
+        line-height: 1.5;
+      }
+
+      /* washroom name in cards is now an entry point into the detail screen */
+      .wr-name.clickable,
+      .wgrid-name.clickable {
+        cursor: pointer;
+        transition: color 0.15s ease;
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .wr-name.clickable:hover,
+        .wgrid-name.clickable:hover {
+          color: var(--primary-deep);
+          text-decoration: underline;
+          text-decoration-color: var(--accent);
+          text-underline-offset: 2px;
+        }
+        .detail-back:hover {
+          background: #ffe9c2;
+          border-color: var(--cta-deep);
+          color: var(--cta-deep);
+          transform: translateY(-1px);
+        }
+        .dbtn-locate:hover {
+          background: var(--cta-soft);
+          transform: translateY(-2px);
+        }
+        .dbtn-edit:hover {
+          filter: brightness(1.06);
+          transform: translateY(-2px);
+        }
+        .dbtn-delete:hover {
+          background: #fbd4da;
+          transform: translateY(-2px);
+        }
+        .detail-tab:not(.active):hover {
+          color: var(--text-dim);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="device">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="scrim" id="scrim"></div>
+        <aside
+          class="drawer"
+          id="drawer"
+          role="dialog"
+          aria-label="Navigation menu"
+          aria-hidden="true"
+        >
+          <button
+            class="drawer-close-x tap-fx"
+            id="drawerCloseBtn"
+            aria-label="Close menu"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+
+          <div
+            class="drawer-user tap-fx"
+            id="drawerProfile"
+            data-toast="Opening profile settings…"
+          >
+            <div class="drawer-user-row">
+              <div class="drawer-avatar">OP</div>
+              <div>
+                <div class="name">Omkar Porlikar</div>
+                <div class="role">SUPER ADMIN</div>
+              </div>
+              <svg
+                class="drawer-user-chev"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="drawer-scroll">
+            <div class="drawer-eyebrow">Overview</div>
+            <div
+              class="drawer-link tap-fx"
+              data-drawer-toast="Switched to Main Dashboard"
+            >
+              <span class="drawer-link-left"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="3" width="7" height="7" />
+                  <rect x="14" y="3" width="7" height="7" />
+                  <rect x="3" y="14" width="7" height="7" />
+                  <rect x="14" y="14" width="7" height="7" /></svg
+                ><a href="index.html">Main Dashboard</span
+              ></a>
+            </div>
+            <div
+              class="drawer-link tap-fx"
+              data-drawer-toast="You're on the Client Dashboard"
+            >
+              <span class="drawer-link-left"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <path d="M3 9h18M9 21V9" /></svg
+                >Client Dashboard</span
+              >
+            </div>
+
+            <div class="drawer-eyebrow">Manage</div>
+            <div
+              class="drawer-link has-sub tap-fx"
+              data-drawer-toast="Opening Location Hierarchy…"
+            >
+              <span class="drawer-link-left"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z" /></svg
+                >Location Hierarchy</span
+              >
+              <svg
+                class="drawer-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+            <div class="drawer-submenu">
+              <div
+                class="drawer-sublink tap-fx"
+                data-drawer-toast="Opening View Hierarchy…"
+              >
+                <span class="drawer-subdot"></span><a href="location_hirarchy.html"> View Hierarchy
+              </div></a>
+              <div
+                class="drawer-sublink tap-fx"
+                data-drawer-toast="Opening Add Hierarchy…"
+              >
+                <span class="drawer-subdot"></span><a href="add-zone-type_final.html"> Add Hierarchy
+              </div></a>
+            </div>
+
+            <div
+              class="drawer-link has-sub open tap-fx"
+              data-drawer-toast="Switched to Washrooms"
+            >
+              <span class="drawer-link-left"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="4" y="3" width="16" height="18" rx="2" />
+                  <path d="M9 8h6M9 12h6M9 16h4" /></svg
+                >Washrooms</span
+              >
+              <span class="drawer-link-badge">53</span>
+              <svg
+                class="drawer-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+            <div class="drawer-submenu">
+              <div
+                class="drawer-sublink active tap-fx"
+                data-drawer-toast="Opening Washrooms List…"
+              >
+                <span class="drawer-subdot"></span>Washrooms List
+              </div>
+              <div
+                class="drawer-sublink tap-fx"
+                data-drawer-toast="Opening Add Washroom…"
+              >
+                <span class="drawer-subdot"></span>Add Washroom
+              </div>
+            </div>
+
+            <div
+              class="drawer-link has-sub tap-fx"
+              data-drawer-toast="Opening User Management…"
+            >
+              <span class="drawer-link-left"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" /></svg
+                >User Management</span
+              >
+              <span class="drawer-link-badge">30</span>
+              <svg
+                class="drawer-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+            <div class="drawer-submenu">
+              <div
+                class="drawer-sublink tap-fx"
+                data-drawer-toast="Opening User List…"
+              >
+                <span class="drawer-subdot"></span><a href="user_manage-final.html"> User List
+              </div></a>
+              <div
+                class="drawer-sublink tap-fx"
+                data-drawer-toast="Opening Add User…"
+              >
+                <span class="drawer-subdot"></span><a href="add_user_final.html"> Add User
+              </div></a>
+            </div>
+
+            <div
+              class="drawer-link has-sub tap-fx"
+              data-drawer-toast="Opening User Mapping…"
+            >
+              <span class="drawer-link-left"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="18" cy="5" r="3" />
+                  <circle cx="6" cy="12" r="3" />
+                  <circle cx="18" cy="19" r="3" />
+                  <line x1="8.6" y1="13.5" x2="15.4" y2="17.5" />
+                  <line x1="15.4" y1="6.5" x2="8.6" y2="10.5" /></svg
+                >User Mapping</span
+              >
+              <svg
+                class="drawer-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+            <div class="drawer-submenu">
+              <div
+                class="drawer-sublink tap-fx"
+                data-drawer-toast="Opening Mapped List…"
+              >
+                <span class="drawer-subdot"></span>Mapped List
+              </div>
+              <div
+                class="drawer-sublink tap-fx"
+                data-drawer-toast="Opening Add Mapping…"
+              >
+                <span class="drawer-subdot"></span>Add Mapping
+              </div>
+            </div>
+
+            <div
+              class="drawer-link has-sub tap-fx"
+              data-drawer-toast="Opening Facility Companies…"
+            >
+              <span class="drawer-link-left"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 21h18" />
+                  <path d="M5 21V7l7-4 7 4v14" />
+                  <path d="M9 21v-6h6v6" /></svg
+                >Facility Companies</span
+              >
+              <svg
+                class="drawer-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+            <div class="drawer-submenu">
+              <div
+                class="drawer-sublink tap-fx"
+                data-drawer-toast="Opening View List…"
+              >
+                <span class="drawer-subdot"></span>View List
+              </div>
+              <div
+                class="drawer-sublink tap-fx"
+                data-drawer-toast="Opening Add Facility…"
+              >
+                <span class="drawer-subdot"></span>Add Facility
+              </div>
+            </div>
+
+            <div class="drawer-eyebrow">Operations</div>
+            <div
+              class="drawer-link tap-fx"
+              data-drawer-toast="Opening Locate On Map…"
+            >
+              <span class="drawer-link-left"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12 21s-7-6.1-9.5-10A5.5 5.5 0 0 1 12 4.5 5.5 5.5 0 0 1 21.5 11c-2.5 3.9-9.5 10-9.5 10z"
+                  />
+                  <circle cx="12" cy="10.5" r="2.2" /></svg
+                >Locate On Map</span
+              >
+            </div>
+            <div
+              class="drawer-link tap-fx"
+              data-drawer-toast="Opening Cleaner Activity…"
+            >
+              <span class="drawer-link-left"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 12h3l2-6 4 12 2-8 2 4h5" /></svg
+                >Cleaner Activity</span
+              >
+            </div>
+            <div
+              class="drawer-link tap-fx"
+              data-drawer-toast="Opening Attendance…"
+            >
+              <span class="drawer-link-left"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M1 21v-2a4 4 0 0 1 4-4h2.5" />
+                  <path d="M17 11l2 2 4-4" /></svg
+                >Attendance</span
+              >
+            </div>
+
+            <div class="drawer-eyebrow">System</div>
+            <div
+              class="drawer-link tap-fx"
+              data-drawer-toast="Opening Dynamic Configuration…"
+            >
+              <span class="drawer-link-left"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="3" />
+                  <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9.09a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                  /></svg
+                >Dynamic Configuration</span
+              >
+            </div>
+            <div
+              class="drawer-link tap-fx"
+              data-drawer-toast="Opening User Review…"
+            >
+              <span class="drawer-link-left"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                  /></svg
+                >User Review</span
+              >
+            </div>
+            <div
+              class="drawer-link tap-fx"
+              data-drawer-toast="Opening Reports…"
+            >
+              <span class="drawer-link-left"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                  />
+                  <path d="M14 2v6h6" />
+                  <path d="M9 13h6M9 17h6" /></svg
+                >Reports</span
+              >
+            </div>
+
+            <div class="drawer-logout tap-fx" id="drawerLogout">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              Logout
+            </div>
+            <div class="drawer-footer">Safai · v2.4.1</div>
+          </div>
+        </aside>
+        <div class="scroll-area" id="scrollArea">
+          <div class="app">
+            <!-- Top bar -->
+            <div class="topbar">
+              <button class="icon-btn tap-fx" id="menuBtn" aria-label="Menu">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                >
+                  <line x1="4" y1="7" x2="20" y2="7" />
+                  <line x1="4" y1="12" x2="20" y2="12" />
+                  <line x1="4" y1="17" x2="20" y2="17" />
+                </svg>
+              </button>
+              <button
+                class="building-picker tap-fx"
+                data-toast="Switch building"
+              >
+                <span class="building-ic">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="4" y="2" width="16" height="20" rx="1" />
+                    <path d="M9 22v-4h6v4" />
+                    <path
+                      d="M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"
+                    />
+                  </svg>
+                </span>
+                <span class="building-name">Corporate Building1</span>
+              </button>
+              <button
+                class="icon-btn tap-fx"
+                aria-label="Notifications"
+                data-toast="3 new notifications"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+                <span class="badge-dot"></span>
+              </button>
+              <button
+                class="icon-btn tap-fx"
+                aria-label="Toggle theme"
+                data-toast="Switched to dark mode"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              </button>
+              <div class="avatar tap-fx" data-toast="Opening profile settings…">
+                OP<span class="dot"></span>
+              </div>
+            </div>
+
+            <main>
+              <!-- Hero -->
+              <section>
+                <div class="hero-card">
+                  <div class="hero-head">
+                    <div class="hero-ic">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <rect x="4" y="3" width="16" height="18" rx="2" />
+                        <path d="M9 8h6M9 12h6M9 16h4" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="hero-title">Washroom Locations</div>
+                      <div class="hero-sub">
+                        Details, assignments &amp; ratings
+                      </div>
+                    </div>
+                  </div>
+                  <div class="hero-actions">
+                    <button
+                      class="btn btn-outline tap-fx"
+                      data-toast="Opening assign panel…"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M19 8v6M22 11h-6" />
+                      </svg>
+                      Assign
+                    </button>
+                    <button
+                      class="btn btn-fill tap-fx"
+                      data-toast="Opening new location form…"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.6"
+                        stroke-linecap="round"
+                      >
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                      </svg>
+                      Add Location
+                    </button>
+                  </div>
+                  <div class="hero-stats">
+                    <div
+                      class="hero-stat stat-a"
+                      style="
+                        --stat-glow: rgba(59, 130, 246, 0.28);
+                        --stat-accent: #3b82f6;
+                        --stat-accent-2: #60a5fa;
+                        --stat-icon-glow: rgba(59, 130, 246, 0.45);
+                        --stat-icon-ring: rgba(59, 130, 246, 0.16);
+                        --stat-color: #1d4ed8;
+                      "
+                    >
+                      <div class="stat-ic">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <rect x="4" y="3" width="16" height="18" rx="2" />
+                          <path d="M9 8h6M9 12h6M9 16h4" />
+                        </svg>
+                      </div>
+                      <div class="v">53</div>
+                      <div class="l">Washrooms</div>
+                    </div>
+                    <div
+                      class="hero-stat stat-b"
+                      style="
+                        --stat-glow: rgba(14, 122, 86, 0.24);
+                        --stat-accent: #0e7a56;
+                        --stat-accent-2: #34d399;
+                        --stat-icon-glow: rgba(14, 122, 86, 0.38);
+                        --stat-icon-ring: rgba(14, 122, 86, 0.16);
+                        --stat-color: #0e7a56;
+                      "
+                    >
+                      <div class="stat-ic">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                          <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                      </div>
+                      <div class="v">49</div>
+                      <div class="l">Active</div>
+                    </div>
+                    <div
+                      class="hero-stat stat-c"
+                      style="
+                        --stat-glow: rgba(240, 165, 39, 0.28);
+                        --stat-accent: #f0a527;
+                        --stat-accent-2: #ffce6b;
+                        --stat-icon-glow: rgba(240, 165, 39, 0.42);
+                        --stat-icon-ring: rgba(240, 165, 39, 0.18);
+                        --stat-color: #8f5608;
+                      "
+                    >
+                      <div class="stat-ic">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path
+                            d="M12 2l2.6 6.2L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.8z"
+                          />
+                        </svg>
+                      </div>
+                      <div class="v">3.4</div>
+                      <div class="l">Avg Rating</div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Search -->
+              <section style="margin-bottom: 16px">
+                <div class="search-row">
+                  <div class="search-box">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="11" cy="11" r="7" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input
+                      type="text"
+                      id="searchInput"
+                      placeholder="Search facility name or ID…"
+                    />
+                  </div>
+                  <button
+                    class="filter-btn tap-fx"
+                    id="filterToggleBtn"
+                    aria-label="Filters"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.1"
+                      stroke-linecap="round"
+                    >
+                      <line x1="4" y1="21" x2="4" y2="14" />
+                      <line x1="4" y1="10" x2="4" y2="3" />
+                      <line x1="12" y1="21" x2="12" y2="12" />
+                      <line x1="12" y1="8" x2="12" y2="3" />
+                      <line x1="20" y1="21" x2="20" y2="16" />
+                      <line x1="20" y1="12" x2="20" y2="3" />
+                      <line x1="1" y1="14" x2="7" y2="14" />
+                      <line x1="9" y1="8" x2="15" y2="8" />
+                      <line x1="17" y1="16" x2="23" y2="16" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="chip-row">
+                  <div class="chip tap-fx" data-toast="Filter by type">
+                    Types: All
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </div>
+                  <div
+                    class="chip tap-fx"
+                    data-toast="Filter by facility company"
+                  >
+                    Facility: All
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </div>
+                  <div class="chip tap-fx" data-toast="Filter by rating">
+                    Rating: All
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </div>
+                  <div class="seg-toggle">
+                    <button class="seg-btn active tap-fx" id="segAllBtn">
+                      All
+                    </button>
+                    <button class="seg-btn tap-fx" id="segAssignedBtn">
+                      Assigned
+                    </button>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Washroom list -->
+              <section>
+                <div class="list-toolbar">
+                  <div class="list-count" id="listCount">
+                    Showing <b>1–15</b> of <b>53</b> washrooms
+                  </div>
+                  <div class="view-toggle">
+                    <button
+                      class="view-btn active tap-fx"
+                      id="viewListBtn"
+                      aria-label="List view"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        stroke-linecap="round"
+                      >
+                        <line x1="4" y1="6" x2="20" y2="6" />
+                        <line x1="4" y1="12" x2="20" y2="12" />
+                        <line x1="4" y1="18" x2="20" y2="18" />
+                      </svg>
+                    </button>
+                    <button
+                      class="view-btn tap-fx"
+                      id="viewGridBtn"
+                      aria-label="Grid view"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="wr-list" id="wrList"></div>
+                <div class="pagination" id="pagination"></div>
+
+                <div
+                  class="zones-foot tap-fx"
+                  data-toast="Opening unassigned washrooms…"
+                >
+                  <div class="zones-foot-ic">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M12 9v4" />
+                      <path d="M12 17h.01" />
+                      <path
+                        d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="zones-foot-text">
+                    <div class="zones-foot-label">Unassigned washrooms</div>
+                    <div class="zones-foot-num" id="unassignedCount">3</div>
+                  </div>
+                  <svg
+                    class="chev"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              </section>
+            </main>
+          </div>
+        </div>
+
+        <div class="toast-stack" id="toastStack"></div>
+
+        <button class="fab tap-fx" data-toast="Opening new location form…">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.6"
+            stroke-linecap="round"
+          >
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
+
+        <!-- Bottom nav, docked flush to the bottom edge -->
+        <nav class="navbar">
+          <div class="navbar-inner">
+            <button class="nav-item" data-tab="dashboard">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                <rect x="14" y="14" width="7" height="7" rx="1.5" />
+              </svg>
+              <span><a href="index.html"> Dashboard</span></a>
+            </button>
+            <button class="nav-item active" data-tab="washroom">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+              <span>Washroom</span>
+            </button>
+            <button class="nav-item" data-tab="task">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="5" y="3" width="14" height="18" rx="2" />
+                <path d="M9 8h6M9 12h6M9 16h4" />
+              </svg>
+              <span>Task</span>
+            </button>
+            <button class="nav-item" data-tab="reports">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 3v18h18" />
+                <path d="M18 17V9" />
+                <path d="M13 17V5" />
+                <path d="M8 17v-3" />
+              </svg>
+              <span>Reports</span>
+            </button>
+            <button class="nav-item" data-tab="profile">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <span>Profile</span>
+            </button>
+          </div>
+        </nav>
+
+        <!-- ===================== Washroom Detail Screen (confined to the phone frame) ===================== -->
+        <div
+          class="detail-screen"
+          id="detailScreen"
+          role="dialog"
+          aria-modal="true"
+          aria-hidden="true"
+        >
+          <div class="detail-topbar">
+            <button class="detail-back tap-fx" id="detailBackBtn">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+              Back to listings
+            </button>
+            <div class="detail-topbar-name" id="detailTopbarName"></div>
+          </div>
+          <div class="detail-main" id="detailMain"></div>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </div>
+
+    <script>
+      var toastStack = document.getElementById("toastStack");
+      var toastCheckIcon =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+      function showToast(message) {
+        if (!message) return;
+        var t = document.createElement("div");
+        t.className = "toast";
+        t.innerHTML = toastCheckIcon + "<span>" + message + "</span>";
+        toastStack.appendChild(t);
+        requestAnimationFrame(function () {
+          t.classList.add("show");
+        });
+        setTimeout(function () {
+          t.classList.remove("show");
+          setTimeout(function () {
+            t.remove();
+          }, 220);
+        }, 2000);
+        while (toastStack.children.length > 2) {
+          toastStack.removeChild(toastStack.firstChild);
+        }
+      }
+      document.querySelectorAll("[data-toast]").forEach(function (el) {
+        el.addEventListener("click", function (e) {
+          e.stopPropagation();
+          showToast(el.dataset.toast);
+        });
+      });
+
+      document.querySelectorAll(".nav-item").forEach(function (t) {
+        t.addEventListener("click", function () {
+          document.querySelectorAll(".nav-item").forEach(function (x) {
+            x.classList.remove("active");
+          });
+          t.classList.add("active");
+          showToast("Switched to " + t.querySelector("span").textContent);
+        });
+      });
+
+      /* ---------- Icons ---------- */
+      var svgWashroom =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>';
+      var svgStar =
+        '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.6 6.2L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.8z"/></svg>';
+      var svgTarget =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>';
+      var svgBuilding =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>';
+      var svgNav =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>';
+      var svgKebab =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="19" r="1.4"/></svg>';
+
+      /* ---------- Data (15 real entries matching the desktop list, plus generated entries to reach 53) ---------- */
+      var washrooms = [
+        {
+          id: 423,
+          name: "Test89",
+          zone: "NEW A",
+          score: null,
+          rating: 10,
+          cleaner: "Anil Clean",
+          extra: 1,
+          facility: "N/A",
+          status: "active",
+        },
+        {
+          id: 422,
+          name: "test-bf-ghs",
+          zone: "TEST-B-FA",
+          score: null,
+          rating: 0.0,
+          cleaner: "Test - FA1",
+          extra: 0,
+          facility: "N/A",
+          status: "active",
+        },
+        {
+          id: 421,
+          name: "Test -FA",
+          zone: "WATHODA",
+          score: null,
+          rating: 1.3,
+          cleaner: "Ramesh C.",
+          extra: 1,
+          facility: "saafai",
+          status: "active",
+        },
+        {
+          id: 420,
+          name: "Test B - Limit",
+          zone: "RAM NAGAR",
+          score: null,
+          rating: 0.0,
+          cleaner: "test a cleaner",
+          extra: 0,
+          facility: "washroom co.",
+          status: "active",
+        },
+        {
+          id: 419,
+          name: "Adipisci in earum",
+          zone: "UJWAL NAGAR",
+          score: null,
+          rating: 0.0,
+          cleaner: "abc",
+          extra: 1,
+          facility: "saafai",
+          status: "active",
+        },
+        {
+          id: 418,
+          name: "Tower C - Ground Fl.",
+          zone: "LOKMAT SQ.",
+          score: null,
+          rating: 0.0,
+          cleaner: null,
+          extra: 0,
+          facility: "N/A",
+          status: "active",
+        },
+        {
+          id: 417,
+          name: "Tower A - Ground Fl.",
+          zone: "LOKMAT SQ.",
+          score: null,
+          rating: 0.0,
+          cleaner: null,
+          extra: 0,
+          facility: "N/A",
+          status: "active",
+        },
+        {
+          id: 416,
+          name: "Ground Floor Washr.",
+          zone: "LOKMAT SQ.",
+          score: null,
+          rating: 0.0,
+          cleaner: null,
+          extra: 0,
+          facility: "N/A",
+          status: "active",
+        },
+        {
+          id: 415,
+          name: "Ground Floor Washr.",
+          zone: "LOKMAT SQ.",
+          score: null,
+          rating: 5.25,
+          cleaner: "srujal mane",
+          extra: 0,
+          facility: "N/A",
+          status: "active",
+        },
+        {
+          id: 414,
+          name: "dwarka nagar washr.",
+          zone: "TEST33",
+          score: null,
+          rating: 8,
+          cleaner: "Omkar Cl.",
+          extra: 1,
+          facility: "saafai",
+          status: "active",
+        },
+        {
+          id: 413,
+          name: "test33",
+          zone: "TEST33",
+          score: null,
+          rating: 0.0,
+          cleaner: "srujal mane",
+          extra: 0,
+          facility: "Test comp.",
+          status: "active",
+        },
+        {
+          id: 412,
+          name: "Incidunt distinctio",
+          zone: "BHANDARA",
+          score: null,
+          rating: 0.0,
+          cleaner: "sdm",
+          extra: 0,
+          facility: "safai test",
+          status: "active",
+        },
+        {
+          id: 409,
+          name: "Test-02",
+          zone: "MANISH 1",
+          score: null,
+          rating: 7.1,
+          cleaner: "srujal ma.",
+          extra: 1,
+          facility: "saafai",
+          status: "active",
+        },
+        {
+          id: 402,
+          name: "Kamthee Test",
+          zone: "NAGPUR",
+          score: null,
+          rating: 0.0,
+          cleaner: "Sanjivani",
+          extra: 3,
+          facility: "N/A",
+          status: "active",
+        },
+        {
+          id: 399,
+          name: "Khamla test 1",
+          zone: "KHAMLA",
+          score: null,
+          rating: 8.7,
+          cleaner: "Omkar te.",
+          extra: 1,
+          facility: "saafai",
+          status: "active",
+        },
+      ];
+      var extraNames = [
+        "Floor 2 Washroom",
+        "East Wing WC",
+        "Basement Restroom",
+        "Lobby Washroom",
+        "Cafeteria WC",
+        "Tower B Washroom",
+        "Reception Restroom",
+        "Staff Washroom",
+        "Visitor WC",
+        "Annex Washroom",
+        "Block D Restroom",
+        "Parking Level WC",
+        "Rooftop Washroom",
+        "Server Room WC",
+        "Gate 3 Restroom",
+        "North Wing WC",
+        "South Block Washr.",
+        "Common Area WC",
+      ];
+      var extraZones = [
+        "SADAR",
+        "DHARAMPETH",
+        "CIVIL LINES",
+        "SITABULDI",
+        "JARIPATKA",
+        "HINGNA",
+        "AJNI",
+        "PRATAP NAGAR",
+        "ITWARI",
+        "MAHAL",
+        "SOMALWADA",
+        "KAMPTEE RD",
+      ];
+      var extraCleaners = [
+        "Priya S.",
+        "Rahul K.",
+        "Sunita W.",
+        "Vikas T.",
+        "Meena J.",
+        null,
+        "Deepak R.",
+        "Anita M.",
+      ];
+      var extraFacilities = [
+        "saafai",
+        "N/A",
+        "Test comp.",
+        "safai test",
+        "washroom co.",
+      ];
+      var startId = 398;
+      for (var i = 0; i < 38; i++) {
+        var cleaner = extraCleaners[i % extraCleaners.length];
+        washrooms.push({
+          id: startId - i,
+          name: extraNames[i % extraNames.length],
+          zone: extraZones[i % extraZones.length],
+          score: null,
+          rating: cleaner ? Math.round((((i * 37) % 100) / 10) * 10) / 10 : 0,
+          cleaner: cleaner,
+          extra: cleaner && i % 4 === 0 ? 1 : 0,
+          facility: extraFacilities[i % extraFacilities.length],
+          status: i % 11 === 0 ? "inactive" : "active",
+        });
+      }
+
+      var PAGE_SIZE = 15;
+      var currentPage = 1;
+      var currentMode = "list";
+
+      function initials(name) {
+        return name
+          .split(" ")
+          .map(function (w) {
+            return w[0];
+          })
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+      }
+      function scoreHtml() {
+        return '<span class="val dash">' + svgTarget + "&mdash;</span>";
+      }
+      function ratingValHtml(r) {
+        var display = r === 0 ? "0.0" : (Math.round(r * 10) / 10).toString();
+        return '<span class="val">' + svgStar + display + "</span>";
+      }
+      function cleanerHtml(w) {
+        if (!w.cleaner) {
+          return '<div class="wr-person unassigned"><span class="pdot"></span><span class="name">Unassigned</span></div>';
+        }
+        return (
+          '<div class="wr-person"><span class="pdot"></span><span class="name">' +
+          w.cleaner +
+          "</span>" +
+          (w.extra ? '<span class="extra">+' + w.extra + "</span>" : "") +
+          "</div>"
+        );
+      }
+
+      function renderCardList(pageItems) {
+        return pageItems
+          .map(function (w, i) {
+            var statusLabel = w.status === "active" ? "Active" : "Inactive";
+            return (
+              '<div class="wr-card tap-fx" data-open-detail="' +
+              w.id +
+              '" style="animation-delay:' +
+              i * 40 +
+              'ms">' +
+              '<div class="wr-top">' +
+              '<div class="wr-badge">' +
+              svgWashroom +
+              "</div>" +
+              '<div class="wr-titlewrap">' +
+              '<div class="wr-name clickable">' +
+              w.name +
+              "</div>" +
+              '<div class="wr-sub">ID ' +
+              w.id +
+              " &middot; " +
+              w.zone +
+              "</div>" +
+              "</div>" +
+              '<span class="status-pill ' +
+              w.status +
+              '">' +
+              statusLabel +
+              "</span>" +
+              "</div>" +
+              '<div class="wr-metrics">' +
+              '<div class="wr-metric"><div class="lbl">Current score</div>' +
+              scoreHtml() +
+              "</div>" +
+              '<div class="wr-metric"><div class="lbl">Avg rating</div>' +
+              ratingValHtml(w.rating) +
+              "</div>" +
+              "</div>" +
+              '<div class="wr-bottom">' +
+              '<div class="wr-people">' +
+              cleanerHtml(w) +
+              '<div class="wr-facility">' +
+              svgBuilding +
+              "<span>" +
+              w.facility +
+              "</span></div>" +
+              "</div>" +
+              '<div class="wr-actions">' +
+              '<button class="act-locate tap-fx" data-toast="Locating ' +
+              w.name +
+              '…">' +
+              svgNav +
+              "</button>" +
+              '<button class="act-kebab tap-fx" data-toast="' +
+              w.name +
+              ' options">' +
+              svgKebab +
+              "</button>" +
+              "</div>" +
+              "</div>" +
+              "</div>"
+            );
+          })
+          .join("");
+      }
+
+      function renderCardGrid(pageItems) {
+        return pageItems
+          .map(function (w, i) {
+            return (
+              '<div class="wgrid-card tap-fx" data-open-detail="' +
+              w.id +
+              '" style="animation-delay:' +
+              i * 40 +
+              'ms">' +
+              '<div class="wgrid-top">' +
+              '<div class="wgrid-badge">' +
+              svgWashroom +
+              "</div>" +
+              '<span class="status-pill ' +
+              w.status +
+              '" style="padding:3px 8px 3px 6px; font-size:8.5px;">' +
+              (w.status === "active" ? "Active" : "Inactive") +
+              "</span>" +
+              "</div>" +
+              "<div>" +
+              '<div class="wgrid-name clickable">' +
+              w.name +
+              "</div>" +
+              '<div class="wgrid-zone">' +
+              w.zone +
+              " &middot; ID " +
+              w.id +
+              "</div>" +
+              "</div>" +
+              '<div class="wgrid-row">' +
+              ratingValHtml(w.rating).replace("val", "wgrid-rating") +
+              '<span style="font-size:10px; color:var(--text-faint); font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:70px;">' +
+              (w.cleaner || "Unassigned") +
+              "</span>" +
+              "</div>" +
+              '<div class="wgrid-actions">' +
+              '<button class="act-locate tap-fx" data-toast="Locating ' +
+              w.name +
+              '…">' +
+              svgNav +
+              "</button>" +
+              '<button class="act-kebab tap-fx" data-toast="' +
+              w.name +
+              ' options">' +
+              svgKebab +
+              "</button>" +
+              "</div>" +
+              "</div>"
+            );
+          })
+          .join("");
+      }
+
+      var wrList = document.getElementById("wrList");
+      var paginationEl = document.getElementById("pagination");
+      var listCountEl = document.getElementById("listCount");
+      var unassignedCountEl = document.getElementById("unassignedCount");
+
+      function bindDynamicToasts(container) {
+        container.querySelectorAll("[data-toast]").forEach(function (el) {
+          el.addEventListener("click", function (e) {
+            e.stopPropagation();
+            showToast(el.dataset.toast);
+          });
+        });
+        container.querySelectorAll("[data-open-detail]").forEach(function (el) {
+          el.addEventListener("click", function (e) {
+            e.stopPropagation();
+            openDetail(parseInt(el.dataset.openDetail, 10));
+          });
+        });
+      }
+
+      function totalPages() {
+        return Math.max(1, Math.ceil(washrooms.length / PAGE_SIZE));
+      }
+
+      function svgChevron(dir) {
+        var points = dir === "left" ? "15 18 9 12 15 6" : "9 18 15 12 9 6";
+        return (
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="' +
+          points +
+          '"/></svg>'
+        );
+      }
+
+      function renderPagination() {
+        var pages = totalPages();
+        if (pages <= 1) {
+          paginationEl.innerHTML = "";
+          return;
+        }
+        var html =
+          '<button class="page-btn nav tap-fx" id="pagePrev"' +
+          (currentPage === 1 ? " disabled" : "") +
+          ">" +
+          svgChevron("left") +
+          "</button>";
+
+        var addPageBtn = function (n) {
+          html +=
+            '<button class="page-btn tap-fx page-num' +
+            (n === currentPage ? " active" : "") +
+            '" data-page="' +
+            n +
+            '">' +
+            n +
+            "</button>";
+        };
+        var addDots = function () {
+          html += '<span class="page-dots">&middot;&middot;&middot;</span>';
+        };
+
+        addPageBtn(1);
+        if (currentPage > 3) addDots();
+        for (
+          var p = Math.max(2, currentPage - 1);
+          p <= Math.min(pages - 1, currentPage + 1);
+          p++
+        ) {
+          addPageBtn(p);
+        }
+        if (currentPage < pages - 2) addDots();
+        if (pages > 1) addPageBtn(pages);
+
+        html +=
+          '<button class="page-btn nav tap-fx" id="pageNext"' +
+          (currentPage === pages ? " disabled" : "") +
+          ">" +
+          svgChevron("right") +
+          "</button>";
+        paginationEl.innerHTML = html;
+
+        var prevBtn = document.getElementById("pagePrev");
+        var nextBtn = document.getElementById("pageNext");
+        if (prevBtn)
+          prevBtn.addEventListener("click", function () {
+            goToPage(currentPage - 1);
+          });
+        if (nextBtn)
+          nextBtn.addEventListener("click", function () {
+            goToPage(currentPage + 1);
+          });
+        paginationEl.querySelectorAll(".page-num").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            goToPage(parseInt(btn.dataset.page, 10));
+          });
+        });
+      }
+
+      function renderPage() {
+        var start = (currentPage - 1) * PAGE_SIZE;
+        var pageItems = washrooms.slice(start, start + PAGE_SIZE);
+        wrList.className =
+          "wr-list" + (currentMode === "grid" ? " grid-mode" : "");
+        wrList.innerHTML =
+          currentMode === "grid"
+            ? renderCardGrid(pageItems)
+            : renderCardList(pageItems);
+        bindDynamicToasts(wrList);
+        var last = Math.min(start + PAGE_SIZE, washrooms.length);
+        listCountEl.innerHTML =
+          "Showing <b>" +
+          (washrooms.length ? start + 1 : 0) +
+          "&ndash;" +
+          last +
+          "</b> of <b>" +
+          washrooms.length +
+          "</b> washrooms";
+        renderPagination();
+        unassignedCountEl.textContent = washrooms.filter(function (w) {
+          return !w.cleaner;
+        }).length;
+      }
+
+      function goToPage(n) {
+        var pages = totalPages();
+        currentPage = Math.max(1, Math.min(pages, n));
+        renderPage();
+        document
+          .getElementById("scrollArea")
+          .scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function setListMode(mode) {
+        currentMode = mode;
+        currentPage = 1;
+        document
+          .getElementById("viewListBtn")
+          .classList.toggle("active", mode !== "grid");
+        document
+          .getElementById("viewGridBtn")
+          .classList.toggle("active", mode === "grid");
+        renderPage();
+      }
+      document
+        .getElementById("viewListBtn")
+        .addEventListener("click", function () {
+          setListMode("list");
+        });
+      document
+        .getElementById("viewGridBtn")
+        .addEventListener("click", function () {
+          setListMode("grid");
+        });
+
+      /* ---------- Search + Assigned/All toggle ---------- */
+      var searchInput = document.getElementById("searchInput");
+      var fullList = washrooms.slice();
+      var segAllBtn = document.getElementById("segAllBtn");
+      var segAssignedBtn = document.getElementById("segAssignedBtn");
+
+      function applyFilters() {
+        var q = searchInput.value.trim().toLowerCase();
+        var assignedOnly = segAssignedBtn.classList.contains("active");
+        washrooms = fullList.filter(function (w) {
+          var matchesQ =
+            !q ||
+            w.name.toLowerCase().indexOf(q) !== -1 ||
+            String(w.id).indexOf(q) !== -1;
+          var matchesAssigned = !assignedOnly || !!w.cleaner;
+          return matchesQ && matchesAssigned;
+        });
+        currentPage = 1;
+        renderPage();
+      }
+      searchInput.addEventListener("input", applyFilters);
+      segAllBtn.addEventListener("click", function () {
+        segAllBtn.classList.add("active");
+        segAssignedBtn.classList.remove("active");
+        applyFilters();
+      });
+      segAssignedBtn.addEventListener("click", function () {
+        segAssignedBtn.classList.add("active");
+        segAllBtn.classList.remove("active");
+        applyFilters();
+      });
+
+      setListMode("list");
+
+      /* ---------- Drawer ---------- */
+      var drawer = document.getElementById("drawer");
+      var scrim = document.getElementById("scrim");
+      var menuBtn = document.getElementById("menuBtn");
+
+      function openDrawer() {
+        drawer.classList.add("open");
+        scrim.classList.add("open");
+        drawer.setAttribute("aria-hidden", "false");
+        menuBtn.setAttribute("aria-expanded", "true");
+      }
+      function closeDrawer() {
+        drawer.classList.remove("open");
+        scrim.classList.remove("open");
+        drawer.setAttribute("aria-hidden", "true");
+        menuBtn.setAttribute("aria-expanded", "false");
+      }
+      menuBtn.addEventListener("click", openDrawer);
+      document
+        .getElementById("drawerCloseBtn")
+        .addEventListener("click", closeDrawer);
+      scrim.addEventListener("click", closeDrawer);
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && drawer.classList.contains("open"))
+          closeDrawer();
+      });
+
+      document
+        .getElementById("drawerProfile")
+        .addEventListener("click", function () {
+          showToast("Opening profile settings…");
+        });
+
+      document.querySelectorAll(".drawer-link").forEach(function (link) {
+        link.setAttribute("tabindex", "0");
+        link.setAttribute("role", "button");
+        function activateLink() {
+          if (link.classList.contains("has-sub")) {
+            var wasOpen = link.classList.contains("open");
+            document
+              .querySelectorAll(".drawer-link.has-sub")
+              .forEach(function (x) {
+                x.classList.remove("open");
+              });
+            if (!wasOpen) {
+              link.classList.add("open");
+            }
+            return;
+          }
+          document.querySelectorAll(".drawer-link").forEach(function (x) {
+            x.classList.remove("active");
+          });
+          link.classList.add("active");
+          showToast(link.dataset.drawerToast || "Opening…");
+          setTimeout(closeDrawer, 320);
+        }
+        link.addEventListener("click", activateLink);
+        link.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            activateLink();
+          }
+        });
+      });
+
+      document.querySelectorAll(".drawer-sublink").forEach(function (sublink) {
+        sublink.setAttribute("tabindex", "0");
+        sublink.setAttribute("role", "button");
+        function activateSublink() {
+          var parentMenu = sublink.closest(".drawer-submenu");
+          if (parentMenu) {
+            parentMenu
+              .querySelectorAll(".drawer-sublink")
+              .forEach(function (x) {
+                x.classList.remove("active");
+              });
+          }
+          sublink.classList.add("active");
+          showToast(sublink.dataset.drawerToast || "Opening…");
+          setTimeout(closeDrawer, 320);
+        }
+        sublink.addEventListener("click", function (e) {
+          e.stopPropagation();
+          activateSublink();
+        });
+        sublink.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            e.stopPropagation();
+            activateSublink();
+          }
+        });
+      });
+
+      document
+        .getElementById("drawerLogout")
+        .addEventListener("click", function () {
+          showToast("Logging out…");
+          setTimeout(closeDrawer, 320);
+        });
+
+      /* opening the drawer already sets the correct open submenu via the "open" class on markup */
+      document
+        .querySelector(
+          '.drawer-link.has-sub[data-drawer-toast="Switched to Washrooms"]',
+        )
+        .classList.add("open");
+
+      /* =========================================================================
+     WASHROOM DETAIL SCREEN
+     Clicking a washroom's name opens a full detail view for that exact
+     washroom (id-matched from the `washrooms` / `fullList` data), styled
+     to mirror the desktop admin "washroom profile" page and laid out
+     responsively: single column on phones, the wide two-column layout
+     shown in the reference screenshot from ~860px and up.
+     ========================================================================= */
+
+      var svgLocate = svgNav;
+      var svgEdit =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>';
+      var svgTrash =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>';
+      var svgLayers =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/></svg>';
+      var svgTag =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 11 22 2 13V4a2 2 0 0 1 2-2h9z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>';
+      var svgUsers =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
+      var svgBar =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>';
+      var svgSink =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M5 12v3a7 7 0 0 0 14 0v-3"/><path d="M9 6V3M15 6V3M12 6V3"/></svg>';
+      var svgDrop =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s7 8.5 7 13a7 7 0 0 1-14 0c0-4.5 7-13 7-13z"/></svg>';
+      var svgChat =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
+      var svgShield =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+      var svgPin =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.1-9.5-10A5.5 5.5 0 0 1 12 4.5 5.5 5.5 0 0 1 21.5 11c-2.5 3.9-9.5 10-9.5 10z"/><circle cx="12" cy="10.5" r="2.2"/></svg>';
+      var svgCalendar =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+      var svgPhone =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+
+      function seeded(seed) {
+        var x = Math.sin(seed) * 10000;
+        return x - Math.floor(x);
+      }
+      function pick(arr, seed) {
+        return arr[Math.floor(seeded(seed) * arr.length)];
+      }
+      function starIcon() {
+        return svgStar;
+      }
+
+      var cityPool = [
+        { city: "Nagpur", state: "Maharashtra" },
+        { city: "Pune", state: "Maharashtra" },
+        { city: "Mumbai", state: "Maharashtra" },
+        { city: "Nashik", state: "Maharashtra" },
+        { city: "Indore", state: "Madhya Pradesh" },
+        { city: "Raipur", state: "Chhattisgarh" },
+      ];
+      var buildingCodePool = [
+        "ABC",
+        "Block A",
+        "Tower B",
+        "Wing C",
+        "Unit D",
+        "Sector E",
+        "Block F",
+      ];
+      var amenityPool = [
+        { label: "Paid Entry", icon: svgTag },
+        { label: "Wheelchair Accessible", icon: svgShield },
+        { label: "Baby Changing Station", icon: svgUsers },
+        { label: "Sanitary Vending", icon: svgDrop },
+        { label: "Hand Dryer", icon: svgSink },
+        { label: "CCTV Monitored", icon: svgShield },
+        { label: "24x7 Open", icon: svgCalendar },
+      ];
+      var createdPool = [
+        "Jun 25, 2026",
+        "Jun 20, 2026",
+        "Jul 1, 2026",
+        "May 15, 2026",
+        "Apr 30, 2026",
+        "Mar 12, 2026",
+      ];
+      var reviewCommentPool = [
+        "Very clean and well maintained.",
+        "Good hygiene, restocked regularly.",
+        "Excellent service, no complaints at all.",
+        "Neat and tidy every time I visit.",
+        "Great water pressure and cleanliness.",
+        "Consistently spotless, appreciate the effort.",
+      ];
+
+      /* Builds a full, deterministic detail record for a washroom id so every
+     open of the same washroom looks identical, without needing a backend. */
+      function getDetail(w) {
+        var seed = w.id;
+        var loc = pick(cityPool, seed * 1.7);
+        var building = pick(buildingCodePool, seed * 2.3);
+        var created = pick(createdPool, seed * 9.9);
+
+        var amenCount = 1 + Math.floor(seeded(seed * 3.1) * 3);
+        var amenities = [];
+        var usedIdx = {};
+        for (var a = 0; a < amenCount; a++) {
+          var idx = Math.floor(
+            seeded(seed * (5 + a * 1.9)) * amenityPool.length,
+          );
+          if (usedIdx[idx]) idx = (idx + 1) % amenityPool.length;
+          usedIdx[idx] = true;
+          amenities.push(amenityPool[idx]);
+        }
+
+        var men = {
+          western: 1 + Math.floor(seeded(seed * 4.4) * 2),
+          indian: 1 + Math.floor(seeded(seed * 5.5) * 2),
+          urinals: 1 + Math.floor(seeded(seed * 6.6) * 2),
+        };
+        var women = {
+          western: 1 + Math.floor(seeded(seed * 7.7) * 2),
+          indian: 1 + Math.floor(seeded(seed * 8.8) * 2),
+          urinals: 1 + Math.floor(seeded(seed * 10.1) * 2),
+        };
+        var capacityTotal =
+          men.western +
+          men.indian +
+          men.urinals +
+          women.western +
+          women.indian +
+          women.urinals;
+        var capacityUsed =
+          w.status === "active"
+            ? capacityTotal
+            : Math.max(
+                0,
+                capacityTotal - 1 - Math.floor(seeded(seed * 11.3) * 3),
+              );
+
+        var cleaners = [];
+        if (w.cleaner) {
+          cleaners.push({
+            name: w.cleaner,
+            role: "cleaner",
+            phone:
+              "4" +
+              String(
+                200000000 + Math.floor(seeded(seed * 12.1) * 90000000),
+              ).slice(0, 9),
+            status: "assigned",
+            date: created,
+          });
+        }
+        if (w.extra) {
+          for (var c = 0; c < w.extra; c++) {
+            cleaners.push({
+              name: pick(
+                ["Test-fsgs", "Ramesh C.", "Priya S.", "Deepak R.", "Vikas T."],
+                seed * (13 + c),
+              ),
+              role: "cleaner",
+              phone:
+                "4" +
+                String(
+                  300000000 + Math.floor(seeded(seed * (14 + c)) * 70000000),
+                ).slice(0, 9),
+              status: "assigned",
+              date: created,
+            });
+          }
+        }
+
+        var cleanerReviewCount =
+          w.rating > 0 ? 1 + Math.floor(seeded(seed * 15.5) * 3) : 0;
+        var cleanerReviews = [];
+        for (var r = 0; r < cleanerReviewCount; r++) {
+          cleanerReviews.push({
+            name: cleaners.length
+              ? pick(cleaners, seed * (16 + r)).name
+              : "Team Member",
+            stars: Math.max(1, Math.min(5, Math.round(w.rating / 2))) || 5,
+            text: pick(reviewCommentPool, seed * (20 + r)),
+            date: pick(createdPool, seed * (24 + r)),
+          });
+        }
+
+        return {
+          loc: loc,
+          building: building,
+          created: created,
+          amenities: amenities,
+          men: men,
+          women: women,
+          capacityUsed: capacityUsed,
+          capacityTotal: capacityTotal,
+          cleaners: cleaners,
+          userReviewCount: 0,
+          cleanerAvg: w.rating || 0,
+          cleanerReviewCount: cleanerReviewCount,
+          cleanerReviews: cleanerReviews,
+        };
+      }
+
+      function detailFacRow(icon, label, count) {
+        return (
+          '<div class="detail-fac-row"><div class="l">' +
+          icon +
+          "<span>" +
+          label +
+          '</span></div><div class="n">' +
+          count +
+          "</div></div>"
+        );
+      }
+
+      function detailRing(used, total) {
+        var pct = total ? used / total : 0;
+        var r = 24,
+          c = 2 * Math.PI * r;
+        var offset = c - pct * c;
+        return (
+          '<div class="detail-ring"><svg viewBox="0 0 58 58">' +
+          '<circle class="detail-ring-track" cx="29" cy="29" r="' +
+          r +
+          '"/>' +
+          '<circle class="detail-ring-val" cx="29" cy="29" r="' +
+          r +
+          '" stroke-dasharray="' +
+          c +
+          '" stroke-dashoffset="' +
+          offset +
+          '"/>' +
+          '</svg><div class="detail-ring-text"><b>' +
+          used +
+          "</b><span>/ " +
+          total +
+          "</span></div></div>"
+        );
+      }
+
+      function renderDetail(w) {
+        var d = getDetail(w);
+        var statusLabel = w.status === "active" ? "Active" : "Inactive";
+
+        var amenitiesHtml = d.amenities
+          .map(function (a) {
+            return (
+              '<span class="detail-amenity-chip">' +
+              a.icon +
+              a.label +
+              "</span>"
+            );
+          })
+          .join("");
+
+        var cleanersHtml = d.cleaners.length
+          ? d.cleaners
+              .map(function (c) {
+                return (
+                  '<div class="detail-cleaner-row">' +
+                  '<div class="detail-cleaner-avatar">' +
+                  initials(c.name) +
+                  "</div>" +
+                  '<div class="detail-cleaner-info"><div class="n">' +
+                  c.name +
+                  '</div><div class="r">' +
+                  c.role +
+                  '</div><div class="p">' +
+                  svgPhone.replace(
+                    "<svg ",
+                    '<svg style="width:10px;height:10px;vertical-align:-1px;margin-right:3px" ',
+                  ) +
+                  c.phone +
+                  "</div></div>" +
+                  '<div class="detail-cleaner-side"><span class="status">' +
+                  c.status +
+                  '</span><div class="d">' +
+                  c.date +
+                  "</div></div>" +
+                  "</div>"
+                );
+              })
+              .join("")
+          : '<div class="detail-empty-cleaners">No cleaners assigned yet.</div>';
+
+        var userStatBox =
+          '<div class="detail-stat-box na"><div class="detail-stat-ic">' +
+          svgUsers +
+          '</div><div><div class="v">N/A</div><div class="l">0 User Reviews</div></div></div>';
+        var cleanerStatBox = d.cleanerReviewCount
+          ? '<div class="detail-stat-box rated"><div class="detail-stat-ic">' +
+            svgShield +
+            '</div><div><div class="v">' +
+            (Math.round(d.cleanerAvg * 10) / 10).toFixed(1) +
+            '/10</div><div class="l">' +
+            d.cleanerReviewCount +
+            " Cleaner Review" +
+            (d.cleanerReviewCount > 1 ? "s" : "") +
+            "</div></div></div>"
+          : '<div class="detail-stat-box na"><div class="detail-stat-ic">' +
+            svgShield +
+            '</div><div><div class="v">N/A</div><div class="l">0 Cleaner Reviews</div></div></div>';
+
+        var cleanerReviewsHtml = d.cleanerReviews.length
+          ? d.cleanerReviews
+              .map(function (r) {
+                var stars = "";
+                for (var i = 0; i < 5; i++) {
+                  stars +=
+                    '<span style="opacity:' +
+                    (i < r.stars ? "1" : ".25") +
+                    '">' +
+                    svgStar +
+                    "</span>";
+                }
+                return (
+                  '<div class="detail-review-item">' +
+                  '<div class="detail-review-top">' +
+                  '<div class="detail-review-who"><div class="detail-review-avatar">' +
+                  initials(r.name) +
+                  '</div><div><div class="detail-review-name">' +
+                  r.name +
+                  '</div><div class="detail-review-date">' +
+                  r.date +
+                  "</div></div></div>" +
+                  '<div class="detail-stars">' +
+                  stars +
+                  "</div>" +
+                  "</div>" +
+                  '<div class="detail-review-text">' +
+                  r.text +
+                  "</div>" +
+                  "</div>"
+                );
+              })
+              .join("")
+          : '<div class="detail-empty-reviews"><div class="ic">' +
+            svgChat +
+            '</div><div class="h">No cleaner reviews yet</div><div class="s">Reviews left by assigned cleaners will show up here.</div></div>';
+
+        var userReviewsEmpty =
+          '<div class="detail-empty-reviews"><div class="ic">' +
+          svgChat +
+          '</div><div class="h">No user reviews yet</div><div class="s">Be the first to share your experience with this washroom.</div></div>';
+
+        return (
+          "<section>" +
+          '<div class="detail-hero-grid">' +
+          '<div class="detail-photo-card">' +
+          '<div class="detail-photo">' +
+          svgWashroom +
+          "</div>" +
+          '<div class="detail-photo-body">' +
+          '<div class="detail-photo-row">' +
+          '<div><div class="detail-building-name">' +
+          d.building +
+          '</div><div class="detail-building-sub">ID: ' +
+          w.id +
+          " &middot; " +
+          w.zone +
+          "</div></div>" +
+          detailRing(d.capacityUsed, d.capacityTotal) +
+          "</div>" +
+          '<div class="detail-capacity-box">' +
+          '<div class="detail-capacity-label">Usage Capacity</div>' +
+          '<div class="detail-capacity-rows">' +
+          '<div class="detail-capacity-item"><span class="tag"><span class="dot women"></span>Women</span><b>' +
+          (d.women.western + d.women.indian + d.women.urinals) +
+          "</b></div>" +
+          '<div class="detail-capacity-item"><span class="tag"><span class="dot men"></span>Men</span><b>' +
+          (d.men.western + d.men.indian + d.men.urinals) +
+          "</b></div>" +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          '<div class="detail-info-card">' +
+          '<div class="detail-title">' +
+          w.name +
+          "</div>" +
+          '<div class="detail-zone-pill"><div class="ic">' +
+          svgLayers +
+          '</div><div><div class="lbl">Location Hierarchy / Zone</div><div class="val">' +
+          w.zone +
+          "</div></div></div>" +
+          '<div class="detail-meta-row">' +
+          '<span class="item"><b>City:</b>&nbsp;' +
+          d.loc.city +
+          "</span>" +
+          '<span class="item"><b>State:</b>&nbsp;' +
+          d.loc.state +
+          "</span>" +
+          '<span class="item">' +
+          svgCalendar +
+          "&nbsp;Created on " +
+          d.created +
+          "</span>" +
+          '<span class="item"><span class="status-pill ' +
+          w.status +
+          '">' +
+          statusLabel +
+          "</span></span>" +
+          "</div>" +
+          (d.amenities.length
+            ? '<div class="detail-amenities">' +
+              '<div class="detail-amenities-label">' +
+              svgLayers +
+              "Amenities &amp; Features</div>" +
+              '<div class="detail-chips">' +
+              amenitiesHtml +
+              "</div>" +
+              "</div>"
+            : "") +
+          '<div class="detail-btn-row">' +
+          '<button class="dbtn dbtn-locate tap-fx" data-toast="Locating ' +
+          w.name +
+          '…">' +
+          svgLocate +
+          "Locate on Map</button>" +
+          '<button class="dbtn dbtn-edit tap-fx" data-toast="Opening editor for ' +
+          w.name +
+          '…">' +
+          svgEdit +
+          "Edit</button>" +
+          '<button class="dbtn dbtn-delete tap-fx" data-toast="' +
+          w.name +
+          ' delete requested">' +
+          svgTrash +
+          "Delete</button>" +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "</section>" +
+          "<section>" +
+          '<div class="detail-section-head">' +
+          svgWashroom +
+          "Washroom Facilities</div>" +
+          '<div class="detail-facilities-grid">' +
+          '<div class="detail-fac-panel">' +
+          '<div class="detail-fac-head"><div class="ic">' +
+          svgUsers +
+          '</div><div><div class="t">Men</div><div class="s">Total: ' +
+          (d.men.western + d.men.indian + d.men.urinals) +
+          " facilities</div></div></div>" +
+          detailFacRow(svgSink, "Western Toilet (WC)", d.men.western) +
+          detailFacRow(
+            '<span class="wc">WC</span>',
+            "Indian Toilet",
+            d.men.indian,
+          ) +
+          detailFacRow(svgDrop, "Urinals", d.men.urinals) +
+          "</div>" +
+          '<div class="detail-fac-panel">' +
+          '<div class="detail-fac-head"><div class="ic">' +
+          svgUsers +
+          '</div><div><div class="t">Women</div><div class="s">Total: ' +
+          (d.women.western + d.women.indian + d.women.urinals) +
+          " facilities</div></div></div>" +
+          detailFacRow(svgSink, "Western Toilet (WC)", d.women.western) +
+          detailFacRow(
+            '<span class="wc">WC</span>',
+            "Indian Toilet",
+            d.women.indian,
+          ) +
+          detailFacRow(svgDrop, "Urinals", d.women.urinals) +
+          "</div>" +
+          "</div>" +
+          "</section>" +
+          "<section>" +
+          '<div class="detail-two-col">' +
+          '<div class="detail-panel">' +
+          '<div class="detail-panel-head"><div class="t">' +
+          svgUsers +
+          "Assigned Cleaners (" +
+          d.cleaners.length +
+          ")</div>" +
+          (d.cleaners.length
+            ? '<div class="view-all tap-fx" data-toast="Opening full cleaner list…">View All ' +
+              svgChevron("right") +
+              "</div>"
+            : "") +
+          "</div>" +
+          cleanersHtml +
+          "</div>" +
+          '<div class="detail-panel">' +
+          '<div class="detail-panel-head"><div class="t">' +
+          svgStar +
+          "Review Statistics</div></div>" +
+          userStatBox +
+          cleanerStatBox +
+          "</div>" +
+          "</div>" +
+          "</section>" +
+          "<section>" +
+          '<div class="detail-reviews-card">' +
+          '<div class="detail-tabs">' +
+          '<div class="detail-tab active" data-detail-tab="user">User Reviews (' +
+          d.userReviewCount +
+          ")</div>" +
+          '<div class="detail-tab" data-detail-tab="cleaner">Cleaner Reviews (' +
+          d.cleanerReviewCount +
+          ")</div>" +
+          "</div>" +
+          '<div class="detail-tab-panel active" data-detail-panel="user">' +
+          userReviewsEmpty +
+          "</div>" +
+          '<div class="detail-tab-panel" data-detail-panel="cleaner">' +
+          cleanerReviewsHtml +
+          "</div>" +
+          "</div>" +
+          "</section>"
+        );
+      }
+
+      var detailScreen = document.getElementById("detailScreen");
+      var detailMain = document.getElementById("detailMain");
+      var detailTopbarName = document.getElementById("detailTopbarName");
+      var detailScrollParent = document.getElementById("scrollArea");
+
+      function openDetail(id) {
+        var w = fullList.filter(function (x) {
+          return x.id === id;
+        })[0];
+        if (!w) return;
+        detailMain.innerHTML = renderDetail(w);
+        detailTopbarName.textContent = w.name;
+        bindDynamicToasts(detailMain);
+
+        detailMain
+          .querySelectorAll("[data-detail-tab]")
+          .forEach(function (tabBtn) {
+            tabBtn.addEventListener("click", function () {
+              var key = tabBtn.dataset.detailTab;
+              detailMain
+                .querySelectorAll("[data-detail-tab]")
+                .forEach(function (t) {
+                  t.classList.toggle("active", t === tabBtn);
+                });
+              detailMain
+                .querySelectorAll("[data-detail-panel]")
+                .forEach(function (p) {
+                  p.classList.toggle("active", p.dataset.detailPanel === key);
+                });
+            });
+          });
+
+        detailScreen.classList.add("open");
+        detailScreen.setAttribute("aria-hidden", "false");
+        detailScreen.scrollTop = 0;
+      }
+
+      function closeDetail() {
+        detailScreen.classList.remove("open");
+        detailScreen.setAttribute("aria-hidden", "true");
+      }
+
+      document
+        .getElementById("detailBackBtn")
+        .addEventListener("click", closeDetail);
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && detailScreen.classList.contains("open"))
+          closeDetail();
+      });
+    </script>
+  </body>
+</html>

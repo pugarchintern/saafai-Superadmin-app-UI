@@ -65,7 +65,6 @@
   /* ===================== PHONE FRAME ===================== */
   /* Tuned for a large 6"+ display: taller than the previous pass so more of the
      dashboard is visible without scrolling, while keeping a realistic phone silhouette. */
-     /* global css for device apperance */
   .device{
     position:relative;
     width:min(420px, 92vw);
@@ -108,6 +107,26 @@
   .home-indicator{
     position:absolute; bottom:8px; left:50%; transform:translateX(-50%);
     width:118px; height:5px; border-radius:6px; background:rgba(16,25,21,.55); z-index:40;
+  }
+
+  /* ===================== RESPONSIVE: real mobile gets full-bleed, no mockup bezel ===================== */
+  /* Below this width we assume the page is being opened on an actual phone, so the decorative
+     "phone within a phone" frame is dropped and the screen content fills the real viewport.
+     Above it (tablets/desktop), the device mockup frame stays exactly as designed. */
+  @media (max-width:640px){
+    body{
+      display:block; padding:0; min-height:100vh; min-height:100dvh;
+      background:var(--bg);
+    }
+    .device{
+      width:100vw; max-width:none; aspect-ratio:auto;
+      height:100vh; height:100dvh;
+      border-radius:0; padding:0; background:var(--bg);
+      box-shadow:none;
+    }
+    .device::before, .device::after{display:none;} /* hardware side buttons */
+    .notch{display:none;} /* fake dynamic island — the real device already has one */
+    .screen{border-radius:0;}
   }
 
   /* ===== Fake status bar ===== */
@@ -423,22 +442,23 @@
   .qa-ic svg{width:16px;height:16px;}
   .qa-btn span{font-size:12px; font-weight:700;}
 
-  /* ===== Floating bottom nav ===== */
-  .navbar{position:absolute; bottom:0; left:0; right:0; z-index:50; display:flex; justify-content:center; padding:0 10px 22px; pointer-events:none;}
+  /* ===== Bottom nav — docked flush to the screen edge, not floating ===== */
+  .navbar{position:absolute; bottom:0; left:0; right:0; z-index:50; display:flex;}
   .navbar-inner{
     width:100%;
-    background:linear-gradient(180deg, rgba(255,255,255,.98) 0%, rgba(233,248,243,.92) 100%);
+    background:linear-gradient(180deg, rgba(255,255,255,.98) 0%, rgba(253,241,234,.95) 100%);
     backdrop-filter:blur(10px);
-    box-shadow:0 10px 30px rgba(30,58,138,.14), 0 1px 0 rgba(255,255,255,.6) inset;
-    border:1px solid var(--border);
-    border-radius:22px;
-    display:flex; padding:8px 6px; pointer-events:all;
+    box-shadow:0 -6px 18px rgba(109,40,217,.10);
+    border-top:1px solid var(--border);
+    border-radius:0;
+    display:flex; padding:9px 6px 20px;
   }
   .nav-item{flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; background:none; border:none; color:var(--text-faint); padding:8px 2px; border-radius:14px; position:relative; transition:background .2s ease, color .2s ease;}
   .nav-item svg{width:19px;height:19px;}
   .nav-item span{font-size:9.5px; font-weight:700;}
-  .nav-item.active{color:var(--primary-deep); background:linear-gradient(150deg, var(--primary-soft) 0%, #EAFBF6 100%); box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
+  .nav-item.active{color:var(--primary-deep); background:linear-gradient(150deg, var(--primary-soft) 0%, #F1ECFB 100%); box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
   .nav-item:active{transform:scale(.94);}
+
 
   /* ===== Drawer ===== */
   .scrim{position:absolute; inset:0; background:rgba(10,25,20,.4); backdrop-filter:blur(2px); opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:60;}
@@ -568,10 +588,12 @@
   }
   .drawer-close-x svg{ width:15px; height:15px; }
 
-  @media (max-height:1000px){
+  /* These two only kick in on short desktop/laptop browser windows — gated to widths above the
+     mobile breakpoint so they never fight with the real-phone full-bleed rule above. */
+  @media (max-height:1000px) and (min-width:641px){
     .device{aspect-ratio:auto; width:min(400px, 90vw); height:min(1040px, 96vh);}
   }
-  @media (max-height:760px){
+  @media (max-height:760px) and (min-width:641px){
     .device{width:min(360px, 88vw); height:min(936px, 97vh);}
   }
 </style>
@@ -993,7 +1015,7 @@
         </main>
       </div>
 
-      <!-- Drawer (SIDEBAR ) -->
+      <!-- Drawer -->
       <div class="scrim" id="scrim"></div>
       <aside class="drawer" id="drawer" role="dialog" aria-label="Navigation menu" aria-hidden="true">
         <button class="drawer-close-x tap-fx" id="drawerCloseBtn" aria-label="Close menu">
@@ -1022,8 +1044,8 @@
             <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="drawer-submenu">
-            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening View Hierarchy…"><span class="drawer-subdot"></span><a href="location_hirarchy.html" >Location Hierarchy</div></a>
-            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Add Hierarchy…"><span class="drawer-subdot"></span><a href="add_hirarchy.html">Add Hierarchy</div></a>
+            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening View Hierarchy…"><span class="drawer-subdot"></span><a href="location_hirarchy.html"> View Hierarchy</div></a>
+            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Add Hierarchy…"><span class="drawer-subdot"></span><a href="add-zone-type_final.html" > Add Hierarchy</div></a>
           </div>
           <div class="drawer-link has-sub tap-fx" data-nav="washrooms" data-drawer-toast="Switched to Washrooms">
             <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>Washrooms</span>
@@ -1031,7 +1053,7 @@
             <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="drawer-submenu">
-            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Washrooms List…"><span class="drawer-subdot"></span>Washrooms List</div>
+            <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Washrooms List…"><span class="drawer-subdot"></span><a href="washroom_list.html">Washroom List</div></a>
             <div class="drawer-sublink active tap-fx" data-drawer-toast="Opening Add Washroom…"><span class="drawer-subdot"></span>Add Washroom</div>
           </div>
           <div class="drawer-link has-sub tap-fx" data-drawer-toast="Opening User Management…">
@@ -1041,9 +1063,9 @@
           </div>
           <div class="drawer-submenu">
             <div class="drawer-sublink tap-fx" data-drawer-toast="Opening User List…"><span class="drawer-subdot"></span>
-              <a href="user_management.html"> User List</div></a>
+              <a href="user_manage-final.html" > User List</div></a>
             <div class="drawer-sublink tap-fx" data-drawer-toast="Opening Add User…"><span class="drawer-subdot"></span>
-              <a href="addUser.html"> Add User</div></a>
+              <a href="add_user_final.html">Add User</div></a>
           </div>
           <div class="drawer-link has-sub tap-fx" data-drawer-toast="Opening User Mapping…">
             <span class="drawer-link-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>User Mapping</span>
@@ -1097,31 +1119,28 @@
     <!-- Toast / snackbar feedback layer -->
     <div class="toast-stack" id="toastStack"></div>
 
-    <!-- Floating bottom nav (fixed to screen, above scroll area) -->
+    <!-- Bottom nav, docked flush to the bottom edge -->
     <nav class="navbar">
       <div class="navbar-inner">
         <button class="nav-item active" data-tab="home">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
           <span>Dashboard</span>
         </button>
         <button class="nav-item" data-tab="washrooms">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
-          <a href="user_management.html">
-          <span>User Management
-          </span></a>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <span><a href="washroom_list.html"> Washrooms</span></a>
         </button>
         <button class="nav-item" data-tab="tasks">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="17" rx="2"/><path d="M8 2v4M16 2v4M4 10h16"/></svg>
-          <a href="cleaner_assignment.html">
-          <span>Cleaner</span></a>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+          <span>Tasks</span>
         </button>
         <button class="nav-item" data-tab="reports">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 20 8"/><path d="M9 13h6M9 17h6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
           <span>Reports</span>
         </button>
         <button class="nav-item" id="moreTab" data-tab="more">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
-          <span>More</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile</span>
         </button>
       </div>
     </nav>
